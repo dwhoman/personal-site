@@ -1,0 +1,1562 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<link rel="alternate" type="application/atom+xml" href="/feed.atom">
+<link rel="shortcut icon" href="../graphics/logo3.svg">
+<title>SQL Recursive Queries</title>
+<meta name="description" content="Examples of recursive queries.">
+<meta name="keywords" content="sql">
+<meta name="generator" content="Org mode">
+<link rel="stylesheet" type="text/css" href="../css/main.css?ver=1520406001">
+<link rel="stylesheet" type="text/css" href="../css/exposition.css">
+<link rel="stylesheet" type="text/css" href="../css/blog.css">
+</head>
+<body>
+<header id="masthead"><input id="expand-blog-menu" type="checkbox"><div id="dwhoman-logo" class="nav"><a href="./index.html"><span>D</span><span>W</span><span>H</span></a></div>
+<label id="expand-blog-menu-inactive" class="nav menu menu-btn" for="expand-blog-menu"><span>Blog</span><img src="../graphics/noun_1322581_cc.svg" alt=""></label><label id="expand-blog-menu-active" class="nav blog-menu menu-btn" for="expand-blog-menu"><span>Main Menu</span><img src="../graphics/noun_1355740_cc.svg" alt=""></label><div id="blog-chronologic" class="nav blog-menu menu-btn"><a href="../chronological.html"><span>Chronological</span><img src="../graphics/noun_333757_cc.svg" alt=""></a></div>
+<div id="blog-recent" class="nav blog-menu menu-btn"><a href="../recent-updates.html"><span>Updated</span><img src="../graphics/noun_1572678_cc.svg" alt=""></a></div>
+<div id="blog-categories" class="nav blog-menu menu-btn"><a href="../categories.xhtml"><span>Categories</span><img src="../graphics/noun_1332809_cc.svg" alt=""></a></div>
+<div id="blog-threads" class="nav blog-menu menu-btn"><a href="../threads.html"><span>Threads</span><img src="../graphics/noun_844785_cc.svg" alt=""></a></div>
+<div id="blog-feed" class="nav blog-menu menu-btn"><a href="../feed.atom"><span>Feed</span><img src="../graphics/noun_19895_cc.svg" alt=""></a></div>
+<div id="about-page" class="nav menu menu-btn"><a href="../about.html"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
+<div id="resume-page" class="nav menu menu-btn"><a href="../resume.html"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
+<div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
+<div id="following-page" class="menu filler"></div>
+<div id="blog-feed-comp" class="filler menu"></div>
+<div id="nav-filler" class="filler"></div>
+<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav><h2>Thread</h2>
+<dl id="blog-threads">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
+</dl></nav><nav><h2>Published</h2>
+<dl id="blog-published">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="hy-shell-scripting.html">Shell Scripting with Hy!</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav><h2>Updated</h2>
+<dl id="blog-updated">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav></aside><main id="content">
+<h1 class="title">SQL Recursive Queries</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li>
+<a href="#org89a4bdd">1. common table expressions</a>
+<ul>
+<li><a href="#org5ecdc8d">1.1. recursion</a></li>
+<li><a href="#orgb218e9f">1.2. passing information</a></li>
+<li><a href="#org0998e53">1.3. Mandelbrot Set</a></li>
+<li><a href="#orgdaa2606">1.4. sudoku solver</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<article id="outline-container-org89a4bdd" class="outline-2">
+<h2 id="org89a4bdd">
+<span class="section-number-2">1</span> common table expressions</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://en.wikipedia.org/wiki/Hierarchical_and_recursive_queries_in_SQL">https://en.wikipedia.org/wiki/Hierarchical_and_recursive_queries_in_SQL</a>
+</p>
+</div>
+<div id="outline-container-org5ecdc8d" class="outline-3">
+<h3 id="org5ecdc8d">
+<span class="section-number-3">1.1</span> recursion</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<a href="https://sqlite.org/lang_with.html">https://sqlite.org/lang_with.html</a>
+Union all does not check for duplicates, faster.
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  cnt(x) <span class="org-keyword">AS</span> (<span class="org-keyword">VALUES</span>(2) <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span> x+1 <span class="org-keyword">FROM</span> cnt <span class="org-keyword">WHERE</span> x&lt;10)
+<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> cnt;
+</pre>
+</div>
+
+<p>
+LIMIT stops the recursion after 10 itterations. VALUES and LIMIT do the same thing.
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  cnt(x) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> 1
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> x+1 <span class="org-keyword">FROM</span> cnt
+      <span class="org-keyword">LIMIT</span> 10
+  )
+<span class="org-keyword">SELECT</span> group_concat(x) <span class="org-keyword">FROM</span> cnt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  cnt(x) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">VALUES</span>(1)
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> x+1 <span class="org-keyword">FROM</span> cnt
+      <span class="org-keyword">LIMIT</span> 10
+  )
+<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> cnt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">org</span>(
+  <span class="org-keyword">name</span> TEXT <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>,
+  boss TEXT <span class="org-keyword">REFERENCES</span> org
+) <span class="org-keyword">WITHOUT</span> ROWID;
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,<span class="org-keyword">NULL</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Bob'</span>,<span class="org-string">'Alice'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Cindy'</span>,<span class="org-string">'Alice'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Dave'</span>,<span class="org-string">'Bob'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Emma'</span>,<span class="org-string">'Bob'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Fred'</span>,<span class="org-string">'Cindy'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> org <span class="org-keyword">VALUES</span>(<span class="org-string">'Gail'</span>,<span class="org-string">'Cindy'</span>);
+</pre>
+</div>
+<p>
+By default, SQLite uses numeric indexing for PK, WITHOUT ROWID prevents this. <a href="https://sqlite.org/withoutrowid.html">https://sqlite.org/withoutrowid.html</a>
+</p>
+
+<p>
+ORDER BY 2 (DESC) affects when the recursions occur relative to current table data generated by the recursive function.
+</p>
+
+<ul class="org-ul">
+<li>
+<p>
+breadth first search
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+      <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2
+  )
+<span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>stepping through the recursion
+<ul class="org-ul">
+<li>
+<p>
+org table
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-left"> </td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-left">Cindy</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-left">Cindy</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+inital queue
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 1
+</p>
+<table id="org6c65b83" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org0ee03e8" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p>
+step 2
+</p>
+<table id="orgedd865c" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org1a11cfe" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 3
+</p>
+<table id="org64bd61e" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+<table id="orgaa14671" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 4
+</p>
+<table id="orgabee4a9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org4899760" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 5
+</p>
+<table id="orgc25bfd8" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgf8b5f84" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 6
+</p>
+<table id="org09b0fe6" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org7bb1e2d" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 7
+</p>
+<table id="orgbdb5e2d" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+the +1 is necessary to match the column name level+1, which is the second parameter <a href="https://www.sqlite.org/lang_select.html#orderby">https://www.sqlite.org/lang_select.html#orderby</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite">  <span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+    under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+      <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+      <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+      <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+        <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+       <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> under_alice.<span class="org-keyword">level</span> + 1
+    )
+  <span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+</li>
+</ul>
+</li>
+
+<li>
+<p>
+depth first search
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+      <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2 <span class="org-keyword">DESC</span>, 1 <span class="org-keyword">DESC</span>
+  )
+<span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>stepping through the recursion
+<ul class="org-ul">
+<li>
+<p>
+org table
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-left"> </td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-left">Cindy</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-left">Cindy</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+inital queue
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 1
+</p>
+<table id="org9d8f308" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgeb22934" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 2
+</p>
+<table id="org6ca57ae" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgbc306b2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 3
+</p>
+<table id="orgebda908" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org16e00f2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 4
+</p>
+<table id="org7fd958e" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orge9a24a1" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 5
+</p>
+<table id="org1dc0df5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+<table id="org0fdbda2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 6
+</p>
+<table id="orga1f1664" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org567dcea" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+step 7
+</p>
+<table id="org8055d7e" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+
+<li>
+<p>
+defaults to breadth first search
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite">  <span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+    under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+      <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+      <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+      <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+        <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+    )
+  <span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb218e9f" class="outline-3">
+<h3 id="orgb218e9f">
+<span class="section-number-3">1.2</span> passing information</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">letters</span> (
+  l_sequence TEXT <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>
+) <span class="org-keyword">WITHOUT</span> ROWID;
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("A");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("B");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("C");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("D");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("E");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("F");
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters <span class="org-keyword">VALUES</span>("G");
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+alphabet(c) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'ABCDEFGHIJKLMNOPQRSTUVWXYZ'</span>)
+),
+cnt(x) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> l_sequence || substr(alphabet.c, <span class="org-builtin">abs</span>(random()) % 26 + 1,1)
+    <span class="org-keyword">FROM</span> letters, alphabet
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> l_sequence || substr(alphabet.c, <span class="org-builtin">abs</span>(random()) % 26 + 1,1)
+    <span class="org-keyword">FROM</span> cnt, letters, alphabet
+    <span class="org-keyword">LIMIT</span> 10
+)
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> letters
+<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> cnt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">select</span> * <span class="org-keyword">from</span> letters;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Fibonacci</span> (
+  <span class="org-keyword">number</span> <span class="org-type">INTEGER</span> <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>,
+  fibo <span class="org-type">INTEGER</span>
+) <span class="org-keyword">WITHOUT</span> ROWID;
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(0,0);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(1,1);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> next_fibonacci(<span class="org-keyword">number</span>, fibo) <span class="org-keyword">AS</span> (
+<span class="org-comment">-- compute the next Fibonacci number in the sequence</span>
+    <span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) + 1, <span class="org-builtin">SUM</span>(fibo)
+    <span class="org-keyword">FROM</span> Fibonacci
+    <span class="org-keyword">WHERE</span>
+    <span class="org-comment">-- Get only the last two records</span>
+       Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) <span class="org-keyword">FROM</span> Fibonacci)
+       <span class="org-keyword">OR</span> Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) - 1 <span class="org-keyword">FROM</span> Fibonacci)
+)
+
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Fibonacci
+<span class="org-keyword">SELECT</span> <span class="org-keyword">number</span>, fibo <span class="org-keyword">FROM</span> next_fibonacci;
+
+<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> Fibonacci;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0998e53" class="outline-3">
+<h3 id="org0998e53">
+<span class="section-number-3">1.3</span> Mandelbrot Set</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  xaxis(x) <span class="org-keyword">AS</span> (<span class="org-keyword">VALUES</span>(-2.0) <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span> x+0.05 <span class="org-keyword">FROM</span> xaxis <span class="org-keyword">WHERE</span> x&lt;1.2),
+  yaxis(y) <span class="org-keyword">AS</span> (<span class="org-keyword">VALUES</span>(-1.0) <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span> y+0.1 <span class="org-keyword">FROM</span> yaxis <span class="org-keyword">WHERE</span> y&lt;1.0),
+  <span class="org-keyword">m</span>(iter, cx, cy, x, y) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> 0, x, y, 0.0, 0.0 <span class="org-keyword">FROM</span> xaxis, yaxis
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> iter+1, cx, cy, x*x-y*y + cx, 2.0*x*y + cy <span class="org-keyword">FROM</span> <span class="org-keyword">m</span>
+     <span class="org-keyword">WHERE</span> (x*x + y*y) &lt; 4.0 <span class="org-keyword">AND</span> iter&lt;28
+  ),
+  m2(iter, cx, cy) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> <span class="org-builtin">max</span>(iter), cx, cy <span class="org-keyword">FROM</span> <span class="org-keyword">m</span> <span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> cx, cy
+  ),
+  a(t) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> group_concat( substr(<span class="org-string">' .+*#'</span>, 1+<span class="org-builtin">min</span>(iter/7,4), 1), <span class="org-string">''</span>)
+    <span class="org-keyword">FROM</span> m2 <span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> cy
+  )
+<span class="org-keyword">SELECT</span> group_concat(rtrim(t),x<span class="org-string">'0a'</span>) <span class="org-keyword">FROM</span> a;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdaa2606" class="outline-3">
+<h3 id="orgdaa2606">
+<span class="section-number-3">1.4</span> sudoku solver</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  <span class="org-keyword">input</span>(sud) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79'</span>)
+  ),
+  digits(z, lp) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'1'</span>, 1)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span>
+    <span class="org-builtin">CAST</span>(lp+1 <span class="org-keyword">AS</span> TEXT), lp+1 <span class="org-keyword">FROM</span> digits <span class="org-keyword">WHERE</span> lp&lt;9
+  ),
+  x(s, ind) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> sud, instr(sud, <span class="org-string">'.'</span>) <span class="org-keyword">FROM</span> <span class="org-keyword">input</span>
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span>
+      substr(s, 1, ind-1) || z.z || substr(s, ind+1),
+      instr( substr(s, 1, ind-1) || z.z || substr(s, ind+1), <span class="org-string">'.'</span> )
+     <span class="org-keyword">FROM</span> x, digits <span class="org-keyword">AS</span> z
+    <span class="org-keyword">WHERE</span> ind&gt;0
+      <span class="org-keyword">AND</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span> (
+            <span class="org-keyword">SELECT</span> 1
+              <span class="org-keyword">FROM</span> digits <span class="org-keyword">AS</span> lp
+             <span class="org-keyword">WHERE</span> z.z = substr(s, ((ind-1)/9)*9 + lp.lp, 1)
+                <span class="org-keyword">OR</span> z.z = substr(s, ((ind-1)%9) + (lp.lp-1)*9 + 1, 1)
+                <span class="org-keyword">OR</span> z.z = substr(s, (((ind-1)/3) % 3) * 3
+                        + ((ind-1)/27) * 27 + lp.lp
+                        + ((lp.lp-1) / 3) * 6, 1)
+         )
+  )
+<span class="org-keyword">SELECT</span> s <span class="org-keyword">FROM</span> x <span class="org-keyword">WHERE</span> ind=0;
+</pre>
+</div>
+
+<p>
+534678912
+672195348
+198342567
+859761423
+426853791
+713924856
+961537284
+287419635
+345286179
+</p>
+
+<ul class="org-ul">
+<li>stepping through
+<ul class="org-ul">
+<li>in x(s, ind)
+<ol class="org-ol">
+<li>sud = '53..7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</li>
+<li>instr(sud, '.') = 3</li>
+<li>
+<p>
+SELECT sud, 3
+</p>
+<table id="org9850582" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">sud</td>
+<td class="org-right">3</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+<li>
+<p>
+step 1
+</p>
+<table id="org142b759" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">sud</td>
+<td class="org-right">3</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>s = sud = '53..7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</li>
+<li>ind = 3</li>
+<li>'53' || z || '.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'
+<ul class="org-ul">
+<li>
+<p>
+z = digits(z, lp) =
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">z</th>
+<th scope="col" class="org-right">lp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">'1'</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">'2'</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">'3'</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-left">'4'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'5'</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-left">'6'</td>
+<td class="org-right">6</td>
+</tr>
+
+<tr>
+<td class="org-left">'7'</td>
+<td class="org-right">7</td>
+</tr>
+
+<tr>
+<td class="org-left">'8'</td>
+<td class="org-right">8</td>
+</tr>
+
+<tr>
+<td class="org-left">'9'</td>
+<td class="org-right">9</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>
+select
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">'531.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'532.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'533.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'534.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'535.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'536.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'537.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'538.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">'539.7….6..195….98….6.8…6…34..8.3..17…2…6.6….28….419..5….8..79'</td>
+<td class="org-right">4</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+ind = 3 &gt; 0
+</p>
+</li>
+<li>not exists
+z.z =
+<ul class="org-ul">
+<li>
+<p>
+substr(s, (3-1)/9*9 + lp,1) = substr(s, 0 + lp,1)
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">substr(s, 0,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 1,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 2,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 3,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 4,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 5,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 6,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 7,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 8,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">substr(s, 9,1)</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"> </td>
+</tr>
+
+<tr>
+<td class="org-left">5</td>
+</tr>
+
+<tr>
+<td class="org-left">3</td>
+</tr>
+
+<tr>
+<td class="org-left">,</td>
+</tr>
+
+<tr>
+<td class="org-left">.</td>
+</tr>
+
+<tr>
+<td class="org-left">7</td>
+</tr>
+
+<tr>
+<td class="org-left">.</td>
+</tr>
+
+<tr>
+<td class="org-left">.</td>
+</tr>
+
+<tr>
+<td class="org-left">.</td>
+</tr>
+
+<tr>
+<td class="org-left">,</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</article>
+</main><footer><div id="to-top-alt" class="mobile nav menu-btn"><a href="#">Back to Top</a></div></footer>
+</body>
+</html>
