@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 60.002416 60"
+   version="1.1"
+   id="svg885"
+   sodipodi:docname="Git-logo.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata891">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs889" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1438"
+     inkscape:window-height="1268"
+     id="namedview887"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="3.2239157"
+     inkscape:cx="72.892599"
+     inkscape:cy="57.007793"
+     inkscape:window-x="0"
+     inkscape:window-y="20"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg885" />
+  <path
+     d="M 58.871121,27.327597 32.671917,1.1316038 c -1.507435,-1.50880505 -3.954345,-1.50880505 -5.463676,0 l -5.439976,5.440502 6.900433,6.9004322 c 1.604184,-0.541627 3.442894,-0.178477 4.721018,1.099898 1.284759,1.28634 1.645318,3.140745 1.090102,4.750302 l 6.650787,6.650791 c 1.609032,-0.554478 3.465492,-0.196248 4.750305,1.090839 1.79626,1.795735 1.79626,4.705534 0,6.501743 -1.796529,1.796786 -4.706325,1.796786 -6.50385,0 -1.350645,-1.351699 -1.684712,-3.336192 -1.00062,-5.000312 l -6.202595,-6.202594 -5e-4,16.322037 c 0.437926,0.216785 0.851204,0.50613 1.216134,0.869475 1.795735,1.795525 1.795735,4.7048 0,6.503326 -1.796261,1.79547 -4.707377,1.79547 -6.501743,0 -1.795998,-1.798371 -1.795998,-4.707641 0,-6.503326 0.443851,-0.44306 0.957434,-0.778415 1.505434,-1.0032 V 22.077802 C 27.8449,21.853968 27.331923,21.521112 26.887413,21.074496 25.527024,19.71516 25.199384,17.718554 25.897063,16.048008 L 19.094572,9.2444828 1.131959,27.206568 c -1.50927867,1.509964 -1.50927867,3.956874 0,5.465784 l 26.197627,26.196043 c 1.508278,1.508805 3.954344,1.508805 5.46473,0 L 58.870806,32.79612 c 1.508808,-1.509542 1.508808,-3.957189 0,-5.46631"
+     id="path883"
+     inkscape:connector-curvature="0"
+     style="fill:#f5e8c8;stroke-width:0.52667016" />
+  <!-- https://en.wikipedia.org/wiki/Git#/media/File:Git-logo.svg -->
+</svg>

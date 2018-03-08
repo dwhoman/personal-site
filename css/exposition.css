@@ -1,0 +1,26 @@
+@media screen {
+    @media (min-width: 900px) and (min-height: 450px) {
+	body > main p, body > main ul, body > main table {
+	    max-width: calc(100vw - var(--nav-width) - 10ch);
+	}
+    }
+    @media (min-width: 1200px) {
+	body > main p, body > main ul, body > main table {
+	    max-width: var(--max-chars-per-line);
+	}
+	
+    }
+    @media (max-width: 899px), (max-height: 449px) {
+	main {
+	    max-width: 95vw;
+	    margin-bottom: 0px;
+	    margin-left: 4rem;
+	    margin-right: 4rem;
+	}
+    }
+}
+@media print {
+    body > main p, body > main ul, body > main table {
+	max-width: 80ch;
+    }
+}

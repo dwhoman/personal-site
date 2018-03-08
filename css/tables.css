@@ -1,0 +1,20 @@
+@media screen {
+    table a {
+	text-shadow: none;
+    }
+    
+    table.index tbody {
+	border: var(--border-hard);
+	box-shadow: var(--cloud-shadow-low);
+    }
+    table.index tbody {
+	background-color: var(--main-color-trasp1);
+    }
+    table.index tbody:nth-child(2n) {
+	background-color: var(--main-color-trasp2);
+    }
+    
+    table.index td {
+	border: var(--border-soft);
+    }
+}

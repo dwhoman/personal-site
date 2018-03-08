@@ -1,0 +1,15 @@
+table.index tbody tr:first-child td:not(:first-child) {
+    text-align: center;
+}
+
+table {
+    margin-right: 2rem;
+    margin-left: 2rem;
+}
+
+/* table.index { */
+/*     display: grid; */
+/*     grid-template-columns: auto; */
+/*     grid-template-rows: repeat(auto-fill, auto); */
+/*     grid-row-gap: 2rem; */
+/* } */

@@ -1,0 +1,137 @@
+:root {
+}
+
+.cloud {
+    text-shadow: var(--cloud-shadow);
+}
+
+/* hide the last comma in the per-entry category list */
+span.delimiter:last-child {
+    display: none;
+}
+
+/* table re-ordering controls */
+input.name-sort:not(:checked) ~ table tbody.name-sort {
+    display: none;
+}
+input.publish-sort:not(:checked) ~ table tbody.publish-sort {
+    display: none;
+}
+input.update-sort:not(:checked) ~ table tbody.update-sort {
+    display: none;
+}
+
+/* header styling */
+h2.category {
+    text-transform: capitalize;
+}
+
+h2#sql {
+    text-transform: uppercase;
+}
+
+/* keywords styling */
+ul#keywords li {
+    display: inline-block;
+    margin-right: 1ch;
+}
+ul#keywords li:last-child {
+    margin-right: 0px;
+}
+
+/* custom radio buttons */
+input.category-sort {
+    display: none;
+}
+
+label.category-sort::before {
+    content: "◇";
+    display: inline-block;
+    position: relative;
+    top: 0px;
+    right: 2.6ch;
+    color: var(--highlight-color1);
+}
+
+input.name-sort:checked ~ label.name-sort::before, input.publish-sort:checked ~ label.publish-sort::before, input.update-sort:checked ~ label.update-sort::before {
+    content: "◈";
+}
+
+input.name-sort:not(:checked) ~ label.name-sort::before, input.publish-sort:not(:checked) ~ label.publish-sort::before, input.update-sort:not(:checked) ~ label.update-sort::before {
+    cursor: pointer;
+}
+input.name-sort:not(:checked) ~ label.name-sort, input.publish-sort:not(:checked) ~ label.publish-sort, input.update-sort:not(:checked) ~ label.update-sort {
+    cursor: pointer;
+}
+
+
+/* Put each table in a grid with the radio buttons. Position the radio buttons
+   to serve as table headers */
+
+div.category {
+    display: grid;
+    grid-template-columns: 4ch auto 4ch 16ch 4ch 16ch;
+    grid-template-rows: auto;
+}
+
+div.category input.name-sort {
+    grid-column: 1/2;
+}
+
+div.category label.name-sort {
+    grid-column: 2/3;
+}
+
+div.category input.publish-sort {
+    grid-column: 3/4;
+}
+
+div.category label.publish-sort {
+    grid-column: 4/5;
+}
+div.category input.update-sort {
+    grid-column: 5/6;
+}
+
+div.category label.update-sort {
+    grid-column: 6/7;
+}
+
+div.category table {
+    grid-column: 1/-1;
+}
+div.category td:not(:first-child) {
+    /* width of date fields */
+    /* "September 30 2000" = 17 chars */
+    width: 20ch;
+}
+@media (min-width: 900px) and (min-height: 450px) {
+    article h2 {
+	margin-left: 1rem;
+    }
+    div.category {
+	margin-left: 2rem;
+	margin-right: 2rem;
+    }
+}
+@media (max-width: 899px), (max-height: 449px) {
+    body {
+	box-sizing: border-box;
+    }
+
+    main {
+	box-sizing: border-box;
+	margin: 5px;
+	padding: 0;
+    }
+    
+    ul#keywords {
+	padding-left: 0px;
+    }
+    article h2 {
+	margin: 0px;
+    }
+    div.category {
+	margin: 0px;
+    }
+}

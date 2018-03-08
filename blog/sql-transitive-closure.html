@@ -1,0 +1,1672 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<link rel="alternate" type="application/atom+xml" href="/feed.atom">
+<link rel="shortcut icon" href="../graphics/logo3.svg">
+<title>Transitive Closure in SQL</title>
+<meta name="description" content="Using recursive common table expressions in SQL to find the transitive closure.">
+<meta name="keywords" content="sql, relational algebra, python">
+<meta name="generator" content="Org mode">
+<link rel="stylesheet" type="text/css" href="../css/main.css?ver=1520406001">
+<link rel="stylesheet" type="text/css" href="../css/exposition.css">
+<link rel="stylesheet" type="text/css" href="../css/blog.css">
+</head>
+<body>
+<header id="masthead"><input id="expand-blog-menu" type="checkbox"><div id="dwhoman-logo" class="nav"><a href="./index.html"><span>D</span><span>W</span><span>H</span></a></div>
+<label id="expand-blog-menu-inactive" class="nav menu menu-btn" for="expand-blog-menu"><span>Blog</span><img src="../graphics/noun_1322581_cc.svg" alt=""></label><label id="expand-blog-menu-active" class="nav blog-menu menu-btn" for="expand-blog-menu"><span>Main Menu</span><img src="../graphics/noun_1355740_cc.svg" alt=""></label><div id="blog-chronologic" class="nav blog-menu menu-btn"><a href="../chronological.html"><span>Chronological</span><img src="../graphics/noun_333757_cc.svg" alt=""></a></div>
+<div id="blog-recent" class="nav blog-menu menu-btn"><a href="../recent-updates.html"><span>Updated</span><img src="../graphics/noun_1572678_cc.svg" alt=""></a></div>
+<div id="blog-categories" class="nav blog-menu menu-btn"><a href="../categories.xhtml"><span>Categories</span><img src="../graphics/noun_1332809_cc.svg" alt=""></a></div>
+<div id="blog-threads" class="nav blog-menu menu-btn"><a href="../threads.html"><span>Threads</span><img src="../graphics/noun_844785_cc.svg" alt=""></a></div>
+<div id="blog-feed" class="nav blog-menu menu-btn"><a href="../feed.atom"><span>Feed</span><img src="../graphics/noun_19895_cc.svg" alt=""></a></div>
+<div id="about-page" class="nav menu menu-btn"><a href="../about.html"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
+<div id="resume-page" class="nav menu menu-btn"><a href="../resume.html"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
+<div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
+<div id="following-page" class="menu filler"></div>
+<div id="blog-feed-comp" class="filler menu"></div>
+<div id="nav-filler" class="filler"></div>
+<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav><h2>Thread</h2>
+<dl id="blog-threads">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-recursive-queries.html">SQL Recursive Queries</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav><h2>Published</h2>
+<dl id="blog-published">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-recursive-queries.html">SQL Recursive Queries</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav><h2>Updated</h2>
+<dl id="blog-updated">
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav></aside><main id="content">
+<h1 class="title">Transitive Closure in SQL</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li>
+<a href="#org3434960">1. Transitive Closure in SQL</a>
+<ul>
+<li>
+<a href="#org5a21f7d">1.1. Recursive Queries and SQLite's Examples</a>
+<ul>
+<li><a href="#org914e6cd">1.1.1. Sudoku Example</a></li>
+<li><a href="#org99139fa">1.1.2. Memoization Example</a></li>
+</ul>
+</li>
+<li>
+<a href="#org01b044f">1.2. Example Situation</a>
+<ul>
+<li><a href="#orge7328d7">1.2.1. Using Relational Algebra and Python</a></li>
+<li><a href="#org991be95">1.2.2. Using SQLite and Recursive Common Table Expressions</a></li>
+</ul>
+</li>
+<li>
+<a href="#org26850e3">1.3. Cyclic Graphs</a>
+<ul>
+<li><a href="#org50fb68e">1.3.1. Another Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<article id="outline-container-org3434960" class="outline-2">
+<h2 id="org3434960">
+<span class="section-number-2">1</span> Transitive Closure in SQL</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://en.wikipedia.org/wiki/Transitive_closure">Transitive closure</a> is cited as one of the obvious operations on relation
+tables (also called relations in some of the references cited here) that is
+outside the bounds of relational algebra. Transitive closure is an operation
+on directed graphs where the output is a graph with direct connections between
+nodes only if there is some path between those nodes in the input graph. The
+transitive closure is possible by using recursive common table
+expressions. SQLite has a good <a href="https://sqlite.org/lang_with.html">article</a> on recursive CTEs, even using it for
+more general purpose computing. The paper "Universality of Data Retrieval
+Languages", by Aho and Ullman, shows why some <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">least fixed point operators</a> such
+as the transitive closure are not possible by just using relational algebra. A
+fixed point operator is a operator that returns its input, which is what the
+transitive closure eventually does. Giving an input graph to the transitive
+closure operation and then applying the transitive closure on the output, the
+output will be the same as the second input. The output of any further
+iterations will be the same. I suppose it is considered a least fixed point
+operator because it returns the smallest possible transitively closed graph
+containing the input graph.
+</p>
+</div>
+
+<div id="outline-container-org5a21f7d" class="outline-3">
+<h3 id="org5a21f7d">
+<span class="section-number-3">1.1</span> Recursive Queries and SQLite's Examples</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+A recursive query is one like:
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+      <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2
+  )
+<span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+
+<p>
+which is given as an example in the linked SQLite article. "under_alice"
+looks like a function that takes parameters, but it is not. What look to be
+parameters, are actually the column names of the return value, so (org.name,
+under_alice.level+1) becomes under_alice.name and under_alice.level. The last
+SELECT statement just formats the result from "under_alice". The under_alice
+query makes reference to the org table, which looks like:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-left"> </td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-left">Alice</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-left">Bob</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-left">Cindy</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-left">Cindy</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The SQLite article gives the algorithm that these kinds of queries take. When
+recursing, two tables are created, the "recursive table" and the "queue". So
+stepping through the code: Initially
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+</pre>
+</div>
+
+<p>
+is stored in the queue, and the recursive table is empty. The part after the
+UNION ALL is the recursion loop.
+</p>
+
+<p>
+The statement:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+</pre>
+</div>
+
+<p>
+does not get re-evaluated. In the first iteration, the recursive table gets
+the top value from the queue and that value becomes the value that
+"under_alice" refers to in the SELECT … FROM … statement.  The org table
+gets joined with ('Alice',0) ON org.boss = 'Alice', and the table returned by
+the SELECT … FROM … statement gets stored at the bottom of the queue,
+resulting in the tables shown in step 1.  The algorithm repeats, step 2, Bob
+is pulled from the queue and put into the recursive table, and the Bob record
+gets joined with the org table.  The result is then stored in the queue.
+This repeats until the queue is empty; which is only possible if the JOIN
+returns NULL, which is does for Fred, Gail, Cindy, and Dave.  Otherwise the
+query would loop infinitely.  This query performs a breadth first search.
+</p>
+
+<ul class="org-ul">
+<li>step 1</li>
+</ul>
+
+<table id="org04b796a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org31ffcff" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 2</li>
+</ul>
+<table id="org1bbabfe" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgc443c59" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 3</li>
+</ul>
+<table id="org33c1f7a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org56165c4" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 4</li>
+</ul>
+<table id="org09e5c94" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org07fb611" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 5</li>
+</ul>
+<table id="org150afd2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org93341aa" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 6</li>
+</ul>
+<table id="org0686be9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org1c45f7b" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 7</li>
+</ul>
+<table id="org9d59fb9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The SQLite article also gives an example of depth first search.
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+  under_alice(<span class="org-keyword">name</span>,<span class="org-keyword">level</span>) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
+      <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2 <span class="org-keyword">DESC</span>
+  )
+<span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
+</pre>
+</div>
+
+<p>
+The ORDER BY number refers to the second column in the select statement. The
+DESC means that elements get taken from the bottom of the queue instead of
+the top; that is, the queue acts as a stack.
+</p>
+
+<ul class="org-ul">
+<li>step 1</li>
+</ul>
+<table id="org2e387a3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgc07a02a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 2</li>
+</ul>
+<table id="org9b164c3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgf37f196" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 3</li>
+</ul>
+<table id="org5a2b60a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org3e55f45" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 4</li>
+</ul>
+<table id="orgc98b1f5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgdec75e5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 5</li>
+</ul>
+<table id="org67f5d84" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table id="org5e98200" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 6</li>
+</ul>
+<table id="orgffb080a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgc60de4a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>step 7</li>
+</ul>
+<table id="org7d20220" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In the previous examples, the order that rows were returned was random.  The
+row order of (Bob,1; Cindy,1) in the first step could have been switched to
+(Cindy,1; Bob,1), as could other returns.  So if it mattered, you could use
+for sub-sorting:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2 <span class="org-keyword">DESC</span>, 1 <span class="org-keyword">DESC</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org914e6cd" class="outline-4">
+<h4 id="org914e6cd">
+<span class="section-number-4">1.1.1</span> Sudoku Example</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+The SQLite article gives the following code that performs sudoku.
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+<span class="org-keyword">input</span>(sud) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79'</span>)
+  ),
+  digits(z, lp) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">VALUES</span>(<span class="org-string">'1'</span>, 1)
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span>
+    <span class="org-builtin">CAST</span>(lp+1 <span class="org-keyword">AS</span> TEXT), lp+1 <span class="org-keyword">FROM</span> digits <span class="org-keyword">WHERE</span> lp&lt;9
+  ),
+  x(s, ind) <span class="org-keyword">AS</span> (
+    <span class="org-keyword">SELECT</span> sud, instr(sud, <span class="org-string">'.'</span>) <span class="org-keyword">FROM</span> <span class="org-keyword">input</span>
+    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+    <span class="org-keyword">SELECT</span>
+      substr(s, 1, ind-1) || z.z || substr(s, ind+1),
+      instr( substr(s, 1, ind-1) || z.z || substr(s, ind+1), <span class="org-string">'.'</span> )
+     <span class="org-keyword">FROM</span> x, digits <span class="org-keyword">AS</span> z
+    <span class="org-keyword">WHERE</span> ind&gt;0
+      <span class="org-keyword">AND</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span> (
+            <span class="org-keyword">SELECT</span> 1
+              <span class="org-keyword">FROM</span> digits <span class="org-keyword">AS</span> lp
+             <span class="org-keyword">WHERE</span> z.z = substr(s, ((ind-1)/9)*9 + lp.lp, 1)
+                <span class="org-keyword">OR</span> z.z = substr(s, ((ind-1)%9) + (lp.lp-1)*9 + 1, 1)
+                <span class="org-keyword">OR</span> z.z = substr(s, (((ind-1)/3) % 3) * 3
+                        + ((ind-1)/27) * 27 + lp.lp
+                        + ((lp.lp-1) / 3) * 6, 1)
+         )
+  ) &lt;9 1="" <span class="org-keyword">all</span>="" <span class="org-keyword">as</span>="" digits="" <span class="org-keyword">from</span>="" ind-1="" ind="" <span class="org-keyword">input</span>="" instr="" s="" <span class="org-keyword">select</span>="" substr="" sud="" <span class="org-keyword">union</span>="" <span class="org-keyword">where</span>="" x="" z.z="" z=""&gt;
+<span class="org-keyword">SELECT</span> s <span class="org-keyword">FROM</span> x <span class="org-keyword">WHERE</span> ind=0;
+</pre>
+</div>
+
+<p>
+There are a few comments on this code that I would like to make. Every time
+one of these functions are called; input(), digits(), and x(), they return
+the same value. Also the code
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite">substr(s, 1, ind-1) || z.z || substr(s, ind+1)
+</pre>
+</div>
+
+<p>
+is repeated once and digits() is called twice. Since the result is not
+changed, I assume that the SQLite compiler caches the result and hopefully
+it is smart enough to recognize repeat statements and cache the first
+evaluation and skip the second evaluation. I think this is one of the
+problems with SQL, as far as I know, there are no variables or nested WITH
+statements.  You might be able to use INSERT, UPDATE, and DELETE on
+referenced tables to pass data between CTE calls and other queries.
+</p>
+
+<p>
+Another thing to note, in the example given in the article, there are
+references to the tables "z" and "lp" that do not make sense because a
+specific column is needed, which turns out to be "z.z" and "lp.lp".  I
+assume that this is short hand.  I made those changes in the code shown
+here.
+</p>
+</div>
+</div>
+<div id="outline-container-org99139fa" class="outline-4">
+<h4 id="org99139fa">
+<span class="section-number-4">1.1.2</span> Memoization Example</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Looking through the SQLite syntax diagrams, it appears that CTEs can only
+perform select statements; however, you can use external tables to cache
+results. Here is an example that computes the Fibonacci sequence. Given the
+following table and starting data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Fibonacci</span> (
+  <span class="org-keyword">number</span> <span class="org-type">INTEGER</span> <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>,
+  fibo <span class="org-type">INTEGER</span>
+) <span class="org-keyword">WITHOUT</span> ROWID;
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(0,0);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(1,1);
+</pre>
+</div>
+<p>
+This code will compute the next number in the sequence, store it, and return
+the sequence. Repeated calls will add succeeding values to the table.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> next_fibonacci(<span class="org-keyword">number</span>, fibo) <span class="org-keyword">AS</span> (
+<span class="org-comment">-- compute the next Fibonacci number in the sequence</span>
+    <span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) + 1, <span class="org-builtin">SUM</span>(fibo)
+    <span class="org-keyword">FROM</span> Fibonacci
+    <span class="org-keyword">WHERE</span>
+    <span class="org-comment">-- Get only the last two records </span>
+    Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) <span class="org-keyword">FROM</span> Fibonacci)
+    <span class="org-keyword">OR</span> Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) - 1 <span class="org-keyword">FROM</span> Fibonacci)
+)
+
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Fibonacci
+<span class="org-keyword">SELECT</span> <span class="org-keyword">number</span>, fibo <span class="org-keyword">FROM</span> next_fibonacci; 
+<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> Fibonacci;
+</pre>
+</div>
+<p>
+Getting the Nth term, would require repeatedly calling this WITH … INSERT
+statement N times, since recursive CTEs cannot perform insertion and only
+the first INSERT is scoped to the WITH statement.  You cannot get an
+arbitrary Nth value, however. If you add another INSERT statement after the
+first one, it will not see the WITH statement.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org01b044f" class="outline-3">
+<h3 id="org01b044f">
+<span class="section-number-3">1.2</span> Example Situation</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Aho and Ullman give the example of finding whether one can take flights to
+get from one airport to another. Direct and one-stop flights are possible to
+find using relational algebra; however, more than one stop requires looping
+or recursion on intermediate output until a steady state is reached.
+</p>
+
+<p>
+Given the following table of flights, where "source" is the flight's starting
+airport, "dest" is the destination airport, "departs" is the departure time,
+and "arrives" is the arrival time, each flight represents a node on a graph.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-left">
+
+<col class="org-left">
+
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">id</th>
+<th scope="col" class="org-left">source</th>
+<th scope="col" class="org-left">dest</th>
+<th scope="col" class="org-right">departs</th>
+<th scope="col" class="org-right">arrives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-left">A</td>
+<td class="org-left">B</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">A</td>
+<td class="org-left">B</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">B</td>
+<td class="org-left">C</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">B</td>
+<td class="org-left">C</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">C</td>
+<td class="org-left">D</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">D</td>
+<td class="org-left">E</td>
+<td class="org-right">5</td>
+<td class="org-right">6</td>
+</tr>
+</tbody>
+</table>
+<p>
+We can get possible one-stop flights by joining the table with itself where
+flights arrive at or before another flight at the same airport. To get
+multi-stop flights, the <a href="https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm">Floyd-Warshall algorithm</a> is used.  The Floyd-Warshall
+alogrithm uses a boolean connection table, true for connected, false for
+unconnected, for each pair of nodes.  The example here, instead, uses a list
+of connections.  A connections is added to the list if there are two
+connections with a common node.  The algorithm uses a triple nested loop that
+iterates through all possible node connections, including connections that
+start and end at the same node. There are N2 number of possible connections,
+N being the number of nodes.  After N3 iterations, any further iterations
+will not affect the output. N times more iterations than there are possible
+connections is necessary to check all connection pairs for new connections
+after ones have been made in the previous iteration. It is possible to short
+circuit the loop if two consecutive loops produce equal output; and if there
+are no connections to begin with, the algorithm can be avoided all together.
+<object type="image/svg+xml" data="sql-transitive-closure/flights.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+
+<p>
+Black arrows in the diagram, represent one-stop connections.  Red and blue
+arrows are found by the Floyd-Warshall alogrithm.  The red arrows are
+computed during the first iteration by looking for pairs of black arrows with
+common nodes.  These are two-stop flights.  The blue arrow is a three stop
+connection that is found after the red arrows are established.  So the
+algorithm looks for red and black arrow pairs with common nodes.
+</p>
+
+<p>
+However, knowing that you can get from one airport to another is not
+necessarily good enough.  You would want to have your flight itinerary.  All
+itineraries can be computed by slightly modifying the Floyd-Warshall
+algorithm.
+</p>
+</div>
+
+<div id="outline-container-orge7328d7" class="outline-4">
+<h4 id="orge7328d7">
+<span class="section-number-4">1.2.1</span> Using Relational Algebra and Python</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+The following Python code uses relational.py and Emacs Org mode.  See my
+previous post for more on that.
+</p>
+<div class="org-src-container">
+<pre class="src src-python">    <span class="org-keyword">import</span> sys
+sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</span>)
+<span class="org-keyword">from</span> relational.relation_org <span class="org-keyword">import</span> RelationOrg
+<span class="org-variable-name">flights</span> = RelationOrg(in_table)
+<span class="org-variable-name">flight_ids</span> = flights.projection(<span class="org-string">"id"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">use Warshall's algorithm to compute indirect connections</span>
+<span class="org-variable-name">flight_num</span> = <span class="org-builtin">len</span>(flights)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add one-stop connections to the connections table</span>
+<span class="org-variable-name">connections</span> = flights.thetajoin(flights.rename({<span class="org-string">"id"</span>:<span class="org-string">"dest_id"</span>,
+                                                <span class="org-string">"source"</span>:<span class="org-string">"source_d"</span>,
+                                                <span class="org-string">"dest"</span>:<span class="org-string">"dest_d"</span>,
+                                                <span class="org-string">"departs"</span>:<span class="org-string">"departs_d"</span>,
+                                                <span class="org-string">"arrives"</span>:<span class="org-string">"arrives_d"</span>}),
+                                <span class="org-string">"dest == source_d and arrives &lt;= departs_d"</span>)\
+                     .projection(<span class="org-string">"id"</span>, <span class="org-string">"dest_id"</span>).rename({<span class="org-string">"id"</span>:<span class="org-string">"source_id"</span>})
+<span class="org-variable-name">connections_org</span> = connections.rename({<span class="org-string">"source_id"</span>: <span class="org-string">"source_id_c"</span>,
+                                      <span class="org-string">"dest_id"</span>: <span class="org-string">"dest_id_c"</span>})
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">store intermediate results, currently only have one-stop flight itineraries</span>
+<span class="org-variable-name">itineraries</span> = connections.thetajoin(connections.projection(<span class="org-string">"source_id"</span>)\
+                                    .rename({<span class="org-string">"source_id"</span>:<span class="org-string">"connection_id"</span>}),
+                                    <span class="org-string">"source_id == connection_id"</span>)
+<span class="org-variable-name">itineraries_org</span> = itineraries.rename({<span class="org-string">"connection_id"</span>:<span class="org-string">"connection_id_n"</span>,
+                                      <span class="org-string">"source_id"</span>:<span class="org-string">"source_id_n"</span>,
+                                      <span class="org-string">"dest_id"</span>:<span class="org-string">"dest_id_n"</span>})
+
+<span class="org-keyword">if</span> <span class="org-builtin">len</span>(connections) &gt; 0:
+    <span class="org-variable-name">i</span> = 0
+    <span class="org-keyword">while</span> i &lt; flight_num:
+        <span class="org-comment-delimiter"># </span><span class="org-comment">find secondary connections and remove known connections from</span>
+        <span class="org-comment-delimiter"># </span><span class="org-comment">new_connections list so as to not insert existing connections,</span>
+        <span class="org-comment-delimiter"># </span><span class="org-comment">SQL might be able to check whether a tuple exists when doing the</span>
+        <span class="org-comment-delimiter"># </span><span class="org-comment">theta join</span>
+        <span class="org-variable-name">connections</span> = connections.thetajoin(connections_org,
+                                            <span class="org-string">"dest_id == source_id_c"</span>)\
+                                 .projection(<span class="org-string">"source_id"</span>, <span class="org-string">"dest_id_c"</span>)\
+                                 .rename({<span class="org-string">"dest_id_c"</span>:<span class="org-string">"dest_id"</span>})\
+                                 .union(connections)
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">add connections to the itineraries table</span>
+        <span class="org-variable-name">itineraries</span> = itineraries.thetajoin(itineraries_org,\
+                                            <span class="org-string">"dest_id == source_id_n"</span>)\
+                                 .projection(<span class="org-string">"dest_id"</span>, <span class="org-string">"dest_id_n"</span>, <span class="org-string">"connection_id"</span>)\
+     .rename({<span class="org-string">"dest_id"</span>: <span class="org-string">"source_id"</span>, <span class="org-string">"dest_id_n"</span>:<span class="org-string">"dest_id"</span>})\
+                                 .union(itineraries)
+        <span class="org-variable-name">i</span> += 1
+
+<span class="org-variable-name">result</span> = flights.product(flights.rename({<span class="org-string">"id"</span>:<span class="org-string">"dest_id"</span>,
+                                         <span class="org-string">"source"</span>:<span class="org-string">"source_d"</span>,
+                                         <span class="org-string">"dest"</span>:<span class="org-string">"dest_d"</span>,
+                                         <span class="org-string">"departs"</span>:<span class="org-string">"departs_d"</span>,
+                                         <span class="org-string">"arrives"</span>:<span class="org-string">"arrives_d"</span>}))\
+         .rename({<span class="org-string">"id"</span>:<span class="org-string">"source_id"</span>})\
+         .semijoin_left(connections)\
+         .projection(<span class="org-string">"source_id"</span>, <span class="org-string">"dest_id"</span>, <span class="org-string">"source"</span>, <span class="org-string">"dest_d"</span>, <span class="org-string">"departs"</span>, <span class="org-string">"arrives_d"</span>)
+<span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(result))
+</pre>
+</div>
+<p>
+"in_table" refers to the before mentioned flights table. Initially, the
+"connections" variable is a two-column, many-to-many relation table
+describing possible one-stop connections, "source_id" and "dest_id". The
+"itineraries" variable adds an extra column, "connection_id", to the
+"connections" table, that being the starting connection. The code only needs
+to iterate N times because the two inner loops are accomplished by the
+thetajoin. Renaming is necessary because thetajoin does not allow for
+duplicate column names. Intermediate results are aggregated into the
+"connections" and "itineraries" variables by union the known connections
+with the new found connections. The only difference between "connections"
+and "itineraries" is that the "source_id" is projected in the former, while
+the "dest_id" is projected in the later. The "result" variable shows the
+flight information associated with the entries in the connections table. It
+is created by computing all possible connections between nodes and keeping
+only those connections that exist in the connections table, joining on
+"dest_id" and "source_id".
+</p>
+</div>
+</div>
+
+<div id="outline-container-org991be95" class="outline-4">
+<h4 id="org991be95">
+<span class="section-number-4">1.2.2</span> Using SQLite and Recursive Common Table Expressions</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Given example table
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Flights</span> (
+       id <span class="org-keyword">NUMBER</span>,
+       <span class="org-keyword">source</span> TEXT(2),
+       dest TEXT(2),
+       departs <span class="org-keyword">NUMBER</span>,
+       arrives <span class="org-keyword">NUMBER</span>,
+       <span class="org-keyword">CONSTRAINT</span> FlightsPK <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span> (id)
+);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">BEGIN</span> <span class="org-keyword">TRANSACTION</span>;
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (0, <span class="org-string">'A'</span>, <span class="org-string">'B'</span>, 0, 1);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (1, <span class="org-string">'A'</span>, <span class="org-string">'B'</span>, 3, 4);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (2, <span class="org-string">'B'</span>, <span class="org-string">'C'</span>, 0, 1);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (3, <span class="org-string">'B'</span>, <span class="org-string">'C'</span>, 3, 4);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (4, <span class="org-string">'C'</span>, <span class="org-string">'D'</span>, 4, 5);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (5, <span class="org-string">'D'</span>, <span class="org-string">'E'</span>, 5, 6);
+<span class="org-keyword">COMMIT</span>;
+</pre>
+</div>
+
+<p>
+the transitive closure and itineraries can be generated by using recursive
+CTEs. The following code returns the transitive closure.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+connections(source_id, dest_id) <span class="org-keyword">AS</span> (
+                   <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+                   <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
+                   <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
+),
+
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
+),
+
+trans_closure(source_id, dest_id) <span class="org-keyword">AS</span> (
+                   <span class="org-keyword">SELECT</span> source_id, dest_id <span class="org-keyword">FROM</span> connections
+                   <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+                   <span class="org-keyword">SELECT</span> A.source_id, B.dest_id
+                   <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
+                   <span class="org-keyword">ON</span> A.dest_id = B.source_id
+                   <span class="org-keyword">LIMIT</span> (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+)
+<span class="org-keyword">SELECT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
+</pre>
+</div>
+
+<p>
+connections function is just a regular CTE that results in a static table of
+one-stop connections. The output table's column names are "source_id" and
+"dest_id" when they are referenced, not S.id and D.id. The trans_closure CTE
+is recursive. The SELECT statement before the UNION ALL creates a table that
+the recursive operation, the code after the UNION ALL, iterates through. The
+table "connections" has the value
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">source_id</th>
+<th scope="col" class="org-right">dest_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+</table>
+<p>
+The table is copied into a queue. One of the rows is extracted from the queue
+and inserted into trans_closure's table. The trans_closure table is joined
+with the connections table ON A.dest_id = B.source_id and the result is added
+to the queue.
+</p>
+
+<p>
+A list of all itineraries can be produced by:
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+itineraries(id, source_id, connection_id) <span class="org-keyword">AS</span>
+(
+        <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, S.id, D.id 
+        <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
+        <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
+),
+
+sub_graphs(id, source_id, connection_id) <span class="org-keyword">AS</span>
+(
+        <span class="org-keyword">SELECT</span> id, source_id, connection_id <span class="org-keyword">FROM</span> itineraries
+        <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+        <span class="org-keyword">SELECT</span> A.id, A.connection_id, B.connection_id
+        <span class="org-keyword">FROM</span> sub_graphs <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> itineraries <span class="org-keyword">AS</span> B
+        <span class="org-keyword">ON</span> A.connection_id = B.source_id
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> id, source_id, connection_id <span class="org-keyword">FROM</span> sub_graphs <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2,3;
+</pre>
+</div>
+<p>
+There are only minor differences between this code and the transitive closure
+query.  "itineraries()" is like "connections()", except the first node is
+used to group itinerary parts together.  In the recursive query, the JOIN ON
+is the same, dest_id is renamed connection_id (This was done to be consistent
+with the relational algebra example, and it was done there to avoid naming
+collisions.), and the fields returned is changed.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org26850e3" class="outline-3">
+<h3 id="org26850e3">
+<span class="section-number-3">1.3</span> Cyclic Graphs</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+If the Flights table were cyclic, the former queries would never stop. There
+are two ways we could modify the queries. Using a limit:
+</p>
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+connections(source_id, dest_id) <span class="org-keyword">AS</span> (
+                   <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+                   <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
+                   <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
+),
+
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
+),
+
+
+trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
+                   <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
+                   <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+                   <span class="org-keyword">SELECT</span> itter + 1, A.source_id, B.dest_id
+                   <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
+                   <span class="org-keyword">ON</span> A.dest_id = B.source_id
+                   <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+                   <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
+</pre>
+</div>
+
+<p>
+Or using an iterator:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+connections(source_id, dest_id) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+     <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
+     <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
+),
+
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
+),
+
+
+trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> itter + 1, A.source_id, B.dest_id
+     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
+     <span class="org-keyword">ON</span> A.dest_id = B.source_id
+     <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
+</pre>
+</div>
+<p>
+Unlike the relational algebra example, where the entire intermediate result
+was joined with the entire original table, this query is joining one of the
+intermediate results with the original table, so N2 loops are needed. If
+SQLite uses a signed 64-bit integer for the iterator or LIMIT, then the table
+must be no longer than 3,037,000,499 entries. The second version has the
+advantage of being order-able.  The ORDER BY clause does not seem to work
+with LIMIT clause when there is no numeric field.  The SQLite documentation
+says that ascending is the default but that that may change.  ORDER BY
+requires a field, so you cannot say FIFO or FILO without referring to one of
+the columns.
+</p>
+
+<p>
+A list of all itineraries can be produced by:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span> 
+
+connections(source_id, dest_id) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+     <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
+     <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
+),
+
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
+),
+
+
+trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> itter + 1, A.source_id, B.dest_id
+     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
+     <span class="org-keyword">ON</span> A.dest_id = B.source_id
+     <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org50fb68e" class="outline-4">
+<h4 id="org50fb68e">
+<span class="section-number-4">1.3.1</span> Another Example</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Given the table
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Circular</span> (
+       <span class="org-keyword">source</span> TEXT(1),
+       dest TEXT(1),
+       <span class="org-keyword">CONSTRAINT</span> CircularPK <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span> (<span class="org-keyword">source</span>, dest)
+);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Circular(<span class="org-keyword">source</span>, dest) <span class="org-keyword">VALUES</span> (<span class="org-string">'A'</span>, <span class="org-string">'B'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Circular(<span class="org-keyword">source</span>, dest) <span class="org-keyword">VALUES</span> (<span class="org-string">'B'</span>, <span class="org-string">'C'</span>);
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Circular(<span class="org-keyword">source</span>, dest) <span class="org-keyword">VALUES</span> (<span class="org-string">'C'</span>, <span class="org-string">'A'</span>);
+</pre>
+</div>
+
+<p>
+The query
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Circular
+),
+
+trans_closure(<span class="org-keyword">source</span>, dest) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> Circular
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> A.<span class="org-keyword">source</span>, B.dest
+     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> Circular <span class="org-keyword">AS</span> B
+     <span class="org-keyword">ON</span> A.dest = B.<span class="org-keyword">source</span>
+     <span class="org-keyword">LIMIT</span> (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;    
+</pre>
+</div>
+
+<p>
+will produce correct results. However, if an
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>    
+</pre>
+</div>
+
+<p>
+clause is added before the LIMIT clause (after will give a syntax error), an
+incorrect result is produced. The query:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+iterations(x) <span class="org-keyword">AS</span> (
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Circular
+),
+
+trans_closure(itter, <span class="org-keyword">source</span>, dest) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> 0, <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> Circular
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> itter + 1, A.<span class="org-keyword">source</span>, B.dest
+     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> Circular <span class="org-keyword">AS</span> B
+     <span class="org-keyword">ON</span> A.dest = B.<span class="org-keyword">source</span>
+     <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
+)
+<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
+</pre>
+</div>
+<p>
+produces the correct result and can have an order by clause.  Order might be
+necessary for transitive closure of cyclic graphs.  Otherwise an
+undiscovered connection might get left at the queue's top, while loops get
+repeatedly stored at the bottom and popped off.
+</p>
+</div>
+</div>
+</div>
+</article>
+</main><footer><div id="to-top-alt" class="mobile nav menu-btn"><a href="#">Back to Top</a></div></footer>
+</body>
+</html>

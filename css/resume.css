@@ -1,0 +1,109 @@
+@font-face {
+    font-family: "CMU";
+    src: url("./fonts/Serif/cmunrm.woff")format("woff");
+}
+
+h1, h2, h3, h4, h5, h6, ul, hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+main h1, main h2 {
+    font-variant: small-caps;
+    text-align: center;
+    width: 100%;
+}
+
+@media screen {
+    article ul, article li, article p {
+	margin-left: 0;
+	margin-left: 0;
+	padding-left: 0;
+	padding-left: 0;
+    }
+    
+    main article {
+	margin-right: auto;
+	margin-left: auto;
+    }
+
+    main h1 {
+	padding-top: 1em;
+	padding-bottom: 1em;
+    }
+
+    article ul, article li {
+	width: 100%;
+    }
+    
+    article li {
+	padding-bottom: 1rem;
+    }
+    
+    ul#memberships_awards {
+	text-align:center;
+	margin-top: 1em;
+    }
+    
+    article li:last-child {
+	padding-bottom: 0;
+    }
+    main hr {
+	width: 80%;
+	text-align: center;
+    }
+}
+
+@media print {
+    @page {
+	margin-top: 1in;
+    }
+    h1, h2, h3, h4, h5, h6, ul, hr {
+	page-break-after: avoid;
+    }
+    p, li {
+	font-size: 12px;
+    }
+    a {
+	color: black;
+	text-decoration: none;
+    }
+    hr {
+	display: none;
+    }
+    li:first-child {
+	page-break-before: avoid;
+    }
+    
+    li {
+	page-break-inside: avoid;
+    }
+
+    p {
+	margin-left: auto;
+	margin-right: auto;
+    }
+}
+
+address {
+    width: 100%;
+    text-align: center;
+}
+
+@supports (display: grid) {
+    address {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: auto;
+    }
+    address ul#physical-address {
+	grid-column-start: 1;
+	grid-column-end: 2;
+    }
+    
+    address ul#web-address {
+	grid-column-start: 2;
+	grid-column-end: 3;
+    }
+}
+

@@ -1,0 +1,385 @@
+/* screen dimensions */
+/* mobile screen: (max-width: 899px), (max-height: 449px) */
+/* bigger than mobile (min-width: 900px), (min-height: 450px) */
+/* large screen: (min-width: 1200px) */
+
+/* class nav: all navigation bar content */
+
+/* class menu-btn: all navigation bar content except the logo */
+
+@font-face {
+    font-family: "GenoaItalic";
+    src: url("../fonts/genoa_italic_filtered.woff")format("woff");
+}
+
+:root {
+    --logo-height: 190px;
+    --nav-width: 200px;
+    --nav-gutter: 1rem;
+    --min-btn-ht: 2rem;
+    --max-btn-ht: 170px;
+    --logo-margin: 0px;
+    --desktop-content-max-x: calc(100vw - var(--nav-width) - var(--nav-gutter));
+    --max-chars-per-line: 80ch;
+
+    --default-font-size: 1.5rem;
+    
+    --main-color: #F5E8C8;
+    --main-color-trasp1: #EBDDB777;
+    --main-color-trasp2: #EBCE8477;
+    --main-color-opacity: calc(119.0/255.0);
+    --nav-background: black;
+    --cloud-shadow-high: -5px -5px 3px #fbf9e550, 3px 3px 3px #ebce8480, -3px -3px 3px #ebce8460;
+    --cloud-shadow-low: 0px 0px 3px #EBA58480, 4px 3px 3px #816A4B80;
+    --cloud-shadow: -5px -5px 3px #fbf9e550, 3px 3px 3px #ebce8480, -3px -3px 3px #ebce8460, 0px 0px 3px #EBA58480, 4px 3px 3px #816A4B80;
+    --highlight-shadow: 0px 0px 5px #eedd82;
+    --accent-color1: #611D1F;
+    --accent-color2: #98585A;
+    --accent-color3: #a52a2a;
+    --highlight-color1: green;
+    --highlight-color2: #0080FF;
+    --border-hard: 1px solid #ccc;
+    --border-soft: 1px dotted #ccc;
+}
+
+.text-browser {
+    display: none;
+}
+ul {
+    list-style-type: none;
+}
+
+/* LaTeX formatting adapted from http://tess.oconnor.cx/2007/08/tex-poshlet */
+span.latex-over sub, span.latex-over sup {
+    text-transform: uppercase;
+}
+
+span.latex-over sub {
+    vertical-align: -0.5ex;
+    margin-left: -0.1667em;
+    margin-right: -0.125em;
+}
+
+span.latex-over, span.latex-over sub {
+    font-size: 1em;
+}
+
+span.latex-over sup {
+    font-size: 0.7em;
+    vertical-align: 0.3em;
+    margin-left: -0.45em;
+    margin-right: -0.15em;
+}
+
+span.em-dash::after {
+    content: "–";
+}
+
+span.bar-dash {
+    visibility: hidden;
+}
+
+span.bar-dash::before {
+    content: "―";
+    visibility: visible;
+    position: relative;
+    display: inline-block;
+    margin-right: -0.8ex;
+}
+
+/* span.acute-e { */
+/*     visibility: hidden; */
+/* } */
+
+/* span.acute-e::before { */
+/*     content: "è"; */
+/* } */
+
+@media screen {   
+    body {
+	background-image: url("../graphics/background.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: left;
+	padding: 0px;
+	margin: 0px;
+    }
+    
+    /* default link style */
+    main a, aside a {
+	text-shadow:  var(--cloud-shadow);
+	color: var(--accent-color1);
+	text-decoration: none;
+    }
+    
+    main a:visited, aside a:visited {
+	color: var(--accent-color2);
+    }
+    main a:hover, aside a:hover {
+	color: var(--accent-color3);
+	text-shadow: var(--highlight-shadow);
+    }
+    
+    /* style main navigation bar */
+    .nav {
+	padding: 0px;
+	margin: 0px;
+	text-decoration: none;
+	background-color: var(--nav-background);
+	color: var(--main-color);
+    }
+    .nav * {
+	color: inherit;
+	text-decoration: none;
+    }
+    .nav a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+    }
+    label.nav {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+    }
+    .menu-btn {
+	font-size: 1.5rem;
+	text-align: center;
+	font-weight: 900;
+	font-family: "Courier New", Courier, monospace;
+    }
+    .menu-btn img {
+	height: 60px;
+    }
+    .nav:hover {
+	filter: opacity(0.5);
+    }
+
+    .nav:active {
+	filter: opacity(0.4);
+    }
+
+    /* logo graphic created with CSS */
+    div#dwhoman-logo {
+	--logo-margin: -8px;
+	text-align: center;
+	font-family: "GenoaItalic", monospace;
+	font-weight: normal;
+	background-color: transparent;
+	width: 100%;
+	background-color: var(--nav-background);
+    }
+    div#dwhoman-logo * {
+	padding: 0px;
+	margin: 0px;
+    }
+    div#dwhoman-logo a {
+	display: block;
+	width: 100%;
+	height: 100%;
+    }
+    div#dwhoman-logo span {
+	position: relative;
+	top: 29px;
+	left: calc(10px + var(--logo-margin));
+	font-size: 80px;
+    }
+
+    div#dwhoman-logo span:first-child {
+	vertical-align: -20px;
+	margin-right: -14px;
+    }
+
+    div#dwhoman-logo span:last-child {
+	vertical-align: -20px;
+	margin-left: -21px;
+    }
+    div#dwhoman-logo a::before {
+	content: '';
+	position: absolute;
+	margin-top: 11px;
+	margin-left: var(--logo-margin);
+	width: 128px;
+	height: 128px;
+	border: solid 10px currentColor;
+	border-radius: 100%;
+    }
+    /* switch between main menu and blog menu */
+    input#expand-blog-menu {
+	display: none;
+    }
+    label#expand-blog-menu-inactive, label#expand-blog-menu-active {
+	cursor: pointer;
+    }
+    input#expand-blog-menu:checked ~ .menu {
+	display: none;
+    }
+
+    input#expand-blog-menu:not(:checked) ~ .blog-menu {
+	display: none;
+    }
+
+    @media (min-width: 1200px) {
+	body > main {
+	    font-size: var(--default-font-size);
+	}
+    }
+
+    @media (min-width: 900px) and (min-height: 450px) {
+	.mobile {
+	    display: none;
+	}
+
+	footer {
+	    display: none;
+	}
+
+	/* 2-column n-row grid */
+	body {
+	    display: grid;
+	    grid-template-columns: var(--nav-width) auto;
+	    grid-column-gap: var(--nav-gutter);
+	}
+
+	body > main {
+	    max-width: var(--desktop-content-max-x);
+	    margin: 0 auto 50vh auto;
+	    grid-column: 2/3;
+	}
+
+	/* position the main menu */
+	header#masthead {
+	    position: fixed;
+	    width: var(--nav-width);
+	    top: 0;
+	    left: 0;
+	    height: 100vh;
+	    grid-column: 1/2;
+	    grid-row: 1/-1;
+	    
+	    display: grid;
+	    grid-gap: 0px;
+	    grid-template: "logo" var(--logo-height) "nav1" minmax(var(--min-btn-ht), var(--max-btn-ht))
+				  "nav2" minmax(var(--min-btn-ht), var(--max-btn-ht))
+				  "nav3" minmax(var(--min-btn-ht), var(--max-btn-ht)) "nav4" minmax(var(--min-btn-ht), var(--max-btn-ht))
+				  "nav5" minmax(var(--min-btn-ht), var(--max-btn-ht)) "nav6" minmax(var(--min-btn-ht), var(--max-btn-ht))
+				  "filler" auto "totop" minmax(var(--min-btn-ht), var(--max-btn-ht));
+	}
+	
+	div#dwhoman-logo {
+	    grid-area: logo;
+	}
+	label#expand-blog-menu-inactive, label#expand-blog-menu-active {
+	    grid-area: nav1;
+	}
+	
+	div#blog-chronologic, div#about-page {
+	    grid-area: nav2;
+	}
+	
+	div#blog-recent, div#resume-page {
+	    grid-area: nav3;
+	}
+	
+	div#blog-categories, div#project-page {
+	    grid-area: nav4;
+	}
+	
+	div#blog-threads, div#following-page {
+	    grid-area: nav5;
+	}
+	
+	div#blog-feed, div#blog-feed-comp {
+	    grid-area: nav6;
+	}
+	
+	div#nav-filler {
+	    grid-area: filler;
+	}
+	
+	div.filler {
+	    background-color: var(--nav-background);
+	}
+	
+	div#to-top {
+	    grid-area: totop;
+	}
+    }
+
+    @media (max-width: 899px), (max-height: 449px) {
+	:root {
+	    --min-btn-ht: 0.5in;
+	}
+	header#masthead div#nav-filler {
+	    display: none;
+	}
+	header#masthead div#to-top {
+	    display: none;
+	}
+
+	header#masthead div#blog-feed-comp {
+	    display: none;
+	}
+	header#masthead .menu-btn {
+	    height: auto;
+	}
+	header#masthead {
+	    display: grid;
+	    grid-gap: 0px;
+	    height: 100vh;
+	    grid-template-rows: minmax(var(--logo-height), 1fr) repeat(auto-fit, minmax(var(--min-btn-ht), 1fr));
+	    grid-template-columns: 100vw;
+	}
+
+	.nav {
+	    filter: opacity(0.5);
+	    grid-column: 1/2;
+	}
+
+	div#dwhoman-logo {
+	    height: var(--logo-height);
+	    height: auto;
+	    grid-row: 1/2;
+	}
+	label#expand-blog-menu-inactive, label#expand-blog-menu-active {
+	    grid-row: 2/3;
+	}
+	div#blog-chronologic, div#about-page {
+	    grid-row: 3/4;
+	}
+	div#blog-recent, div#resume-page {
+	    grid-row: 4/5;
+	}
+	div#blog-categories, div#project-page {
+	    grid-row: 5/6;
+	}
+	div#blog-threads, div#following-page {
+	    grid-row: 6/7;
+	}
+	div#blog-feed {
+	    grid-row: 7/8;
+	}
+    }
+    @media (max-width: 899px) {
+	ul > li, li > ul {
+	    margin-left: 0px;
+	    padding-left: 0px;
+	}
+	
+    }
+    @media (max-height: 799px) {
+	.menu-btn img {
+	    display: none;
+	}
+    }
+}
+
+@media print {
+    header, header *, footer, footer * {
+	display: none;
+    }
+}

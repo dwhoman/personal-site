@@ -1,0 +1,31 @@
+div#link-auxiliary {
+    width: 80%;
+}
+
+div#graph-container {
+    width: 100%;
+    overflow: auto;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+svg g#graph0 > polygon {
+    fill: var(--main-color-trasp2);
+    filter: opacity(var(--main-color-opacity));
+}
+
+svg a {
+    fill: var(--accent-color1);
+}
+
+svg a:visited {
+    fill: var(--accent-color2);
+}
+svg a:hover {
+    fill: var(--accent-color3);
+    text-shadow: var(--highlight-shadow);
+}
+
+input#show-links:not(:checked) + ol#thread-links {
+    display: none;
+}
