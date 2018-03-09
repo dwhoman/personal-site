@@ -5,6 +5,18 @@
     text-shadow: var(--cloud-shadow);
 }
 
+div.category:not(.multiple) input {
+    display: none;
+}
+
+div.category:not(.multiple) label {
+    display: none;
+}
+
+div.category.multiple table thead {
+    display:none;
+}
+
 /* hide the last comma in the per-entry category list */
 span.delimiter:last-child {
     display: none;
@@ -105,33 +117,42 @@ div.category td:not(:first-child) {
     /* "September 30 2000" = 17 chars */
     width: 20ch;
 }
-@media (min-width: 900px) and (min-height: 450px) {
-    article h2 {
-	margin-left: 1rem;
-    }
-    div.category {
-	margin-left: 2rem;
-	margin-right: 2rem;
-    }
-}
-@media (max-width: 899px), (max-height: 449px) {
-    body {
-	box-sizing: border-box;
-    }
 
-    main {
-	box-sizing: border-box;
-	margin: 5px;
-	padding: 0;
+@media screen {
+    @supports (-webkit-logical-height: auto) {
+	.nav a {
+	    height: auto;
+	}
     }
     
-    ul#keywords {
-	padding-left: 0px;
+    @media (min-width: 900px) and (min-height: 450px) {
+	article h2 {
+	    margin-left: 1rem;
+	}
+	div.category {
+	margin-left: 2rem;
+	margin-right: 2rem;
+	}
     }
-    article h2 {
-	margin: 0px;
-    }
-    div.category {
-	margin: 0px;
+    @media (max-width: 899px), (max-height: 449px) {
+	body {
+	    box-sizing: border-box;
+	}
+	
+	main {
+	    box-sizing: border-box;
+	    margin: 5px;
+	    padding: 0;
+	}
+	
+	ul#keywords {
+	    padding-left: 0px;
+	}
+	article h2 {
+	    margin: 0px;
+	}
+	div.category {
+	    margin: 0px;
+	}
     }
 }
