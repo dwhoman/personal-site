@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    version="1.1"
+    viewBox="0 0 190 190">
+  <defs>
+    <font-face font-family="GenoaItalic2">
+      <font-face-src>
+	<font-face-uri href="../fonts/genoa_italic_filtered.woff" />
+      </font-face-src>
+    </font-face>
+  </defs>
+  <g>
+    <circle
+        r="69"
+        cy="95"
+        cx="95"
+        style="fill:none;stroke:#f5e8c8;stroke-width:10;" />
+    <text style="fill:#f5e8c8;stroke:none;font-family:'GenoaItalic2',monospace;font-size:80px;">
+      <tspan x="31" y="126">D</tspan>
+      <tspan x="64" y="106">W</tspan>
+      <tspan x="100" y="126">H</tspan>
+    </text>
+  </g>
+</svg>
