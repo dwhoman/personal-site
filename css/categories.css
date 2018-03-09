@@ -5,6 +5,39 @@
     text-shadow: var(--cloud-shadow);
 }
 
+div.category table thead th {
+    font-weight: normal;
+    font-size: var(--default-font-size);
+}
+
+div.category table tbody tr {
+    font-size: var(--default-font-size);
+}
+
+div.category label {
+    font-size: var(--default-font-size);
+}
+
+div.category table thead th:first-child {
+    text-align: left;
+    padding-left: 4rem;
+}
+
+div.category td:not(:first-child) {
+    /* width of date fields */
+    /* "September 30 2000" = 17 chars */
+    width: 20ch;
+}
+
+div.category:not(.multiple) {
+    box-sizing: border-box;
+    width: var(--desktop-content-max-x)%;
+}
+
+div.category:not(.multiple) table {
+    width: 100%;
+}
+
 div.category:not(.multiple) input {
     display: none;
 }
@@ -80,42 +113,37 @@ input.name-sort:not(:checked) ~ label.name-sort, input.publish-sort:not(:checked
 /* Put each table in a grid with the radio buttons. Position the radio buttons
    to serve as table headers */
 
-div.category {
+div.category.multiple {
     display: grid;
     grid-template-columns: 4ch auto 4ch 16ch 4ch 16ch;
     grid-template-rows: auto;
 }
 
-div.category input.name-sort {
+div.category.multiple input.name-sort {
     grid-column: 1/2;
 }
 
-div.category label.name-sort {
+div.category.multiple label.name-sort {
     grid-column: 2/3;
 }
 
-div.category input.publish-sort {
+div.category.multiple input.publish-sort {
     grid-column: 3/4;
 }
 
-div.category label.publish-sort {
+div.category.multiple label.publish-sort {
     grid-column: 4/5;
 }
-div.category input.update-sort {
+div.category.multiple input.update-sort {
     grid-column: 5/6;
 }
 
-div.category label.update-sort {
+div.category.multiple label.update-sort {
     grid-column: 6/7;
 }
 
-div.category table {
+div.category.multiple table {
     grid-column: 1/-1;
-}
-div.category td:not(:first-child) {
-    /* width of date fields */
-    /* "September 30 2000" = 17 chars */
-    width: 20ch;
 }
 
 @media screen {
