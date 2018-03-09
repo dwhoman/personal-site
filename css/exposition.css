@@ -1,16 +1,41 @@
 @media screen {
-    @media (min-width: 900px) and (min-height: 450px) {
+    @media
+    (min-width: 1024) and (max-width: 1279) and (max-resolution: 146dpi)
+    {
 	body > main p, body > main ul, body > main table {
 	    max-width: calc(100vw - var(--nav-width) - 10ch);
 	}
     }
-    @media (min-width: 1200px) {
+    @media
+    (min-width: 8192px),
+    (min-width: 5120px) and (max-width: 8191px) and (max-resolution: 731dpi),
+    (min-width: 4608px) and (max-width: 5119px) and (max-resolution: 658dpi),
+    (min-width: 3840px) and (max-width: 4607px) and (max-resolution: 548dpi),
+    (min-width: 2700px) and (max-width: 3839px) and (max-resolution: 385dpi),
+    (min-width: 2560px) and (max-width: 2669px) and (max-resolution: 365dpi),
+    (min-width: 2160px) and (max-width: 2559px) and (max-resolution: 308dpi),
+    (min-width: 1920px) and (max-width: 2159px) and (max-resolution: 274dpi),
+    (min-width: 1440px) and (max-width: 1919px) and (max-resolution: 205dpi),
+    (min-width: 1280px) and (max-width: 1439px) and (max-resolution: 182dpi)
+    {
 	body > main p, body > main ul, body > main table {
 	    max-width: var(--max-chars-per-line);
 	}
 	
     }
-    @media (max-width: 899px), (max-height: 449px) {
+    @media
+    (max-width: 1023px),
+    (min-width: 1024px) and (max-width: 1279px) and (min-resolution: 147dpi),
+    (min-width: 1280px) and (max-width: 1439px) and (min-resolution: 183dpi),
+    (min-width: 1440px) and (max-width: 1919px) and (min-resolution: 206dpi),
+    (min-width: 1920px) and (max-width: 2159px) and (min-resolution: 275dpi),
+    (min-width: 2160px) and (max-width: 2559px) and (min-resolution: 309dpi),
+    (min-width: 2560px) and (max-width: 2669px) and (min-resolution: 366dpi),
+    (min-width: 2700px) and (max-width: 3839px) and (min-resolution: 386dpi),
+    (min-width: 3840px) and (max-width: 4607px) and (min-resolution: 549dpi),
+    (min-width: 4608px) and (max-width: 5119px) and (min-resolution: 659dpi),
+    (min-width: 5120px) and (max-width: 8191px) and (min-resolution: 732dpi)
+    {
 	main {
 	    max-width: 95vw;
 	    margin-bottom: 0px;

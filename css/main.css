@@ -1,8 +1,3 @@
-/* screen dimensions */
-/* mobile screen: (max-width: 899px), (max-height: 449px) */
-/* bigger than mobile (min-width: 900px), (min-height: 450px) */
-/* large screen: (min-width: 1200px) */
-
 /* class nav: all navigation bar content */
 
 /* class menu-btn: all navigation bar content except the logo */
@@ -16,14 +11,14 @@
     --logo-height: 190px;
     --nav-width: 200px;
     --nav-gutter: 1rem;
-    --min-btn-ht: 2rem;
+    --min-btn-ht: 0.5in;
     --max-btn-ht: 170px;
     --logo-margin: 0px;
     --desktop-content-max-x: calc(100vw - var(--nav-width) - var(--nav-gutter));
     --max-chars-per-line: 80ch;
 
     --default-font-size: 1.5rem;
-    
+
     --main-color: #F5E8C8;
     --main-color-trasp1: #EBDDB777;
     --main-color-trasp2: #EBCE8477;
@@ -95,7 +90,7 @@ span.bar-dash::before {
 /*     content: "è"; */
 /* } */
 
-@media screen {   
+@media screen {
     body {
 	background-image: url("../graphics/background.jpg");
 	background-repeat: no-repeat;
@@ -105,14 +100,14 @@ span.bar-dash::before {
 	padding: 0px;
 	margin: 0px;
     }
-    
+
     /* default link style */
     main a, aside a {
 	text-shadow:  var(--cloud-shadow);
 	color: var(--accent-color1);
 	text-decoration: none;
     }
-    
+
     main a:visited, aside a:visited {
 	color: var(--accent-color2);
     }
@@ -120,7 +115,7 @@ span.bar-dash::before {
 	color: var(--accent-color3);
 	text-shadow: var(--highlight-shadow);
     }
-    
+
     /* style main navigation bar */
     .nav {
 	padding: 0px;
@@ -223,13 +218,27 @@ span.bar-dash::before {
 	display: none;
     }
 
-    @media (min-width: 1200px) {
+
+    @media (min-width: 1280px) and (max-resolution: 182dpi) {
 	body > main {
 	    font-size: var(--default-font-size);
 	}
     }
 
-    @media (min-width: 900px) and (min-height: 450px) {
+    /* destop, tablet */
+    @media
+    (min-width: 8192px),
+    (min-width: 5120px) and (max-width: 8191px) and (max-resolution: 731dpi),
+    (min-width: 4608px) and (max-width: 5119px) and (max-resolution: 658dpi),
+    (min-width: 3840px) and (max-width: 4607px) and (max-resolution: 548dpi),
+    (min-width: 2700px) and (max-width: 3839px) and (max-resolution: 385dpi),
+    (min-width: 2560px) and (max-width: 2669px) and (max-resolution: 365dpi),
+    (min-width: 2160px) and (max-width: 2559px) and (max-resolution: 308dpi),
+    (min-width: 1920px) and (max-width: 2159px) and (max-resolution: 274dpi),
+    (min-width: 1440px) and (max-width: 1919px) and (max-resolution: 205dpi),
+    (min-width: 1280px) and (max-width: 1439px) and (max-resolution: 182dpi),
+    (min-width: 1024px) and (max-width: 1279px) and (max-resolution: 146dpi)
+    {
 	.mobile {
 	    display: none;
 	}
@@ -253,6 +262,7 @@ span.bar-dash::before {
 
 	/* position the main menu */
 	header#masthead {
+	    --min-btn-ht: 2rem;
 	    position: fixed;
 	    width: var(--nav-width);
 	    top: 0;
@@ -260,7 +270,7 @@ span.bar-dash::before {
 	    height: 100vh;
 	    grid-column: 1/2;
 	    grid-row: 1/-1;
-	    
+
 	    display: grid;
 	    grid-gap: 0px;
 	    grid-template: "logo" var(--logo-height) "nav1" minmax(var(--min-btn-ht), var(--max-btn-ht))
@@ -269,51 +279,61 @@ span.bar-dash::before {
 				  "nav5" minmax(var(--min-btn-ht), var(--max-btn-ht)) "nav6" minmax(var(--min-btn-ht), var(--max-btn-ht))
 				  "filler" auto "totop" minmax(var(--min-btn-ht), var(--max-btn-ht));
 	}
-	
+
 	div#dwhoman-logo {
 	    grid-area: logo;
 	}
 	label#expand-blog-menu-inactive, label#expand-blog-menu-active {
 	    grid-area: nav1;
 	}
-	
+
 	div#blog-chronologic, div#about-page {
 	    grid-area: nav2;
 	}
-	
+
 	div#blog-recent, div#resume-page {
 	    grid-area: nav3;
 	}
-	
+
 	div#blog-categories, div#project-page {
 	    grid-area: nav4;
 	}
-	
+
 	div#blog-threads, div#following-page {
 	    grid-area: nav5;
 	}
-	
+
 	div#blog-feed, div#blog-feed-comp {
 	    grid-area: nav6;
 	}
-	
+
 	div#nav-filler {
 	    grid-area: filler;
 	}
-	
+
 	div.filler {
 	    background-color: var(--nav-background);
 	}
-	
+
 	div#to-top {
 	    grid-area: totop;
 	}
     }
 
-    @media (max-width: 899px), (max-height: 449px) {
-	:root {
-	    --min-btn-ht: 0.5in;
-	}
+    /* mobile */
+    @media
+    (max-width: 1023px),
+    (min-width: 1024px) and (max-width: 1279px) and (min-resolution: 147dpi),
+    (min-width: 1280px) and (max-width: 1439px) and (min-resolution: 183dpi),
+    (min-width: 1440px) and (max-width: 1919px) and (min-resolution: 206dpi),
+    (min-width: 1920px) and (max-width: 2159px) and (min-resolution: 275dpi),
+    (min-width: 2160px) and (max-width: 2559px) and (min-resolution: 309dpi),
+    (min-width: 2560px) and (max-width: 2669px) and (min-resolution: 366dpi),
+    (min-width: 2700px) and (max-width: 3839px) and (min-resolution: 386dpi),
+    (min-width: 3840px) and (max-width: 4607px) and (min-resolution: 549dpi),
+    (min-width: 4608px) and (max-width: 5119px) and (min-resolution: 659dpi),
+    (min-width: 5120px) and (max-width: 8191px) and (min-resolution: 732dpi)
+    {
 	header#masthead div#nav-filler {
 	    display: none;
 	}
@@ -363,14 +383,12 @@ span.bar-dash::before {
 	div#blog-feed {
 	    grid-row: 7/8;
 	}
-    }
-    @media (max-width: 899px) {
-	ul > li, li > ul {
+    	ul > li, li > ul {
 	    margin-left: 0px;
 	    padding-left: 0px;
 	}
-	
     }
+
     @media (max-height: 799px) {
 	.menu-btn img {
 	    display: none;
