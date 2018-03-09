@@ -3,7 +3,7 @@
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:x="http://www.w3.org/1999/xhtml"
 		exclude-result-prefixes="x">
-  <xsl:output method="html" />
+  <xsl:output method="html" media-type="text/xml" doctype-public="html" encoding="utf-8" />
   
   <xsl:template match="/">
     <xsl:apply-templates />
@@ -12,7 +12,6 @@
   <xsl:template match="head">
     <head>
       <xsl:apply-templates select="*" />
-      <style><xsl:text>div.category table thead {display:none;}</xsl:text></style>
     </head>
   </xsl:template>
   
@@ -29,6 +28,11 @@
     <xsl:variable name="id" select="preceding-sibling::h2[1]/@id" />
     <div>
       <xsl:copy-of select="@*" />
+      <xsl:if test="count(table/tbody) &gt; 1">
+	<xsl:attribute name="class">
+	  <xsl:text>multiple </xsl:text><xsl:value-of select="@class" />
+	</xsl:attribute>
+      </xsl:if>
       <input title="{$name-sort-tip}" id="{$id}-name-sort" class="name-sort category-sort" name="{$id}-sort" type="radio" checked="checked" />
       <label title="{$name-sort-tip}" for="{$id}-name-sort" class="name-sort category-sort">Article</label>
       <input title="{$publish-sort-tip}" id="{$id}-publish-sort" class="publish-sort category-sort" name="{$id}-sort" type="radio" />
