@@ -1,0 +1,61 @@
+#+TITLE: Why I Use Gentoo
+#+DESCRIPTION: Why I choose to use Gentoo Linux as my primary operating system.
+#+KEYWORDS: linux, gentoo
+#+PROPERTY: header-args :eval no-export
+
+#+DATE: [2018-03-16 Fri]
+
+* Why I Use Gentoo
+  I use Gentoo Linux as my primary operating system. Gentoo Linux is a
+  source based GNU/Linux distribution, which means that you must compile the
+  source code for your specific architecture.  Gentoo has long installation
+  and upgrade times; but, despite that, there are a number of reasons why
+  you might want to use Gentoo.
+
+** Version Slots
+   Gentoo has a [[https://devmanual.gentoo.org/general-concepts/slotting/][slotting system]], making it easy to switch between package
+   versions, such as between PHP 5 and 7.
+
+** Package Manager
+   Gentoo's package manager, Portage, plus a number of accompanying tools, such
+   as ~eix~, ~equery~, ~e-file~, and ~layman~, make it easy to manage packages,
+   search for them, and add third party repositories.
+
+** Rolling Release Done Properly
+   I also occasionally use Arch Linux, which also uses a rolling release model,
+   but it is a binary distribution.  When installing a program in Arch, you are
+   forced to first upgrade because the package version that is compatible with
+   your setup no longer exists.  In fixed release GNU/Linux distributions,
+   forced upgrades may still be required, for the same reason.  In Gentoo, the
+   source code is pulled from upstream; so, as long as the source exists, you
+   can install your desired program.
+
+** Choice and Optimization
+   Gentoo typically gives you choices about which major versions of a package
+   that you want installed. There are sometimes incompatibilities that occur
+   between packages, but if you really need a specific version of some code to
+   run a particular program, you might be better off creating a Docker
+   container. Gentoo also allows you to control the compiler flags and configure
+   options used when building a program.  Gentoo is great for low power devices,
+   so long as you can cross-compile it.  I ran Gentoo on an EeePC 1000HE for a
+   number of years and would upgrade by imaging the hard drive and upgrading the
+   image on my desktop in a ~linux32~, loop device, ~chroot~ environment.
+   Initially when I got the computer, I installed EeeBuntu, but the Unity
+   interface was slow and cumbersome.  Installing Gentoo, which admittedly took
+   a few days, ran much faster. Upgrade times can often be sped up by farming
+   out the compilation; although, some programs will fail to compile when
+   distributed.
+
+** OpenRC
+   Gentoo gives you a choice between OpenRC and the more popular Systemd for
+   system initialization.  I prefer most aspects of OpenRC over
+   Systemd. Systemd's integrated logging is convenient, but its conveniences
+   stop there.  OpenRC does not do logging.  You have a choice of which logging
+   system to use.  OpenRC's user interface is strait foreword and not overly
+   verbose. I have not used both, extensively enough, to really form a good
+   opinion as to which is better; but as a user, my preference is OpenRC.
+
+** Other User Testimonials
+   If you want another user's experience, Randal Schwartz and Aaron Newcomb, in
+   their FLOSS Weekly [[https://twit.tv/shows/floss-weekly/episodes/212][show]], conducted an interview with Jeff Horelick about
+   Gentoo.

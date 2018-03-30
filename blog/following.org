@@ -1,0 +1,119 @@
+#+TITLE: Following
+#+DESCRIPTION: Sites, groups, and projects that i follow.
+
+* Sites, Groups, and Projects That I Follow
+  :PROPERTIES:
+  :UNNUMBERED: t
+  :END:
+  This is an annotated list of sites I frequent or programs that I
+  enjoying using and would like to promote.
+** Programs
+*** [[https://gentoo.org/][Gentoo Linux]]
+    I use Gentoo Linux as my primary operating system. Gentoo Linux is a source
+    based, rolling release GNU/Linux distribution. It is highly customizable,
+    and has a superb package manager and initialization system.
+*** [[https://suckless.org/][Suckless DWM]]
+    Since early 2017, the D Window Manager has been my primary window manager.
+    It is primarily a tiling window manager, but it also has a floating window
+    mode.  I remapped the keybindings, added some functions for moving between
+    desktops using the arrow keys and mouse, and limited dmenu to only GUI
+    programs.
+      
+*** [[https://www.gnu.org/software/emacs/][GNU Emacs]]
+    GNU Emacs is my editor of choice. I use it for all my coding and almost
+    all of my authoring needs.  Emacs is highly extensible and adaptable with
+    its own domain specific Lisp programming language.
+
+** Programming/Emacs
+*** [[http://sachachua.com][Sacha Chua]]
+    Sacha Chua blogs and conducts interviews about Emacs.  You can view the
+    interviews on her [[https://www.youtube.com/user/sachactube/videos][YouTube channel]].
+
+*** [[http://nullprogram.com/][Chris Wellons]]
+    Chis Wellons writes extensively on Emacs and programming in Emacs Lisp and
+    C.
+
+*** [[http://xahlee.org/][Xah Lee]]
+    Xah Lee writes on a wide range of topics, including Emacs, keyboarding
+    ergonomics, and a variety of programming languages.
+
+*** [[https://www.cs.uaf.edu/~olawlor/][Dr. Orion Lawlor]]
+    Prof. Lawlow is a former professor of mine.  His lecture notes are
+    published online and cover high performance C, C++, and assembly
+    programming as well as computer graphics.
+
+** Web Design
+*** [[http://labs.jensimmons.com/][Jen Simmons]]
+    Jen Simmons is a web developer who, on her [[https://www.youtube.com/channel/UC7TizprGknbDalbHplROtag/][YouTube channel]], produces videos
+    on newer CSS features.
+
+*** [[https://www.youtube.com/channel/UCbwXnUipZsLfUckBPsC7Jog][Online Tutorials]]
+    Online Tutorials is a YouTube channel showing how to achieve a lot of
+    impressive effects in CSS.
+
+*** [[https://css-tricks.com/][CSS Tricks]]
+    CSS Tricks is a blog on CSS that I often turn to.  My site's general layout
+    is inspired by the CSS Tricks site.
+      
+** Health
+*** [[https://www.marksdailyapple.com/][Mark's Daily Apple]] [[https://www.primalblueprint.com/][(The Primal Blueprint)]]
+    I try to follow ancestral diet principles.  Mark Sission's, Mark's Daily
+    Apple, introduced me to these dietary and healthy living principles.  Since
+    I started following these principles in 2011, I have lost six inches off my
+    waistline and kept it off.
+
+*** [[http://drcate.com/][Dr. Cate Shanahan]]
+    Dr. Shanahan is a physician with training in genetics and biochemistry.  She
+    is a frequent guest on the Primal Blueprint [[http://blog.primalblueprint.com/][netcast]], and I find those
+    interviews most enlightening as she shares her knowledge of genetic and
+    biochemistry research.  I also recommend her book, Deep Nutrition. The first
+    few chapters might strike some as bizarre because of the focus on beauty,
+    genetics, epigenetics, and second sibling syndrome (where a pregnant mother
+    has not fully recovered from her previous pregnancy, causing nutritional
+    deprivation to the fetus).  The broader point is that what we eat affects us
+    and our progeny on an epigenetic level, and that beauty and health are
+    biologically linked.
+
+*** [[http://fatburningman.com/][Abel James]]
+    Abel James, creator of the Fat Burning Man, conducts a netcast featuring
+    experts in the field, which I often listen to.
+
+*** [[https://www.thepaleomom.com/][Dr. Sarah Ballantyne]]
+    Dr. Ballantyne is a medical biophysicist who converses on nutrition topics,
+    with co-host Stacy Toth, on [[https://www.thepaleomom.com/the-paleo-view/][The Paleo View]], offering both technical and
+    practical information on health and nutrition.
+
+** Ethics/Economics/Philosophy/History
+*** [[https://tomwoods.com/][Tom Woods Show]]
+    The Tom Woods Show is a netcast hosted by historian Dr. Tom Woods.  It
+    covers topics both current and historical from a Libertarian
+    perspective. This netcast also lead me to the Paleo diet, after his first
+    interview with Mark Sission.
+      
+*** [[https://mises.org/][Mises Institute]]
+    The Mises Institute is the premier center of Libertarian and Austrian
+    economic thought. It has thousands of articles and hundreds of quality
+    books, many seminal works, on Libertarian philosophy and Austrian economics.
+
+*** [[http://ronpaulinstitute.org/][Ron Paul]]
+    Ron Paul's 2008 presidential campaign is what lead me to Libertarianism
+    and Austrian Economics. He does daily webcasts and interviews on his
+    [[https://www.youtube.com/channel/UCkJ1N-7g9Q6n7KnriGit-Ig][Liberty Report]].
+
+*** [[http://www.stephankinsella.com/][Stephan Kinsella]]
+    Stephan Kinsella is a patent attorney who has written and spoken extensively
+    on intellectual property law. I agree with him that intellectual property is
+    a legal fiction and that it violates people's claims to real, tangible
+    property.
+      
+*** [[https://www.youtube.com/user/jsonmez][John Sonmez]]
+    John Sonmez is a life, health, and programming coach, filling the
+    intersection between programming and Soft Skills. He has daily netcasts
+    and founded the [[https://simpleprogrammer.com/][Simple Programmer]].
+
+*** [[http://partiallyexaminedlife.com/][Partially Examined Life]]
+    The Partially Examined Life is a netcast discussing philosophical
+    readings.  I was active in philosophy club/Socratic society at university,
+    as well as taking a number of philosophy classes as would satisfy my
+    degree's core requirements. Post university, this has served as a source
+    of in-depth philosophical thought and discussion.

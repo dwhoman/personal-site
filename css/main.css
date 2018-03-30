@@ -32,7 +32,9 @@
     --accent-color2: #98585A;
     --accent-color3: #a52a2a;
     --highlight-color1: green;
+    --highlight-color1-complement: #800000;
     --highlight-color2: #0080FF;
+    --highlight-color2-complement: #FFB861;
     --border-hard: 1px solid #ccc;
     --border-soft: 1px dotted #ccc;
 }
@@ -42,6 +44,10 @@
 }
 ul {
     list-style-type: none;
+}
+
+h5, h6 {
+    font-size: 1em;
 }
 
 /* LaTeX formatting adapted from http://tess.oconnor.cx/2007/08/tex-poshlet */
@@ -162,7 +168,7 @@ span.bar-dash::before {
     div#dwhoman-logo {
 	--logo-margin: -8px;
 	text-align: center;
-	font-family: "GenoaItalic", monospace;
+	font-family: "GenoaItalic", Courier, monospace;
 	font-weight: normal;
 	background-color: transparent;
 	width: 100%;

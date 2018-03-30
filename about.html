@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <link rel="alternate" type="application/atom+xml" href="/feed.atom">
 <link rel="shortcut icon" href="./graphics/logo3.svg">
+<link rel="preload" href="./fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
 <title>About</title>
-<meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="./css/main.css">
 <link rel="stylesheet" type="text/css" href="css/exposition.css">
+<link rel="stylesheet" type="text/css" href="css/blog.css">
 <link rel="stylesheet" type="text/css" href="css/about.css">
 </head>
 <body>
@@ -20,10 +21,134 @@
 <div id="about-page" class="nav menu menu-btn"><a href="./about.html"><span>About</span><img src="./graphics/info.svg" alt=""></a></div>
 <div id="resume-page" class="nav menu menu-btn"><a href="./resume.html"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="./graphics/noun_591006_cc.svg" alt=""></a></div>
 <div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman"><span>Projects</span><img src="./graphics/Git-logo.svg" alt=""></a></div>
-<div id="following-page" class="menu filler"></div>
+<div id="following-page" class="menu nav menu-btn"><a href="./blog/following.html"><span>Following</span><img src="./graphics/noun_541507_cc.svg" alt=""></a></div>
 <div id="blog-feed-comp" class="filler menu"></div>
 <div id="nav-filler" class="filler"></div>
 <div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="./graphics/to_top.svg" alt=""></a></div></header><main>
+      <h1>About the Blog</h1>
+      <p>I created this blog to share my insights about programming, web
+      development, and programs I use, but this blog is not limited to just
+      those topics.</p>
+      <p>
+      The particular programming languages of interest to me are C, C++,
+      JavaScript, SQL, Emacs Lisp, Scheme, Python, and the shell.
+      </p>
+      <!-- explain what they are and why I would want to write about them -->
+      <dl>
+	<dt>
+<a href="https://en.wikipedia.org/wiki/C_(programming_language)">C</a> and <a href="https://en.wikipedia.org/wiki/C%2B%2B">C++</a>
+</dt>
+	<dd>
+	  C is an <a href="https://en.wikipedia.org/wiki/Imperative_programming">imperative
+	  programming</a> language that compiles to binary code. It is praised
+	  for its speed and simplicity, and is the lingua franca of
+	  programming. C++ is one of a number of "successors" to C and is the
+	  most common among them.  Modern C++ is basically C, plus <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object
+	  oriented programming</a> abilities, some <a href="https://en.wikipedia.org/wiki/Functional_programming">functional
+	  programming</a> abilities, and <a href="https://en.wikipedia.org/wiki/Template_(C%2B%2B)">type
+	  abstraction</a>. Most operating systems and high performance programs
+	  are written in C or C++. C and C++ are more relevant than ever.  Every
+	  platform natively supports C or C++: smartphones (Android and iPhone),
+	  any desktop operating system, embedded devices, web browsers (via
+	  <a href="http://webassembly.org/">WebAssembly</a>).
+	</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a></dt>
+	<dd>
+	  JavaScript (or ECMAScript) is a <a href="https://en.wikipedia.org/wiki/Scripting_language">scripting
+	  language</a>, originally created to extend web browser
+	  functionality. JavaScript is about as ubiquitous as C and C++.  Most
+	  every computer has a JavaScript capable browser or can run it outside
+	  the browser, such as with <a href="https://nodejs.org/en/">Node.js</a>
+	  or <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Nashorn</a>. I
+	  am also interested in exploring languages that transpile to
+	  JavaScript, especially <a href="https://clojurescript.org/">ClojureScript</a> and <a href="http://elm-lang.org/">Elm</a>.
+	</dd>
+	<dt>
+<a href="https://en.wikipedia.org/wiki/SQL">SQL</a> and <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a>
+</dt>
+	<dd>
+	  SQL is the standard relational database query language, and most
+	  databases are relational. The field of databases has become more
+	  heterogeneous with non-SQL databases filling niches where relational
+	  databases are inappropriate or not optimal.  This blog is an example
+	  of one, in this case, an XML document database.
+	</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/Emacs_Lisp">Emacs Lisp</a></dt>
+	<dd>
+	  <a href="https://www.gnu.org/software/emacs/">GNU Emacs</a> is my
+	  editor of choice and its functionality is extended by using its own
+	  programming language, Emacs Lisp. Emacs Lisp was my first real
+	  exposure to programming.  It is not just useful for extending Emacs,
+	  but also good for learning <a href="https://en.wikipedia.org/wiki/S-expression">s-expression</a> <a href="https://en.wikipedia.org/wiki/Macro_(computer_science)#Syntactic_macros">macro</a>
+	  programming and quickly experimenting with most any language idea that
+	  is used in general purpose programming languages. Emacs is constantly
+	  being improved, people are creating add-on packages, and I desire to
+	  share and further my knowledge about it.
+	</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a></dt>
+	<dd>
+	  Scheme is a Lisp-like language praised for its simplicity and
+	  expressiveness, and if it was more widely adopted, would be my
+	  preferred scripting language.  However, scheme programming techniques
+	  are often applicable in other lisps such as Emacs Lisp, Clojure, and
+	  ClojureScript. My preferred scheme implementations are <a href="http://www.call-cc.org/">Chicken Scheme</a> and <a href="https://www.gnu.org/software/guile/">Guile</a>. I am also
+	  interested in <a href="http://racket-lang.org/">Racket</a>, which is a
+	  language ecosystem whose primary language is a Scheme derivative.
+	</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/Python_(programming_language)">Python</a></dt>
+	<dd>
+	  Python is possibly the most common scripting language in the Unix
+	  ecosystem and it has an extensive library. Many programs are extensible
+	  with Python.  The language is of interest to me for pragmatic reasons.
+	  Python is a fair scripting language, but I think that the language
+	  itself is similar but inferior to Scheme. It lacks a macro language. I
+	  think the language's forced indents were a mistake, and it cannot do
+	  thread level, high performance parallel programming.
+	</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/Shell_script">Shell Scripting</a></dt>
+	<dd>
+	  This blog is created using the <a href="https://en.wikipedia.org/wiki/Unix#Components">Unix tool kit</a>,
+	  plus additional programs. In Unix, most programs can be used as
+	  functions in shell scripts, blurring the line between program and
+	  function. <a href="https://en.wikipedia.org/wiki/Bash_(Unix_shell)">Bash</a> is my
+	  primary shell scripting language. The Unix toolkit is a set of
+	  standard tools found on all Unix and Unix compliant systems.
+	</dd>
+      </dl>
+
+      <h2>Rolling My Own Static Site Generator</h2> <p>My blog was initially
+      hosted on Blogger. While it was quick to setup, it was cumbersome to add
+      programming blog posts, and the site's look was restricted to templates. I
+      use Emacs <a href="http://orgmode.org/">Org Mode</a> for taking notes and
+      it has the ability to export to many formats, including <a href="https://en.wikipedia.org/wiki/XHTML">XHTML</a>, and can export more
+      than one file at a time. I wanted the ability to export my Org notes as
+      blog posts without post-export editing. With Blogger, this was
+      impossible. I initially tried <a href="https://blog.getpelican.com/">Pelican</a>, which is a static site
+      generator written in Python. However, I did not like the output HTML
+      markup; it used too many <code>div</code>'s and did not take advantage of
+      HTML5 tags such as <code>main</code> and <code>aside</code>.  I also
+      wanted more control over navigation.  I knew that <a href="https://en.wikipedia.org/wiki/XSLT">XSLT</a> (Extensible Stylesheet
+      Language Transformations) would be perfect for this kind of task,
+      converting XHTML Org output to HTML in the format that I wanted, with a
+      consistent header, asides, and a footer; this is precisely the use case
+      that it was designed for.  The main challenge was creating a document
+      database from Org's export, and then using that information to generate
+      navigation content and pages. I also took this as an opportunity to
+      modernize my HTML and <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">CSS</a>
+      skills.</p>
+
+      <h2>Why Blog</h2>      
+      <p>Every programmer should have a blog. At the very least, it serves as a
+      platform to show your knowledge in an accessible format.  In addition,
+      every programmer is well served by having an account on a code sharing
+      site such as GitHub, but I believe that the blog is more important.
+      Non-trivial programs are difficult, time-consuming things to create and
+      understand, so even if you post quality code on GitHub et. al., you are
+      still relying on people taking time to read and understand the code.  In a
+      blog, you can show code excepts and explain them, reducing the reader's
+      mental load and increasing inter-communication.
+      </p>
+
       <h1>About Me</h1>
       <p>
 	I grew up in Eagle River, Alaska, attending school at Birchwood ABC and
@@ -33,26 +158,29 @@
 	found that I was better at and more passionate for programming.
       </p>
       <p>
-	I hold a 5th Dan Black Belt in Taekwondo, and I am a competitor and USAT
-	referee.  I played house-level hockey as a member of the Mustang Hockey
-	Association, playing defenseman.  I also love to ski, hunt, and fish,
-	and regularly go running and hiking.
+	I hold a 5<sup>th</sup> Dan Black Belt in Taekwondo. I also compete nationally and
+	I am a USAT referee.  I played house-level hockey as a member of the
+	Mustang Hockey Association, playing defenseman.  I also love to ski,
+	hunt, and fish, and regularly go running and hiking.
       </p>
+      
       <h1>Credits</h1>
       <p>
 	This site was created with the Emacs editor. Blog posts were generated
-	by Emacs Org Mode. The site was generated using GNU Make, Bash, Awk,
-	Sed, libXSLT, and Graphviz.
+	by Emacs Org Mode. The site is generated using
+	<a href="https://www.gnu.org/software/parallel/">GNU Parallel</a>,
+	<a href="https://www.gnu.org/software/make/">GNU Make</a>, Bash, <a href="https://en.wikipedia.org/wiki/AWK">Awk</a>, <a href="https://www.gnu.org/software/sed/">Sed</a>, <a href="http://xmlsoft.org/XSLT/">libXSLT</a>, and <a href="http://graphviz.org/">Graphviz</a>; and is hosted on <a href="https://pages.github.com/">GitHub Pages</a>.
       </p>
       <p>
-	Some of the icons used in the navigation bar are from the <a href="https://thenounproject.com">Noun Project</a>
+	Some of the icons used in the navigation bar are from the <a href="https://thenounproject.com">Noun Project</a> and licensed under
+	<a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons with Attribution</a>.
       </p>
 	<ul>
 	  <li>
 	    <a href="https://thenounproject.com/search/?q=feather&amp;i=1322581">"Blog"</a> icon by Ayub Irawan.
 	  </li>
 	  <li>
-	    <a href="https://thenounproject.com/search/?q=resume&amp;i=591006">"Resume"</a> a composit of icons by Delwar Hossain and Gregor Cresnar.
+	    <a href="https://thenounproject.com/search/?q=resume&amp;i=591006">"Resume"</a> a composite of icons by Delwar Hossain and Gregor Cresnar.
 	  </li>
 	  <li>
 	    <a href="https://thenounproject.com/search/?q=follow&amp;i=541507">"Following"</a> icon by Gregor Cresnar.
@@ -79,6 +207,9 @@
 	<p>
 	  The "Projects" icon is adapted form the Wikipedia <a href="https://en.wikipedia.org/wiki/Git#/media/File:Git-logo.svg">page</a> on Git.  All
 	  other graphics and icons are original.
+	</p>
+	<p>
+	  The site logo was created using HTML, CSS, and the <a href="https://www.ffonts.net/GenoaItalic.font">Genoa Italic</a> font.
 	</p>
     </main><footer><div id="to-top-alt" class="mobile nav menu-btn"><a href="#">Back to Top</a></div></footer>
 </body>

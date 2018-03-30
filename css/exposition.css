@@ -1,6 +1,6 @@
 @media screen {
     @media
-    (min-width: 1024) and (max-width: 1279) and (max-resolution: 146dpi)
+    (min-width: 1024px) and (max-width: 1279px) and (max-resolution: 146dpi)
     {
 	body > main p, body > main ul, body > main table {
 	    max-width: calc(100vw - var(--nav-width) - 10ch);

@@ -4,13 +4,15 @@
 <meta charset="utf-8">
 <link rel="alternate" type="application/atom+xml" href="/feed.atom">
 <link rel="shortcut icon" href="../graphics/logo3.svg">
+<link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
 <title>SQL Relational Algebra</title>
-<meta name="description" content="Relational algebra offers an alternative syntax for crafting relational database queries.  I demonstrate how to use Python and Relational.py to create relational database queries and translate them into SQL.">
+<meta name="description" content="Relational algebra offers an alternative syntax for crafting relational database queries.  I demonstrate how to use Python and Relational.py to ces6/index.htmlreate relational database queries and translate them into SQL.">
 <meta name="keywords" content="sql, relational algebra, python">
 <meta name="generator" content="Org mode">
 <link rel="stylesheet" type="text/css" href="../css/main.css">
 <link rel="stylesheet" type="text/css" href="../css/exposition.css">
 <link rel="stylesheet" type="text/css" href="../css/blog.css">
+<link rel="stylesheet" type="text/css" href="../css/sql-relational-algebra.css">
 </head>
 <body>
 <header id="masthead"><input id="expand-blog-menu" type="checkbox"><div id="dwhoman-logo" class="nav"><a href="../index.html"><span>D</span><span>W</span><span>H</span></a></div>
@@ -22,22 +24,35 @@
 <div id="about-page" class="nav menu menu-btn"><a href="../about.html"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
 <div id="resume-page" class="nav menu menu-btn"><a href="../resume.html"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
 <div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
-<div id="following-page" class="menu filler"></div>
+<div id="following-page" class="menu nav menu-btn"><a href="../blog/following.html"><span>Following</span><img src="../graphics/noun_541507_cc.svg" alt=""></a></div>
 <div id="blog-feed-comp" class="filler menu"></div>
 <div id="nav-filler" class="filler"></div>
-<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav><h2>Thread</h2>
-<dl id="blog-threads">
+<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-threads"><h2>Thread</h2>
+<dl>
 <dt>Next:</dt>
-<dd class="cloud"><a href="sql-recursive-queries.html">SQL Recursive Queries</a></dd>
-</dl></nav><nav><h2>Published</h2>
-<dl id="blog-published">
-<dt>Prev:</dt>
 <dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
-</dl></nav><nav><h2>Updated</h2>
-<dl id="blog-updated">
+</dl></nav><nav id="blog-published"><h2>Published</h2>
+<dl>
 <dt>Next:</dt>
-<dd class="cloud"><a href="hy-shell-scripting.html">Shell Scripting with Hy!</a></dd>
-</dl></nav></aside><main id="content">
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav id="blog-updated"><h2>Updated</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav id="tag-list"><h2>Tags</h2>
+<ul>
+<li><a href="../categories.xhtml#python">python</a></li>
+<li><a href="../categories.xhtml#relational_algebra">relational algebra</a></li>
+<li><a href="../categories.xhtml#sql">sql</a></li>
+</ul></nav></aside><aside id="generation-dates"><ul>
+<li id="publication-date">Published: <time datetime="2016-09-01T00:00:00">September 01 2016</time>
+</li>
+<li id="update-date">Updated: <time datetime="2018-03-29T15:24:01">March 29 2018</time>
+</li>
+<li id="markup-source"><a href="sql-relational-algebra.org" type="text/plain" download="sql-relational-algebra.org">Page Markup Source</a></li>
+</ul></aside><main id="content">
 <h1 class="title">SQL Relational Algebra</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -55,8 +70,53 @@
 <li><a href="#org1782b05">1.3.2. Projection</a></li>
 <li><a href="#orgdcea6f6">1.3.3. Rename</a></li>
 <li><a href="#orga87273b">1.3.4. Product</a></li>
-<li><a href="#org6ea1051">1.3.5. Set Operations</a></li>
-<li><a href="#org04cab26">1.3.6. Joins</a></li>
+<li>
+<a href="#org6ea1051">1.3.5. Set Operations</a>
+<ul>
+<li><a href="#org71d83a5">1.3.5.1. Union</a></li>
+<li><a href="#org8b2df60">1.3.5.2. Intersection</a></li>
+<li><a href="#org5808359">1.3.5.3. Difference</a></li>
+<li><a href="#orge4080ec">1.3.5.4. Symmetric Difference, XOR</a></li>
+</ul>
+</li>
+<li>
+<a href="#org04cab26">1.3.6. Joins</a>
+<ul>
+<li>
+<a href="#org2e4fbe4">1.3.6.1. Natural Join and Semijoin</a>
+<ul>
+<li><a href="#orgbfc2096">1.3.6.1.1. Natural Join</a></li>
+<li><a href="#orgbf79881">1.3.6.1.2. Semijoin Left</a></li>
+<li><a href="#orgc862976">1.3.6.1.3. Semijoin Right</a></li>
+</ul>
+</li>
+<li><a href="#org0317b96">1.3.6.2. Theta Join</a></li>
+<li>
+<a href="#org1a45cd3">1.3.6.3. Outer Joins</a>
+<ul>
+<li><a href="#org80199b8">1.3.6.3.1. Outer Left Join</a></li>
+<li><a href="#orga7748d0">1.3.6.3.2. Outer Right Join</a></li>
+<li><a href="#orgc6546e2">1.3.6.3.3. Full Outer Join</a></li>
+</ul>
+</li>
+<li>
+<a href="#orgc3a173d">1.3.6.4. Anti-Join</a>
+<ul>
+<li><a href="#orgbc2eeb3">1.3.6.4.1. With Correlated Subqueries</a></li>
+<li><a href="#org8b16245">1.3.6.4.2. With the Relation Algebra Definition</a></li>
+</ul>
+</li>
+<li>
+<a href="#org5e64ec4">1.3.6.5. Division</a>
+<ul>
+<li><a href="#orgeb22a51">1.3.6.5.1. Example</a></li>
+<li><a href="#orgb5ab875">1.3.6.5.2. Relational Algebra Definition</a></li>
+<li><a href="#orgbb3663d">1.3.6.5.3. With Correlated Subqueries</a></li>
+<li><a href="#org676f435">1.3.6.5.4. With the Relation Algebra Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
@@ -64,12 +124,16 @@
 <ul>
 <li><a href="#org3596ee1">1.4.1. Multiple Joins</a></li>
 <li><a href="#org4e5f40a">1.4.2. Adding Division</a></li>
-<li><a href="#org588d383">1.4.3. With Correlated Subqueries</a></li>
-<li><a href="#org2ee2315">1.4.4. With the Relation Algebra Definition</a></li>
-<li><a href="#orgda58b58">1.4.5. Gotcha with Except</a></li>
+<li><a href="#org5ccc421">1.4.3. With Correlated Subqueries</a></li>
+<li><a href="#orge396856">1.4.4. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
-<li><a href="#org5ea39c9">1.5. Conclusion</a></li>
+<li>
+<a href="#org5ea39c9">1.5. Conclusion</a>
+<ul>
+<li><a href="#orgdd83e78">1.5.1. Further Reading</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -85,12 +149,11 @@ The dominant language for writing relational database queries is SQL.
 Unfortunately, SQL tends to get very complicated very quickly as the query's
 complexity increases. Furthermore, SQL is far removed, syntactically, from much
 of the theoretical basis of querying, <a href="https://en.wikipedia.org/wiki/Relational_algebra">relation algebra</a>. For creating complicated
-queries, I prototype them in Python using modules from the relational algebra
-program, <a href="https://ltworf.github.io/relational/">Relational</a>. I forked the code on <a href="https://github.com/dwhoman/relational">GitHub</a> and added additional operators
-as well as code to interface with <a href="https://www.gnu.org/software/emacs/">Emacs</a> <a href="http://orgmode.org/">Org Mode</a> <a href="http://orgmode.org/worg/org-contrib/babel/">Babel</a>. You can download an
-<a href="https://drive.google.com/open?id=0B-O-rtcjwX6gWHQ5dlJhdFplenM">Org file</a> containing the code examples that are described in this post.  Also
-required to run the examples is the <a href="https://chinookdatabase.codeplex.com/">Chinook</a> database and a <a href="https://drive.google.com/file/d/0B-O-rtcjwX6gVUFVQ0ZSNlJwbzg/view?usp=sharing">CSV version</a> of the
-database.
+queries, it may be easier to prototype them in Python using modules from the
+relational algebra program, <a href="https://ltworf.github.io/relational/">Relational</a>. I forked the code on <a href="https://github.com/dwhoman/relational">GitHub</a> and added
+additional operators as well as code to interface with <a href="https://www.gnu.org/software/emacs/">Emacs</a> <a href="http://orgmode.org/">Org Mode</a> <a href="http://orgmode.org/worg/org-contrib/babel/">Babel</a>.
+Also required to run the examples is the <a href="https://github.com/lerocha/chinook-database">Chinook</a> database and a <a href="https://github.com/dwhoman/chinook-database/tree/master/ChinookDatabase/DataSources/csv">CSV version</a> of
+the database.
 </p>
 </div>
 <div id="outline-container-org7d2a681" class="outline-3">
@@ -114,34 +177,42 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 </pre>
 </div>
 
 <p>
 Relational provides a graphical interface, but I find it easier to interact
-with the code using Python. Relational's Relation class represents
-relational tables and their operators. Relation requires a file path argument
-to initialize. This must be CSV a file, where the first line is the
-header and all elements are quoted. In the above code, the path to the
-Relational code is added to sys.path and Relation objects are created for
-each CSV file. The CSV data entries are parsed into four possible
-types; string, integer, float, and date, which are defined in
-rtypes.py. Relational does not have a null type. Relational's
-outer join operators return "—" strings for null values, so three dashes
-are also used to represent null in the CSV files. Relational treats
-null values as equal, but SQL sometimes treats them as equal and sometimes
-not, so some of the examples may need to be changed to treat null equality as
+with the code using Python. Relational's Relation class represents relational
+tables and their operators. In the above code, the path to the Relational
+code is added to sys.path and Relation objects are created for each CSV file.
+The first line in each CSV file are the column names. Every element in each
+file is quoted with double quotes.  The CSV data entries are parsed into four
+possible types; string, integer, float, and date, which are defined in
+rtypes.py. Relational does not have a null type. Instead, three dashes,
+<code>"---"</code>, are used to represent null values in the CSV files. Relational treats null
+values as equal, but SQL sometimes treats them as equal and sometimes not, so
+some of the examples may need to be changed to treat null equality as
 desired. <a href="https://en.wikipedia.org/wiki/Null_(SQL)">Wikipedia</a> has an extensive article on the subject.
 </p>
 
 <p>
-With the module, relation_org.py, it is also possible to use Emacs Org tables
-as input. It provides the class RelationOrg that is derived from the
-Relation class. In Org, an input table must be given a name and the
-name must be given as a :var argument in the Babel code block. The
-column names must be given in the first row and the table must not have any
-horizontal separators. The :var variables become global variables in
-the Babel code block with list of list values.
+I am using Emacs Org mode to run these pieces of code.  Org mode supports
+<a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>.  One feature of literate programming is the
+pre-processor. Org mode allows you to name code blocks and reference them
+else-ware in other code blocks. The above code block is named <code>setup</code> and is
+referenced using <code>&lt;&lt;setup&gt;&gt;</code>. The <code>:noweb yes</code> argument tells Org to do the
+replacement.
+</p>
+
+<p>
+With the module, <code>relation_org</code>, it is possible to use Emacs Org tables as
+input to Org Babel code blocks. It provides the class <code>RelationOrg</code> that is
+derived from the <code>Relation</code> class. In Org, an input table must be given a
+unique name. The name can be given as a <code>:var</code> argument in the Babel code
+block. The column names must be given in the first row, and the table must not
+have any horizontal separators. The <code>:var</code> variables become global variables in
+the Babel code block and the table data is converted to a list of lists.
 </p>
 
 <div class="org-src-container">
@@ -149,9 +220,10 @@ the Babel code block with list of list values.
 <span class="org-org-table">| key | value |</span>
 <span class="org-org-table">| 1   | A     |</span>
 
-<span class="org-org-block-begin-line">#+BEGIN_SRC python :var alpha_table</span>
+<span class="org-org-block-begin-line">#+BEGIN_SRC python :var in_table=alpha_table :noweb yes</span>
+<span class="org-org-block">&lt;&lt;setup&gt;&gt;</span>
 <span class="org-org-block"><span class="org-keyword">from</span></span><span class="org-org-block"> relational.relation_org </span><span class="org-org-block"><span class="org-keyword">import</span></span><span class="org-org-block"> RelationOrg</span>
-<span class="org-org-block"><span class="org-variable-name">alpha</span></span><span class="org-org-block"> = RelationOrg(alpha_table)</span>
+<span class="org-org-block"><span class="org-variable-name">alpha</span></span><span class="org-org-block"> = RelationOrg(in_table)</span>
 <span class="org-org-block-end-line">#+END_SRC</span>
 </pre>
 </div>
@@ -186,8 +258,12 @@ files, and the Relational source code.
 
 <p>
 The Chinook database has the following entity-relationship model.
-<img src="sql-relational-algebra/ER-diagram.png" alt="ER-diagram.png">
 </p>
+
+<div class="figure">
+<p><img class="latex" alt="latex-formula" src="sql-relational-algebra/ER-diagram.svg">
+</p>
+</div>
 </div>
 </div>
 
@@ -198,17 +274,16 @@ The Chinook database has the following entity-relationship model.
 <p>
 All relational algebra operations are Relation class methods. Each of
 these methods returns a new Relation object. Additionally, the Relation
-object has <em>__eq__</em>, <em>__str__</em>, <em>__len__</em>, <em>__iter__</em>, and <em>__contains__</em> methods
-defined; and furthermore, the RelationOrg class overrides the <em>__str__</em> method
+object has <code>__eq__</code>, <code>__str__</code>, <code>__len__</code>, <code>__iter__</code>, and <code>__contains__</code> methods
+defined; and furthermore, the RelationOrg class overrides the <code>__str__</code> method
 to return an Org table string.
 </p>
 
 <p>
-Relational is not a full fledged database system and it tends to be very slow
-compared to any SQL engine. Internally, the table data is stored as a
-set of tuple rows, and the header is its own Header object type. The
-data is accessible through the Relation <em>content</em> variable and header
-through the <em>header</em> variable.
+Relational is not a full fledged database system and it is slow. Internally,
+the table data is stored as a set of tuple rows, and the header is its own
+Header object type. The data is accessible through the Relation <code>content</code>
+variable and header through the <code>header</code> variable.
 </p>
 </div>
 
@@ -219,14 +294,14 @@ through the <em>header</em> variable.
 <div class="outline-text-4" id="text-1-3-1">
 <p>
 In relational algebra, the selection function selects rows. The selection
-method takes a single string of Python code that returns true or
-false, which it passes to the <a href="https://docs.python.org/3.5/library/functions.html#compile">compile</a> Python internal and then to eval. The
-table's column names get turned into global variables to the code being
-evaluated. Numeric strings get turned into numbers, integers or floats, and
-dates get turned into <a href="https://docs.python.org/3.5/library/datetime.html">datetime</a> objects. Nulls are represented by "—"
-strings. The selection method returns a new table containing only rows
-having the specified property. In this example, only rows whose ArtistId
-column is 1 are returned.
+method takes a single string of Python code that returns true or false,
+which it passes to the <a href="https://docs.python.org/3.5/library/functions.html#compile">compile</a> Python internal and then to eval. The table's
+column names get turned into variables global to the code being
+evaluated. During processing, numeric strings get turned into numbers
+(integers or floats) and dates get turned into <a href="https://docs.python.org/3.5/library/datetime.html">datetime</a> objects.  The
+selection method returns a new table containing only rows having the
+specified property. In this example, only rows whose ArtistId column is 1
+are returned.
 </p>
 
 <div class="org-src-container">
@@ -246,6 +321,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">sel</span> = album.selection(<span class="org-string">"ArtistId == 1"</span>)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(sel))
 </pre>
@@ -268,6 +344,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">sel</span> = employee.selection(<span class="org-string">"ReportsTo == '---'"</span>)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(sel))
 </pre>
@@ -280,9 +357,9 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="section-number-4">1.3.2</span> Projection</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <p>
-Projection performs the same function as SQL selection.&amp;nbsp; It takes one
-or more string arguments, the names of which columns to include in the
-return table.&amp;nbsp; It can also, instead, take a list of names to project.
+Projection performs the same function as SQL selection. It takes one or more
+string arguments or a single list, the names of the columns to include in the return
+table.
 </p>
 
 <div class="org-src-container">
@@ -302,6 +379,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">proj</span> = genre.projection(<span class="org-string">"Name"</span>)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(proj))
 </pre>
@@ -318,8 +396,7 @@ Rename takes a dictionary argument where the keys are the current column
 names to replace and the values are the corresponding replacements, with all
 keys and values being strings. A new table is returned with renamed
 columns. You will have to use this quite often, since the joining methods
-require that its input tables have all different column names, save the ones
-being joined on.
+require that their input tables have all different column names.
 </p>
 
 <div class="org-src-container">
@@ -339,6 +416,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">rn</span> = employee.rename({<span class="org-string">"LastName"</span>: <span class="org-string">"Family"</span>, <span class="org-string">"FirstName"</span>: <span class="org-string">"Given"</span>})
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(rn))
 </pre>
@@ -375,13 +453,9 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">prod</span> = employee.product(media_type)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(prod))
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> * <span class="org-keyword">FROM</span> Employee, MediaType;
 </pre>
 </div>
 </div>
@@ -393,16 +467,16 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <div class="outline-text-4" id="text-1-3-5">
 <p>
 Relation provides three set operations; union, intersection, and difference.
-I added the symmetric difference operation.&amp;nbsp; While symmetric difference
+I added the symmetric difference operation. While symmetric difference
 is not strictly part of relational algebra, it is defined in terms of the
 other relational algebra set operators.  Each of the set methods require
 that both input tables have the same column names.
 </p>
 </div>
 
-<ol class="org-ol">
-<li>
-<a id="org71d83a5"></a>Union<br>
+<div id="outline-container-org71d83a5" class="outline-5">
+<h5 id="org71d83a5">
+<span class="section-number-5">1.3.5.1</span> Union</h5>
 <div class="outline-text-5" id="text-1-3-5-1">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -421,24 +495,19 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">e_state</span> = employee.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">c_state</span> = customer.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">union</span> = e_state.union(c_state)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(union))
 </pre>
 </div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">UNION</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Employee;
-</pre>
 </div>
 </div>
-</li>
 
-<li>
-<a id="org8b2df60"></a>Intersection<br>
+<div id="outline-container-org8b2df60" class="outline-5">
+<h5 id="org8b2df60">
+<span class="section-number-5">1.3.5.2</span> Intersection</h5>
 <div class="outline-text-5" id="text-1-3-5-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -457,24 +526,19 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">e_state</span> = employee.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">c_state</span> = customer.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">inter</span> = c_state.intersection(e_state)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(inter))
 </pre>
 </div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">INTERSECT</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Employee;
-</pre>
 </div>
 </div>
-</li>
 
-<li>
-<a id="org5808359"></a>Difference<br>
+<div id="outline-container-org5808359" class="outline-5">
+<h5 id="org5808359">
+<span class="section-number-5">1.3.5.3</span> Difference</h5>
 <div class="outline-text-5" id="text-1-3-5-3">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -493,6 +557,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">e_state</span> = employee.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">c_state</span> = customer.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">diff</span> = c_state.difference(e_state)
@@ -500,23 +565,17 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">EXCEPT</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Employee;
-</pre>
-</div>
-
 <p>
-The SQL equivalent to difference is the EXCEPT operator. Not all SQL
-engines have the EXCEPT operator, such as MySQL.  <a href="https://en.wikipedia.org/wiki/Set_operations_(SQL)#EXCEPT_operator">Wikipedia</a> has an example
+The SQL equivalent to difference is the <code>EXCEPT</code> operator. Not all SQL
+engines have the <code>EXCEPT</code> operator, such as MySQL.  <a href="https://en.wikipedia.org/wiki/Set_operations_(SQL)#EXCEPT_operator">Wikipedia</a> has an example
 of how to create an except, using left outer join.
 </p>
 </div>
-</li>
+</div>
 
-<li>
-<a id="orge4080ec"></a>Symmetric Difference, XOR<br>
+<div id="outline-container-orge4080ec" class="outline-5">
+<h5 id="orge4080ec">
+<span class="section-number-5">1.3.5.4</span> Symmetric Difference, XOR</h5>
 <div class="outline-text-5" id="text-1-3-5-4">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -535,28 +594,15 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">e_state</span> = employee.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">c_state</span> = customer.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">sym</span> = e_state.symmetric_diff(c_state)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(sym))
 </pre>
 </div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span>
-(<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">UNION</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Employee)
-<span class="org-keyword">EXCEPT</span>
-<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span>
-(<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">INTERSECT</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Employee);
-</pre>
 </div>
 </div>
-</li>
-</ol>
 </div>
 
 <div id="outline-container-org04cab26" class="outline-4">
@@ -565,30 +611,30 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <div class="outline-text-4" id="text-1-3-6">
 <p>
 The Relational program comes with most of the relational algebra join
-operations including the extended relational algebra outer join
-operations.&amp;nbsp; I added semijoin_left, semijoin_right, and antijoin.&amp;nbsp;
+operations including the extended relational algebra outer-join
+operations. I added <code>semijoin_left</code>, <code>semijoin_right</code>, and <code>antijoin</code>.
 Also note that null values are considered equal.
 </p>
 </div>
 
-<ol class="org-ol">
-<li>
-<a id="org2e4fbe4"></a>Natural Join and Semijoin<br>
+<div id="outline-container-org2e4fbe4" class="outline-5">
+<h5 id="org2e4fbe4">
+<span class="section-number-5">1.3.6.1</span> Natural Join and Semijoin</h5>
 <div class="outline-text-5" id="text-1-3-6-1">
 <p>
-The natural join methods (join, semijoin_left, and semijoin_right) each
-take one argument, join its table object to the argument table. and return
-a new table.&amp;nbsp; The join method returns a table with all the different
-column names in each table.&amp;nbsp; semijoin_left returns only those columns
-in the method's object, while semijoin_right returns only those columns in
-the table argument.&amp;nbsp; Tables will be joined on columns with equivalent
-names.&amp;nbsp; If there are no names in common, then the Cartesian product is
+The natural join methods (<code>join</code>, <code>semijoin_left</code>, and <code>semijoin_right</code>)
+each take a table as an argument and join its table object to the argument
+table. Each join function returns a new table.  <code>semijoin_left</code> returns
+only those columns in the method's object, while <code>semijoin_right</code> returns
+only those columns in the table argument. The <code>join</code> method returns columns
+from both tables.  Tables are joined on columns with equivalent
+names. If there are no names in common, then the Cartesian product is
 returned.
 </p>
 </div>
-<ol class="org-ol">
-<li>
-<a id="orgbfc2096"></a>Natural Join<br>
+<div id="outline-container-orgbfc2096" class="outline-6">
+<h6 id="orgbfc2096">
+<span class="section-number-6">1.3.6.1.1</span> Natural Join</h6>
 <div class="outline-text-6" id="text-1-3-6-1-1">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -607,6 +653,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -616,43 +663,12 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
+</div>
+</div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
-</div>
-</div>
-</li>
-<li>
-<a id="orgbf79881"></a>Semijoin Left<br>
+<div id="outline-container-orgbf79881" class="outline-6">
+<h6 id="orgbf79881">
+<span class="section-number-6">1.3.6.1.2</span> Semijoin Left</h6>
 <div class="outline-text-6" id="text-1-3-6-1-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -671,6 +687,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -680,32 +697,12 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
 </div>
 </div>
-</li>
 
-<li>
-<a id="orgc862976"></a>Semijoin Right<br>
+<div id="outline-container-orgc862976" class="outline-6">
+<h6 id="orgc862976">
+<span class="section-number-6">1.3.6.1.3</span> Semijoin Right</h6>
 <div class="outline-text-6" id="text-1-3-6-1-3">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -724,6 +721,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -733,39 +731,20 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
 </div>
 </div>
-</li>
-</ol>
-</li>
+</div>
 
-<li>
-<a id="org0317b96"></a>Theta Join<br>
+<div id="outline-container-org0317b96" class="outline-5">
+<h5 id="org0317b96">
+<span class="section-number-5">1.3.6.2</span> Theta Join</h5>
 <div class="outline-text-5" id="text-1-3-6-2">
 <p>
 The thetajoin method requires two arguments; the table to join on and a
-selection argument.&amp;nbsp; Internally, it performs the Cartesian product on
+selection argument. Internally, it performs the Cartesian product on
 the two tables and selects those rows from the resulting table satisfying
-the input expression.&amp;nbsp; So all column names must be unique.&amp;nbsp; Refer
-to the section on Selection for details on the selection argument.
+the input expression. So all column names must be unique. Refer
+to the section on <a href="#org45d60cf">Selection</a> for details on the selection argument.
 </p>
 
 <div class="org-src-container">
@@ -785,6 +764,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -829,23 +809,24 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </pre>
 </div>
 </div>
-</li>
+</div>
 
 
-<li>
-<a id="org1a45cd3"></a>Outer Joins<br>
+<div id="outline-container-org1a45cd3" class="outline-5">
+<h5 id="org1a45cd3">
+<span class="section-number-5">1.3.6.3</span> Outer Joins</h5>
 <div class="outline-text-5" id="text-1-3-6-3">
 <p>
-Relation provides full outer join (outer), outer join left (outer_left),
-and&amp;nbsp; outer join right (outer_right).&amp;nbsp; When printing the result of
-an outer join, null is represented by "—".&amp;nbsp; Like the natural join
+Relation provides full outer join (<code>outer</code>), outer join left (<code>outer_left</code>),
+and outer join right (<code>outer_right</code>). When printing the result of
+an outer join, null is represented by "—". Like the natural join
 methods, these methods take a single table argument and perform a join with
 the method's object.
 </p>
 </div>
-<ol class="org-ol">
-<li>
-<a id="org80199b8"></a>Outer Left Join<br>
+<div id="outline-container-org80199b8" class="outline-6">
+<h6 id="org80199b8">
+<span class="section-number-6">1.3.6.3.1</span> Outer Left Join</h6>
 <div class="outline-text-6" id="text-1-3-6-3-1">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -864,6 +845,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -873,43 +855,12 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
+</div>
+</div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
-</div>
-</div>
-</li>
-<li>
-<a id="orga7748d0"></a>Outer Right Join<br>
+<div id="outline-container-orga7748d0" class="outline-6">
+<h6 id="orga7748d0">
+<span class="section-number-6">1.3.6.3.2</span> Outer Right Join</h6>
 <div class="outline-text-6" id="text-1-3-6-3-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -928,6 +879,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -937,43 +889,12 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
+</div>
+</div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Customer <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> Employee
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
-</div>
-</div>
-</li>
-<li>
-<a id="orgc6546e2"></a>Full Outer Join<br>
+<div id="outline-container-orgc6546e2" class="outline-6">
+<h6 id="orgc6546e2">
+<span class="section-number-6">1.3.6.3.3</span> Full Outer Join</h6>
 <div class="outline-text-6" id="text-1-3-6-3-3">
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -992,6 +913,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -1001,75 +923,13 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(jn))
 </pre>
 </div>
+</div>
+</div>
+</div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId
-<span class="org-keyword">UNION</span>
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-                Employee.LastName <span class="org-keyword">AS</span> eLastName,
-                Employee.FirstName <span class="org-keyword">AS</span> eFirstName,
-                Employee.Title <span class="org-keyword">AS</span> eTitle,
-                Employee.ReportsTo <span class="org-keyword">AS</span> eReportsTo,
-                Employee.BirthDate <span class="org-keyword">AS</span> eBirthDate,
-                Employee.HireDate <span class="org-keyword">AS</span> eHireDate,
-                Employee.Address <span class="org-keyword">AS</span> eAddress,
-                Employee.City <span class="org-keyword">AS</span> eCity,
-                Employee.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> eState,
-                Employee.Country <span class="org-keyword">AS</span> eCountry,
-                Employee.PostalCode <span class="org-keyword">AS</span> ePostalCode,
-                Employee.Phone <span class="org-keyword">AS</span> ePhone,
-                Employee.Fax <span class="org-keyword">AS</span> eFax,
-                Employee.Email <span class="org-keyword">AS</span> eEmail,
-                Customer.CustomerId <span class="org-keyword">AS</span> cCustomerId,
-                Customer.FirstName <span class="org-keyword">AS</span> cFirstName,
-                Customer.LastName <span class="org-keyword">AS</span> cLastName,
-                Customer.Company <span class="org-keyword">AS</span> cCompany,
-                Customer.Address <span class="org-keyword">AS</span> cAddress,
-                Customer.City <span class="org-keyword">AS</span> cCity,
-                Customer.<span class="org-keyword">State</span> <span class="org-keyword">AS</span> cState,
-                Customer.Country <span class="org-keyword">AS</span> cCountry,
-                Customer.PostalCode <span class="org-keyword">AS</span> cPostalCode,
-                Customer.Phone <span class="org-keyword">AS</span> cPhone,
-                Customer.Fax <span class="org-keyword">AS</span> cFax,
-                Customer.Email <span class="org-keyword">AS</span> cEmail
-<span class="org-keyword">FROM</span> Customer <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> Employee
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
-</div>
-</div>
-</li>
-</ol>
-</li>
-<li>
-<a id="orgc3a173d"></a>Anti-Join<br>
+<div id="outline-container-orgc3a173d" class="outline-5">
+<h5 id="orgc3a173d">
+<span class="section-number-5">1.3.6.4</span> Anti-Join</h5>
 <div class="outline-text-5" id="text-1-3-6-4">
 <p>
 Relational does not currently provide an anti-join operation.  Antijoin
@@ -1082,10 +942,10 @@ Relational using the definition given on Wikipedia;
 </pre>
 </div>
 <p>
-Like other methods in the Relational class, antijoin takes a single table
+Like other methods in the <code>Relational</code> class, <code>antijoin</code> takes a single table
 class argument, anti-joins it onto the acting object, and returns a new
-table object.  In the following example, employee is antijoined with
-customer, joining on EmployeeId.  Equivalently named columns that are not
+table object.  In the following example, <code>employee</code> is antijoined with
+<code>customer</code>, joining on <code>EmployeeId</code>.  Equivalently named columns that are not
 joined on have to be renamed in one of the tables.
 </p>
 
@@ -1106,6 +966,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cn</span> = customer.rename({<span class="org-string">"SupportRepId"</span>: <span class="org-string">"EmployeeId"</span>, <span class="org-string">"LastName"</span>: <span class="org-string">"cLastName"</span>,
                       <span class="org-string">"FirstName"</span>: <span class="org-string">"cFirstName"</span>, <span class="org-string">"Company"</span>: <span class="org-string">"cCompany"</span>,
                       <span class="org-string">"Address"</span>: <span class="org-string">"cAddress"</span>, <span class="org-string">"City"</span>: <span class="org-string">"cCity"</span>, <span class="org-string">"State"</span>: <span class="org-string">"cState"</span>,
@@ -1117,16 +978,17 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<ol class="org-ol">
-<li>
-<a id="orgbebebfb"></a>With Correlated Subqueries<br>
+<div id="outline-container-orgbc2eeb3" class="outline-6">
+<h6 id="orgbc2eeb3">
+<span class="section-number-6">1.3.6.4.1</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-4-1">
 <p>
 In SQL, the typical way of performing an antijoin is by using correlated
 subqueries.
 </p>
+
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
+<pre class="src src-sqlite" id="org09555ab"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
        Employee.LastName,
        Employee.FirstName,
        Employee.Title,
@@ -1151,36 +1013,35 @@ subqueries.
 This query has the following plan in SQLite.
 </p>
 
-<div class="org-src-container">
-<pre class="src src-sqlite">EXPLAIN QUERY PLAN
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> EmployeeId,
-       Employee.LastName,
-       Employee.FirstName,
-       Employee.Title,
-       Employee.ReportsTo,
-       Employee.BirthDate,
-       Employee.HireDate,
-       Employee.Address,
-       Employee.City,
-       Employee.<span class="org-keyword">State</span>,
-       Employee.Country,
-       Employee.PostalCode,
-       Employee.Phone,
-       Employee.Fax,
-       Employee.Email
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
-(<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">WHERE</span> Employee.EmployeeId = Customer.SupportRepId);
-</pre>
-</div>
-</div>
-</li>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-<li>
-<a id="orgf176625"></a>With the Relation Algebra Definition<br>
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE Employee</td>
+</tr>
+
+<tr>
+<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 1</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Customer USING INDEX IFK_CustomerSupportRepId (SupportRepId=?)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org8b16245" class="outline-6">
+<h6 id="org8b16245">
+<span class="section-number-6">1.3.6.4.2</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-4-2">
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> * <span class="org-keyword">FROM</span> Employee
+<pre class="src src-sqlite" id="org16c10f8"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> * <span class="org-keyword">FROM</span> Employee
 <span class="org-keyword">EXCEPT</span>
 <span class="org-keyword">SELECT</span> EmployeeId,
        Employee.LastName,
@@ -1206,60 +1067,59 @@ This query has the following plan in SQLite.
 It has the following plan in SQLite.
 </p>
 
-<div class="org-src-container">
-<pre class="src src-sqlite">EXPLAIN QUERY PLAN
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> * <span class="org-keyword">FROM</span> Employee
-<span class="org-keyword">EXCEPT</span>
-<span class="org-keyword">SELECT</span> EmployeeId,
-       Employee.LastName,
-       Employee.FirstName,
-       Employee.Title,
-       Employee.ReportsTo,
-       Employee.BirthDate,
-       Employee.HireDate,
-       Employee.Address,
-       Employee.City,
-       Employee.<span class="org-keyword">State</span>,
-       Employee.Country,
-       Employee.PostalCode,
-       Employee.Phone,
-       Employee.Fax,
-       Employee.Email
-<span class="org-keyword">FROM</span> Employee <span class="org-keyword">JOIN</span> Customer
-<span class="org-keyword">ON</span> Employee.EmployeeId = Customer.SupportRepId;
-</pre>
-</div>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 1:</span> Query Plan</caption>
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE Employee</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Employee USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)</td>
+</tr>
+</tbody>
+</table>
 
 <p>
-This query selects all columns in the Employee table, so select * rather
-than explicitly specifying columns should not affect the query.&amp;nbsp; This
-anti-join might not produce the same results in all cases as the other due
-to null equality handling differences.&amp;nbsp; EXCEPT treats them as
-equivalent.&amp;nbsp; I prefer this one over the former.&amp;nbsp; With toolkits
-such as <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>, it is difficult to code correlated subqueries.&amp;nbsp;
-Furthermore, this version may be faster, reasons for which I will detail
-later.&amp;nbsp; It may be possible to modify this query to treat nulls as not
-equal.&amp;nbsp; This issue would only arise if nulls exist in the joining
-columns.&amp;nbsp; Null columns could be added to the anti-join result by
-intersecting the projection of the two tables' joining columns, selecting
-those rows that contain nulls, select the corresponding rows in the first
-table, and unioning them to the antijoin result.
+I prefer the relational algebra definition over the correlated subquery
+definition. In toolkits such as <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>, it is difficult to code
+correlated subqueries. This anti-join might not produce the same results
+in all cases as the other due to null equality handling
+differences. <code>EXCEPT</code> treats them as equivalent. It may be possible to
+modify this query to treat nulls as not equal. This issue would only arise
+if nulls exist in the joining columns. Null columns could be added to the
+anti-join result by intersecting the projection of the two tables' joining
+columns, selecting those rows that contain nulls, select the corresponding
+rows in the first table, and unioning them to the antijoin result.
 </p>
 </div>
-</li>
-</ol>
-</li>
+</div>
+</div>
 
-<li>
-<a id="org5e64ec4"></a>Division<br>
+<div id="outline-container-org5e64ec4" class="outline-5">
+<h5 id="org5e64ec4">
+<span class="section-number-5">1.3.6.5</span> Division</h5>
 <div class="outline-text-5" id="text-1-3-6-5">
 <p>
 Division is an operation that is somewhat difficult to grasp, and the
-traditional correlated SQL query even more difficult.&amp;nbsp; When dividing
-one table by another, columns unique to the first table are returned.&amp;nbsp;
-The column names in the second table must be a subset of the first.&amp;nbsp;
+traditional correlated SQL query even more difficult. When dividing
+one table by another, columns unique to the first table are returned.
+The column names in the second table must be a subset of the first.
 Rows in the first table can be thought of as being grouped by values in the
-return columns.&amp;nbsp; A group is returned only if, for every row in the
+return columns. A group is returned only if, for every row in the
 second table, there exists a row in the group with values that exist in the
 second table.
 </p>
@@ -1286,6 +1146,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">cp</span> = customer.projection(<span class="org-string">"CustomerId"</span>, <span class="org-string">"State"</span>)
 <span class="org-variable-name">ep</span> = employee.projection(<span class="org-string">"State"</span>)
 <span class="org-variable-name">div</span> = cp.division(ep)
@@ -1295,18 +1156,19 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<ol class="org-ol">
-<li>
-<a id="orgeb22a51"></a>Example<br>
+<div id="outline-container-orgeb22a51" class="outline-6">
+<h6 id="orgeb22a51">
+<span class="section-number-6">1.3.6.5.1</span> Example</h6>
 <div class="outline-text-6" id="text-1-3-6-5-1">
 <p>
 In this example, columns A and B are common to the input tables and C and
-D are unique to the first.&amp;nbsp; Only the group of rows with 0,0 in C,D
+D are unique to the first. Only the group of rows with 0,0 in C,D
 have all of the A,B columns values existing in the second table.
 </p>
 
 <table id="org9731712" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<caption class="t-above">
+<span class="table-number">Table 2:</span> Dividend</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1363,7 +1225,8 @@ have all of the A,B columns values existing in the second table.
 </table>
 
 <table id="orgb44d9b3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<caption class="t-above">
+<span class="table-number">Table 3:</span> Divisor</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1398,30 +1261,47 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(prod))
 </pre>
 </div>
-<div class="org-src-container">
-<pre class="src src-org" id="org5540d76">    <span class="org-org-table">| D | C |</span>
-    <span class="org-org-table">|---+---|</span>
-    <span class="org-org-table">| 0 | 0 |</span>
-</pre>
-</div>
-</div>
-</li>
 
-<li>
-<a id="orgb5ab875"></a>Relational Algebra Definition<br>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 4:</span> Quotient</caption>
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">C</td>
+<td class="org-right">D</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgb5ab875" class="outline-6">
+<h6 id="orgb5ab875">
+<span class="section-number-6">1.3.6.5.2</span> Relational Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-5-2">
 <p>
-The Wikipedia page on relational algebra defines the division of table \(R\) by table \(S\) as:
-\(R\div S = \pi_pR - V\); where \(p\) is the set of columns unique to \(R\).
+The Wikipedia page on relational algebra defines the division of table <img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_0ba33d7570e327c4a367cbef8d43d8db8405bf87.svg"> by table <img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_bcf3dd37c51c189a4d2f0aedcda608f8a191ab1b.svg"> as:
+<img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_7ea617d5ba22779d09ea48fedf9ea700ded9d739.svg">; where <img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_671c39a6db180b703056674e466cb2ef9a2970e0.svg"> is the set of columns unique to <img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_0ba33d7570e327c4a367cbef8d43d8db8405bf87.svg">.
 </p>
 
 <p>
-Substituting \(V\):
-\(R\div S = \pi_pR - \pi_pU\)
+Substituting <img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_681a24e08cb4cdec7eab121e7a930cc58b7dc085.svg">:
+<img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_0e9fbeda8a65e866d7752414cba9e10065108075.svg">
 Substituting U:
-\(R\div S = \pi_pR - \pi_p(T - R)\)
+<img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_e2fbd42976c308b55402b4dcafd5b548e186b2bf.svg">
 Substituting T:
-\(R\div S = \pi_pR - \pi_p(\pi_pR\times S - R)\)
+<img class="latex" alt="latex-formula" src="ltximg/sql-relational-algebra_88ecca879546dbe7ca6190bc8c4f467dce572eff.svg">
 </p>
 
 <p>
@@ -1444,21 +1324,23 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
-<span class="org-variable-name">cp</span> = customer.projection(<span class="org-string">"CustomerId"</span>, <span class="org-string">"State"</span>)
-<span class="org-variable-name">ep</span> = employee.projection(<span class="org-string">"State"</span>)
-<span class="org-variable-name">pi_c</span> = cp.projection(<span class="org-string">"CustomerId"</span>)
-<span class="org-variable-name">cross</span> = pi_c.product(ep)
-<span class="org-variable-name">diff</span> = cross.difference(cp)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
+<span class="org-variable-name">R</span> = customer.projection(<span class="org-string">"CustomerId"</span>, <span class="org-string">"State"</span>)
+<span class="org-variable-name">S</span> = employee.projection(<span class="org-string">"State"</span>)
+<span class="org-variable-name">pi_R</span> = R.projection(<span class="org-string">"CustomerId"</span>)
+<span class="org-variable-name">cross</span> = pi_R.product(S)
+<span class="org-variable-name">diff</span> = cross.difference(R)
 <span class="org-variable-name">pi_diff</span> = diff.projection(<span class="org-string">"CustomerId"</span>)
-<span class="org-variable-name">div</span> = pi_c.difference(pi_diff)
+<span class="org-variable-name">div</span> = pi_R.difference(pi_diff)
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(div))
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li>
-<a id="orgfe6cb9d"></a>With Correlated Subqueries<br>
+<div id="outline-container-orgbb3663d" class="outline-6">
+<h6 id="orgbb3663d">
+<span class="section-number-6">1.3.6.5.3</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-5-3">
 <p>
 The way division is traditionally performed in SQL textbooks is by using
@@ -1466,7 +1348,7 @@ correlated subqueries.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> Quotient.CustomerId
+<pre class="src src-sqlite" id="org993a37d"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> Quotient.CustomerId
 <span class="org-keyword">FROM</span> Customer <span class="org-keyword">AS</span> Quotient
 <span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
   (<span class="org-keyword">SELECT</span> Dividend.<span class="org-keyword">state</span>
@@ -1478,33 +1360,71 @@ correlated subqueries.
       <span class="org-keyword">AND</span> Quotient.CustomerId = Divisor.CustomerId));
 </pre>
 </div>
+
+<pre class="example">
+14
+
+</pre>
 
 <p>
 This query has the following plan in SQLite.
 </p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 5:</span> Query Plan</caption>
 
-<div class="org-src-container">
-<pre class="src src-sqlite">EXPLAIN QUERY PLAN
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> Quotient.CustomerId
-<span class="org-keyword">FROM</span> Customer <span class="org-keyword">AS</span> Quotient
-<span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
-  (<span class="org-keyword">SELECT</span> Dividend.<span class="org-keyword">state</span>
-   <span class="org-keyword">FROM</span> Employee <span class="org-keyword">AS</span> Dividend
-   <span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
-     (<span class="org-keyword">SELECT</span> Divisor.<span class="org-keyword">state</span>
-      <span class="org-keyword">FROM</span> Customer <span class="org-keyword">AS</span> Divisor
-      <span class="org-keyword">WHERE</span> Dividend.<span class="org-keyword">state</span> = Divisor.<span class="org-keyword">state</span>
-      <span class="org-keyword">AND</span> Quotient.CustomerId = Divisor.CustomerId));
-</pre>
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK_CustomerSupportRepId</td>
+</tr>
+
+<tr>
+<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 1</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Employee AS Dividend</td>
+</tr>
+
+<tr>
+<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 2</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Customer AS Divisor USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 6:</span> Result and Run Time</caption>
+
+<colgroup>
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">14</td>
+</tr>
+
+<tr>
+<td class="org-right">Run Time: real 0.001 user 0.000000 sys 0.001000</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-</li>
 
-<li>
-<a id="orge3344ac"></a>With the Relation Algebra Definition<br>
+<div id="outline-container-org676f435" class="outline-6">
+<h6 id="org676f435">
+<span class="section-number-6">1.3.6.5.4</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-5-4">
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> CustomerId
+<pre class="src src-sqlite" id="org4d5afe5"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> CustomerId
 <span class="org-keyword">FROM</span> Customer
 <span class="org-keyword">EXCEPT</span>
 <span class="org-keyword">SELECT</span> CustomerID
@@ -1516,51 +1436,53 @@ This query has the following plan in SQLite.
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src-sqlite">EXPLAIN QUERY PLAN
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> CustomerId
-<span class="org-keyword">FROM</span> Customer
-<span class="org-keyword">EXCEPT</span>
-<span class="org-keyword">SELECT</span> CustomerID
-<span class="org-keyword">FROM</span>
-  (<span class="org-keyword">SELECT</span> Customer.CustomerId, Employee.<span class="org-keyword">state</span>
-   <span class="org-keyword">FROM</span> Customer, Employee
-   <span class="org-keyword">EXCEPT</span>
-   <span class="org-keyword">SELECT</span> CustomerId, <span class="org-keyword">state</span> <span class="org-keyword">FROM</span> Customer);
-</pre>
-</div>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 7:</span> Query Plan</caption>
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Employee</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Customer</td>
+</tr>
+
+<tr>
+<td class="org-left">COMPOUND SUBQUERIES 4 AND 5 USING TEMP B-TREE (EXCEPT)</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN SUBQUERY 3</td>
+</tr>
+
+<tr>
+<td class="org-left">COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)</td>
+</tr>
+</tbody>
+</table>
 
 <p>
 This query plan is two steps longer than the correlated subquery version;
 however, I have found this version faster (more on that in the next
 section), and this version is more easily coded in toolkits like
-SQLAlchemy.&amp;nbsp; With this version, null values are treated as equal.&amp;nbsp;
-If there are nulls in the second table, and if nulls are not equal, then
-division should always return an empty table.&amp;nbsp; If there are null values
-in the columns unique to the first table, and nulls are not equal, then
-those rows can only be returned if the second table is one row long.
+SQLAlchemy. With this version, null values are treated as equal.
 </p>
 </div>
-</li>
-<li>
-<a id="orgf94773a"></a>SQL using aggregation<br>
-<div class="outline-text-6" id="text-1-3-6-5-5">
-<p>
-Adapted from p. 715 of SQL for Smarties.
-</p>
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> CustomerId
-<span class="org-keyword">FROM</span> Customer, Employee
-<span class="org-keyword">WHERE</span> Customer.<span class="org-keyword">state</span> = Employee.<span class="org-keyword">state</span>
-<span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> Customer.CustomerId
-<span class="org-keyword">HAVING</span> <span class="org-builtin">COUNT</span>(Customer.<span class="org-keyword">state</span>) = (<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(<span class="org-keyword">state</span>) <span class="org-keyword">FROM</span> Employee);
-</pre>
 </div>
 </div>
-</li>
-</ol>
-</li>
-</ol>
 </div>
 </div>
 
@@ -1605,6 +1527,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">artist_rn</span> = artist.rename({<span class="org-string">"Name"</span>: <span class="org-string">"artist_name"</span>})
 <span class="org-variable-name">track_rn</span> = track.projection(<span class="org-string">"TrackId"</span>, <span class="org-string">"AlbumId"</span>, <span class="org-string">"GenreId"</span>)
 <span class="org-variable-name">genre_rn</span> = genre.selection(<span class="org-string">"Name == 'Rock'"</span>).projection(<span class="org-string">"GenreId"</span>)
@@ -1640,17 +1563,17 @@ In SQL, this translates to:
 <span class="org-keyword">USING</span> (PlaylistId);
 </pre>
 </div>
+
 <p>
 You will notice that the Relational version is sequential, while the SQL
 version is nested, five levels deep.  The SQL version could be made more
 sequential by using temporary tables or common table expressions (CTEs),
-depending on the SQL engine.  However, SQL still requires you to do, in
-every SQL query, a projection plus zero or more other operations, so it is
-never going to be as succinct.  Furthermore, if you are using tools such as
-SQLAlchemy, you are either forced to write plain SQL, hope that the tool
-supports whatever mechanism the database uses to create temporary tables, or
-use the nested version. (SQLAlchemy does not support MySQL temporary tables,
-it does support CTEs; however, MySQL does not have CTEs).
+depending on the SQL engine.  However, SQL still requires you to do a
+projection in every SQL query, so it is never going to be as succinct.
+Furthermore, if you are using tools such as SQLAlchemy, you are either
+forced to write plain SQL, hope that the tool supports whatever mechanism
+the database uses to create temporary tables, or use the nested
+version.
 </p>
 </div>
 </div>
@@ -1662,7 +1585,7 @@ it does support CTEs; however, MySQL does not have CTEs).
 <p>
 To make the previous query more interesting, the selected playlists must now
 contain metal and heavy metal in addition to rock, and we also want to
-display the genres on the playlist.&amp;nbsp; All of the same joins are made,
+display the genres on the playlist. All of the same joins are made,
 but there are two tables derived from the genre table; one to join on and
 the other to divide with.  After doing all of the joins, the resulting table
 is divided by a projected genre table. The resulting table is joined with
@@ -1688,6 +1611,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">artist_rn</span> = artist.rename({<span class="org-string">"Name"</span>: <span class="org-string">"artist_name"</span>})
 <span class="org-variable-name">track_rn</span> = track.projection(<span class="org-string">"TrackId"</span>, <span class="org-string">"AlbumId"</span>, <span class="org-string">"GenreId"</span>)
 <span class="org-variable-name">genre_p</span> = genre.projection(<span class="org-string">"GenreId"</span>)
@@ -1706,7 +1630,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 
 <p>
-Expanding the division results in:
+Expanding the division to its relational algebra definition results in:
 </p>
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-keyword">import</span> sys
@@ -1725,6 +1649,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 <span class="org-variable-name">playlist_track</span> = Relation(root_fp + <span class="org-string">"playlist-track.csv"</span>)
 <span class="org-variable-name">playlist</span> = Relation(root_fp + <span class="org-string">"playlist.csv"</span>)
 <span class="org-variable-name">track</span> = Relation(root_fp + <span class="org-string">"track.csv"</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">END SETUP</span>
 <span class="org-variable-name">artist_rn</span> = artist.rename({<span class="org-string">"Name"</span>: <span class="org-string">"artist_name"</span>})
 <span class="org-variable-name">track_rn</span> = track.projection(<span class="org-string">"TrackId"</span>, <span class="org-string">"AlbumId"</span>, <span class="org-string">"GenreId"</span>)
 <span class="org-variable-name">genre_p</span> = genre.projection(<span class="org-string">"GenreId"</span>)
@@ -1747,66 +1672,20 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-org588d383" class="outline-4">
-<h4 id="org588d383">
+<div id="outline-container-org5ccc421" class="outline-4">
+<h4 id="org5ccc421">
 <span class="section-number-4">1.4.3</span> With Correlated Subqueries</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <p>
 SQL's CTE system is used to create three temporary tables; the table
 containing the result of joining multiple tables, a table to divide by, and
-the division.  A temporary table is required for the a_a_t_g_pt_p table
-because it is referenced twice.  The other tables could be in-lined.
-Executing this query took almost 23 seconds!
+the division.  A temporary table is required for the <code>a_a_t_g_pt_p</code> table
+(the table to be divided) because it is referenced twice.  The other tables
+could be in-lined.  Executing this query took almost 23 seconds!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sqlite">.timer <span class="org-keyword">ON</span>
-<span class="org-keyword">WITH</span> a_a_t_g_pt_p <span class="org-keyword">AS</span>
-(<span class="org-keyword">SELECT</span> artist_name, a_a_t_g_pt.GenreId, Playlist.<span class="org-keyword">Name</span> <span class="org-keyword">AS</span> playlist_name, Playlist.PlaylistId, a_a_t_g_pt.TrackId
-<span class="org-keyword">FROM</span> Playlist <span class="org-keyword">JOIN</span>
-  (<span class="org-keyword">SELECT</span> a_a_t_g.GenreId, PlaylistId, PlaylistTrack.TrackId, artist_name
-  <span class="org-keyword">FROM</span> PlaylistTrack <span class="org-keyword">JOIN</span>
-    (<span class="org-keyword">SELECT</span> a_a_track.TrackId, artist_name, Genre.GenreId
-    <span class="org-keyword">FROM</span> Genre <span class="org-keyword">JOIN</span>
-      (<span class="org-keyword">SELECT</span> Track.TrackId, Track.GenreId, artist_name
-      <span class="org-keyword">FROM</span> Track <span class="org-keyword">JOIN</span>
-        (<span class="org-keyword">SELECT</span> Artist.<span class="org-keyword">Name</span> <span class="org-keyword">AS</span> artist_name, AlbumId
-        <span class="org-keyword">FROM</span> Artist <span class="org-keyword">JOIN</span> Album
-        <span class="org-keyword">USING</span> (ArtistId)) <span class="org-keyword">AS</span> album_artist
-      <span class="org-keyword">USING</span> (AlbumId)) <span class="org-keyword">AS</span> a_a_track
-    <span class="org-keyword">USING</span> (GenreId)) <span class="org-keyword">AS</span> a_a_t_g
-  <span class="org-keyword">USING</span> (TrackId)) <span class="org-keyword">AS</span> a_a_t_g_pt
-<span class="org-keyword">USING</span> (PlaylistId)),
-
-divisor <span class="org-keyword">AS</span>
-(<span class="org-keyword">SELECT</span> GenreId <span class="org-keyword">FROM</span> Genre
-<span class="org-keyword">WHERE</span> <span class="org-keyword">Name</span> = <span class="org-string">'Rock'</span> <span class="org-keyword">OR</span> <span class="org-keyword">Name</span> = <span class="org-string">'Metal'</span> <span class="org-keyword">OR</span> <span class="org-keyword">Name</span> = <span class="org-string">'Heavy Metal'</span>)
-
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> (
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> artist_name, playlist_name, Genre.<span class="org-keyword">Name</span>
-<span class="org-keyword">FROM</span> Genre <span class="org-keyword">JOIN</span>
-  (<span class="org-keyword">SELECT</span> quot.PlaylistId, TrackId, artist_name, GenreId, playlist_name
-  <span class="org-keyword">FROM</span> a_a_t_g_pt_p <span class="org-keyword">JOIN</span>
-  <span class="org-comment">-- quot</span>
-    (<span class="org-keyword">SELECT</span> PlaylistId
-    <span class="org-keyword">FROM</span> a_a_t_g_pt_p <span class="org-keyword">AS</span> Quotient
-    <span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
-      (<span class="org-keyword">SELECT</span> divisor.GenreId
-      <span class="org-keyword">FROM</span> divisor
-      <span class="org-keyword">WHERE</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span>
-        (<span class="org-keyword">SELECT</span> dividend.GenreId
-        <span class="org-keyword">FROM</span> a_a_t_g_pt_p <span class="org-keyword">AS</span> dividend
-        <span class="org-keyword">WHERE</span> Quotient.PlaylistId = dividend.PlaylistId
-        <span class="org-keyword">AND</span> divisor.GenreId = dividend.GenreId))) <span class="org-keyword">AS</span> quot
-  <span class="org-comment">-- end quot</span>
-  <span class="org-keyword">USING</span> (PlaylistId)) <span class="org-keyword">AS</span> a_a_t_g_pt_p_q
-<span class="org-keyword">USING</span> (GenreId));
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite">.timer <span class="org-keyword">ON</span>
-<span class="org-keyword">WITH</span> a_a_t_g_pt_p <span class="org-keyword">AS</span>
+<pre class="src src-sqlite" id="org7d8d44a"><span class="org-keyword">WITH</span> a_a_t_g_pt_p <span class="org-keyword">AS</span>
 (<span class="org-keyword">SELECT</span> artist_name, a_a_t_g_pt.GenreId, Playlist.<span class="org-keyword">Name</span> <span class="org-keyword">AS</span> playlist_name, Playlist.PlaylistId, a_a_t_g_pt.TrackId
 <span class="org-keyword">FROM</span> Playlist <span class="org-keyword">JOIN</span>
   (<span class="org-keyword">SELECT</span> a_a_t_g.GenreId, PlaylistId, PlaylistTrack.TrackId, artist_name
@@ -1848,22 +1727,144 @@ quot <span class="org-keyword">AS</span>
 <span class="org-keyword">USING</span> (GenreId));
 </pre>
 </div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 8:</span> Query Plan</caption>
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE PlaylistTrack</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 2</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Genre</td>
+</tr>
+
+<tr>
+<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 3</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">USE TEMP B-TREE FOR DISTINCT</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN SUBQUERY 1</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 9:</span> Result and Run Time</caption>
+
+<colgroup>
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">232</td>
+</tr>
+
+<tr>
+<td class="org-right">Run Time: real 23.081 user 23.022000 sys 0.003000</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
-<div id="outline-container-org2ee2315" class="outline-4">
-<h4 id="org2ee2315">
+<div id="outline-container-orge396856" class="outline-4">
+<h4 id="orge396856">
 <span class="section-number-4">1.4.4</span> With the Relation Algebra Definition</h4>
 <div class="outline-text-4" id="text-1-4-4">
 <p>
 The only difference between this version and the last is how division is
-executed, and here I did not remove it from the main query.  In the previous
-version, I originally had the division inside the main query and it was
-still just as slow.  This query took just 0.06 seconds!
+executed, and here I did not remove the division from the main query. This
+query took just 0.06 seconds!
 </p>
 <div class="org-src-container">
-<pre class="src src-sqlite">.timer <span class="org-keyword">ON</span>
-<span class="org-keyword">WITH</span> a_a_t_g_pt_p <span class="org-keyword">AS</span>
+<pre class="src src-sqlite" id="org279318a"><span class="org-keyword">WITH</span> a_a_t_g_pt_p <span class="org-keyword">AS</span>
 (<span class="org-keyword">SELECT</span> artist_name, a_a_t_g_pt.GenreId, Playlist.<span class="org-keyword">Name</span> <span class="org-keyword">AS</span> playlist_name, Playlist.PlaylistId, a_a_t_g_pt.TrackId
 <span class="org-keyword">FROM</span> Playlist <span class="org-keyword">JOIN</span>
   (<span class="org-keyword">SELECT</span> a_a_t_g.GenreId, PlaylistId, PlaylistTrack.TrackId, artist_name
@@ -1903,58 +1904,200 @@ divisor <span class="org-keyword">AS</span>
 <span class="org-keyword">USING</span> (GenreId));
 </pre>
 </div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 10:</span> Query Plan</caption>
+
+<colgroup>
+<col class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">SCAN TABLE PlaylistTrack</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE PlaylistTrack</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE Genre</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE PlaylistTrack</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">COMPOUND SUBQUERIES 6 AND 7 USING TEMP B-TREE (EXCEPT)</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN SUBQUERY 5</td>
+</tr>
+
+<tr>
+<td class="org-left">COMPOUND SUBQUERIES 3 AND 4 USING TEMP B-TREE (EXCEPT)</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN TABLE PlaylistTrack</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">SEARCH SUBQUERY 2 AS quot USING AUTOMATIC COVERING INDEX (PlaylistId=?)</td>
+</tr>
+
+<tr>
+<td class="org-left">USE TEMP B-TREE FOR DISTINCT</td>
+</tr>
+
+<tr>
+<td class="org-left">SCAN SUBQUERY 1</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 11:</span> Result and Run Time</caption>
+
+<colgroup>
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">232</td>
+</tr>
+
+<tr>
+<td class="org-right">Run Time: real 0.062 user 0.060000 sys 0.002000</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgda58b58" class="outline-4">
-<h4 id="orgda58b58">
-<span class="section-number-4">1.4.5</span> Gotcha with Except</h4>
-<div class="outline-text-4" id="text-1-4-5">
-<p>
-In writing the division operation for the previous query, I found what I
-think to be a major flaw in either SQL or SQLite, that being if you do not
-have the SELECT column names in the same order for tables being given to the
-EXCEPT operator, the EXCEPT operator will not perform its function
-correctly.  Instead it will think that the tables have nothing in common and
-you will get the first table.  Tables are supposed to be sets of columns;
-column order should not matter.  This bug was very difficult to diagnose.
-It had me stepping through each statement, seeing what it returned, and
-comparing it to what Relational returned.
-</p>
-</div>
-</div>
-</div>
 <div id="outline-container-org5ea39c9" class="outline-3">
 <h3 id="org5ea39c9">
 <span class="section-number-3">1.5</span> Conclusion</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 In the non-trivial queries, Python Relational was invaluable in crafting such
-queries.  The Relational query was entirely procedural and relatively easy to
-follow.  I had to make notes about what was being joined on and what columns
-were being returned.  Fortunately, it did not have SQL's nested structure.
-SQL's nested structure makes it difficult to follow.  The results of inner
-queries are syntactically given aliases after they are referenced, requiring
-you to jump around the code a lot and keep track of what nesting level you
-are at in order to make procedural sense of what is happening.&amp;nbsp;
+queries.  The complex Relational query is entirely procedural and relatively
+easy to follow.  I had to make notes about what was being joined on and what
+columns were being returned.  Fortunately, it did not have SQL's nested
+structure.  SQL's nested structure makes it difficult to follow.  The results
+of inner queries are syntactically given aliases after they are referenced,
+requiring you to jump around the code a lot and keep track of what nesting
+level you are at in order to make procedural sense of what is happening.
 Unfortunately, nothting like Relational currently exists for relational
-databases.&amp;nbsp; There was a query language developed at IBM, <a href="https://en.wikipedia.org/wiki/IBM_Business_System_12">IBM BS12</a>,
-that had such qualities.&amp;nbsp; I think Relational can be useful as a guide in
-learning to query relational databases and possibly other database types by
-practicing creating Relational queries along side database queries,
-understanding complex SQL queries by having the Relational version to refer
-back to, and prototyping new queries through sequential development.&amp;nbsp; In
-database classes, learning relational algebra first and playing with it using
-Relational, before diving into SQL (or at least before doing anti-join and
-division in SQL), should help increase understanding.
+databases. There was a query language developed at IBM, <a href="https://en.wikipedia.org/wiki/IBM_Business_System_12">IBM BS12</a>, that had
+such qualities. I think Relational can be useful as a guide in learning to
+query relational databases by practicing creating Relational queries along
+side database queries, understanding complex SQL queries by having the
+Relational version to refer back to, and prototyping new queries through
+sequential development. In database classes, learning relational algebra
+first and playing with it using Relational, before diving into SQL (or at
+least before doing anti-join and division in SQL), should help increase
+understanding.
 </p>
-
+</div>
+<div id="outline-container-orgdd83e78" class="outline-4">
+<h4 id="orgdd83e78">
+<span class="section-number-4">1.5.1</span> Further Reading</h4>
+<div class="outline-text-4" id="text-1-5-1">
 <p>
 For going from SQL to Relational, there is a paper by Jan Van den Bussche and
-Stijn Vansummeren, <a href="http://cs.ulb.ac.be/public/_media/teaching/infoh417/sql2alg_eng.pdf">Translating SQL into the Relational Algebra</a>.  One
-translation that I have yet to figure out is translating the correlated
-subquery version of division.
+Stijn Vansummeren, <a href="http://cs.ulb.ac.be/public/_media/teaching/infoh417/sql2alg_eng.pdf">Translating SQL into the Relational Algebra</a>.
 </p>
+</div>
 </div>
 </div>
 </article>

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <link rel="alternate" type="application/atom+xml" href="/feed.atom">
 <link rel="shortcut icon" href="../graphics/logo3.svg">
+<link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
 <title>Transitive Closure in SQL</title>
 <meta name="description" content="Using recursive common table expressions in SQL to find the transitive closure.">
 <meta name="keywords" content="sql, relational algebra, python">
@@ -11,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="../css/main.css">
 <link rel="stylesheet" type="text/css" href="../css/exposition.css">
 <link rel="stylesheet" type="text/css" href="../css/blog.css">
+<link rel="stylesheet" type="text/css" href="../css/sql-transitive-closure.css">
 </head>
 <body>
 <header id="masthead"><input id="expand-blog-menu" type="checkbox"><div id="dwhoman-logo" class="nav"><a href="../index.html"><span>D</span><span>W</span><span>H</span></a></div>
@@ -22,28 +24,39 @@
 <div id="about-page" class="nav menu menu-btn"><a href="../about.html"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
 <div id="resume-page" class="nav menu menu-btn"><a href="../resume.html"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
 <div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
-<div id="following-page" class="menu filler"></div>
+<div id="following-page" class="menu nav menu-btn"><a href="../blog/following.html"><span>Following</span><img src="../graphics/noun_541507_cc.svg" alt=""></a></div>
 <div id="blog-feed-comp" class="filler menu"></div>
 <div id="nav-filler" class="filler"></div>
-<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav><h2>Thread</h2>
-<dl id="blog-threads">
-<dt>Prev:</dt>
-<dd class="cloud"><a href="sql-recursive-queries.html">SQL Recursive Queries</a></dd>
-<dt>Next:</dt>
-<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
-</dl></nav><nav><h2>Published</h2>
-<dl id="blog-published">
-<dt>Prev:</dt>
-<dd class="cloud"><a href="sql-recursive-queries.html">SQL Recursive Queries</a></dd>
-<dt>Next:</dt>
-<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
-</dl></nav><nav><h2>Updated</h2>
-<dl id="blog-updated">
+<div id="to-top" class="nav menu-btn"><a href="#"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-threads"><h2>Thread</h2>
+<dl>
 <dt>Prev:</dt>
 <dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
 <dt>Next:</dt>
 <dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
-</dl></nav></aside><main id="content">
+</dl></nav><nav id="blog-published"><h2>Published</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav id="blog-updated"><h2>Updated</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav id="tag-list"><h2>Tags</h2>
+<ul>
+<li><a href="../categories.xhtml#python">python</a></li>
+<li><a href="../categories.xhtml#relational_algebra">relational algebra</a></li>
+<li><a href="../categories.xhtml#sql">sql</a></li>
+</ul></nav></aside><aside id="generation-dates"><ul>
+<li id="publication-date">Published: <time datetime="2016-09-11T00:00:00">September 11 2016</time>
+</li>
+<li id="update-date">Updated: <time datetime="2018-03-29T15:24:00">March 29 2018</time>
+</li>
+<li id="markup-source"><a href="sql-transitive-closure.org" type="text/plain" download="sql-transitive-closure.org">Page Markup Source</a></li>
+</ul></aside><main id="content">
 <h1 class="title">Transitive Closure in SQL</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -55,21 +68,22 @@
 <li>
 <a href="#org5a21f7d">1.1. Recursive Queries and SQLite's Examples</a>
 <ul>
-<li><a href="#org914e6cd">1.1.1. Sudoku Example</a></li>
-<li><a href="#org99139fa">1.1.2. Memoization Example</a></li>
+<li><a href="#orgff3b734">1.1.1. Breadth First Search</a></li>
+<li><a href="#org62155e8">1.1.2. Depth First Search</a></li>
 </ul>
 </li>
+<li><a href="#org99139fa">1.2. Memoization Example</a></li>
 <li>
-<a href="#org01b044f">1.2. Example Situation</a>
+<a href="#org6725559">1.3. Transitive Closure Example</a>
 <ul>
-<li><a href="#orge7328d7">1.2.1. Using Relational Algebra and Python</a></li>
-<li><a href="#org991be95">1.2.2. Using SQLite and Recursive Common Table Expressions</a></li>
+<li><a href="#orge7328d7">1.3.1. Using Relational Algebra and Python</a></li>
+<li><a href="#org991be95">1.3.2. Using SQLite and Recursive Common Table Expressions</a></li>
+<li>
+<a href="#org26850e3">1.3.3. Cyclic Graphs</a>
+<ul>
+<li><a href="#org50fb68e">1.3.3.1. Another Example</a></li>
 </ul>
 </li>
-<li>
-<a href="#org26850e3">1.3. Cyclic Graphs</a>
-<ul>
-<li><a href="#org50fb68e">1.3.1. Another Example</a></li>
 </ul>
 </li>
 </ul>
@@ -83,23 +97,24 @@
 <span class="section-number-2">1</span> Transitive Closure in SQL</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a href="https://en.wikipedia.org/wiki/Transitive_closure">Transitive closure</a> is cited as one of the obvious operations on relation
-tables (also called relations in some of the references cited here) that is
-outside the bounds of relational algebra. Transitive closure is an operation
-on directed graphs where the output is a graph with direct connections between
-nodes only if there is some path between those nodes in the input graph. The
-transitive closure is possible by using recursive common table
-expressions. SQLite has a good <a href="https://sqlite.org/lang_with.html">article</a> on recursive CTEs, even using it for
-more general purpose computing. The paper "Universality of Data Retrieval
-Languages", by Aho and Ullman, shows why some <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">least fixed point operators</a> such
-as the transitive closure are not possible by just using relational algebra. A
-fixed point operator is a operator that returns its input, which is what the
-transitive closure eventually does. Giving an input graph to the transitive
-closure operation and then applying the transitive closure on the output, the
-output will be the same as the second input. The output of any further
-iterations will be the same. I suppose it is considered a least fixed point
-operator because it returns the smallest possible transitively closed graph
-containing the input graph.
+<a href="https://en.wikipedia.org/wiki/Transitive_closure">Transitive closure</a> is an operation on relation tables that is not expressible
+in relational algebra. Transitive closure is an operation on directed graphs
+where the output is a graph with direct connections between nodes only when
+there is a path between those nodes in the input graph. The transitive
+closure is possible to compute in SQL by using recursive common table
+expressions (CTEs). SQLite has a good <a href="https://sqlite.org/lang_with.html">article</a> on recursive CTEs, even using it
+for more general purpose computing.
+</p>
+
+<p>
+The paper, <a href="https://www.academia.edu/14343057/Universality_of_data_retrieval_languages">Universality of Data Retrieval Languages</a>, by Aho and Ullman, shows
+why some <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">least fixed point operators</a>, such as the transitive closure, are not
+possible with relational algebra. A fixed point operator is a operator that
+returns its input, which is what the transitive closure eventually
+does. Feeding a transitive closure output back into the function will produce
+the same output.  I suppose it is called a "least" fixed point operator
+because it returns the smallest possible transitively closed graph containing
+the input graph.
 </p>
 </div>
 
@@ -108,7 +123,17 @@ containing the input graph.
 <span class="section-number-3">1.1</span> Recursive Queries and SQLite's Examples</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-A recursive query is one like:
+Here I step through the "Controlling Depth-First Versus Breadth-First Search
+Of a Tree Using ORDER BY" examples given in the SQLite online documentation.
+</p>
+</div>
+
+<div id="outline-container-orgff3b734" class="outline-4">
+<h4 id="orgff3b734">
+<span class="section-number-4">1.1.1</span> Breadth First Search</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+A recursive query is one with the form:
 </p>
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
@@ -117,19 +142,18 @@ A recursive query is one like:
     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
     <span class="org-keyword">SELECT</span> org.<span class="org-keyword">name</span>, under_alice.<span class="org-keyword">level</span>+1
       <span class="org-keyword">FROM</span> org <span class="org-keyword">JOIN</span> under_alice <span class="org-keyword">ON</span> org.boss=under_alice.<span class="org-keyword">name</span>
-     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2
+     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2 <span class="org-keyword">ASC</span>
   )
 <span class="org-keyword">SELECT</span> substr(<span class="org-string">'..........'</span>,1,<span class="org-keyword">level</span>*3) || <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> under_alice;
 </pre>
 </div>
 
 <p>
-which is given as an example in the linked SQLite article. "under_alice"
-looks like a function that takes parameters, but it is not. What look to be
-parameters, are actually the column names of the return value, so (org.name,
-under_alice.level+1) becomes under_alice.name and under_alice.level. The last
-SELECT statement just formats the result from "under_alice". The under_alice
-query makes reference to the org table, which looks like:
+<code>under_alice</code> looks like a function that takes parameters, but it is
+not. What look to be parameters, are actually the column names of the return
+value, so <code>org.name, under_alice.level+1</code> becomes <code>under_alice.name,
+    under_alice.level</code>. The last SELECT statement just formats the result from
+<code>under_alice</code>. The under_alice query makes reference to the <code>org</code> table:
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -140,10 +164,16 @@ query makes reference to the org table, which looks like:
 
 <col class="org-left">
 </colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">name</th>
+<th scope="col" class="org-left">boss</th>
+</tr>
+</thead>
 <tbody>
 <tr>
 <td class="org-left">Alice</td>
-<td class="org-left"> </td>
+<td class="org-left">NULL</td>
 </tr>
 
 <tr>
@@ -179,424 +209,469 @@ query makes reference to the org table, which looks like:
 </table>
 
 <p>
-The SQLite article gives the algorithm that these kinds of queries take. When
-recursing, two tables are created, the "recursive table" and the "queue". So
-stepping through the code: Initially
+The SQLite article explains how recursive queries proceed.  Stepping through
+that process with the <code>under_alice</code> query: When recursing, two tables are
+created, the <em>recursive table</em> and the <em>queue</em>. So stepping through the code:
+Initially <code>VALUES('Alice',0)</code> is stored in the <em>queue</em>, and the <em>recursive
+table</em> is empty. The part after the <code>UNION ALL</code> is the recursion loop.  The
+statement, <code>VALUES('Alice',0)</code>, does not get re-evaluated. In the first
+iteration, the top value from the <em>queue</em> is moved to the <em>recursive table</em>
+and it also becomes the value that <em>under_alice</em> refers to in the
+<code>SELECT...FROM...</code> statement.  The <code>org</code> table gets joined with <code>('Alice',0)
+    ON org.boss = 'Alice'</code>, and the table returned by the <code>SELECT...FROM...</code>
+statement gets stored at the bottom of the queue, resulting in the tables
+shown in step 1.  The algorithm repeats, step 2, Bob is pulled from the
+<em>queue</em> and put into the <em>recursive table</em>, and the Bob record, <code>('Bob',1)</code>,
+gets joined with the org table.  The result is then stored in the <em>queue</em>.
+This repeats until the <em>queue</em> is empty; which is only possible if the <code>JOIN</code>
+returns an empty table, which is does for Fred, Gail, Cindy, and Dave.
+Otherwise the query would loop infinitely.  This query performs a breadth
+first search.
 </p>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
-</pre>
+<ul class="org-ul">
+<li>
+<p>
+step 0
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 1:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The recursive table is empty.
+</p>
+</li>
+
+<li>
+<p>
+step 1
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 2:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 3:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 2
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 4:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 5:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 3
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 6:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 7:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 4
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 8:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 9:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 5
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 10:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 11:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 6
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 12:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 13:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 7
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 14:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The queue is empty.
+</p>
+</li>
+</ul>
 </div>
-
-<p>
-is stored in the queue, and the recursive table is empty. The part after the
-UNION ALL is the recursion loop.
-</p>
-
-<p>
-The statement:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">VALUES</span>(<span class="org-string">'Alice'</span>,0)
-</pre>
 </div>
-
-<p>
-does not get re-evaluated. In the first iteration, the recursive table gets
-the top value from the queue and that value becomes the value that
-"under_alice" refers to in the SELECT … FROM … statement.  The org table
-gets joined with ('Alice',0) ON org.boss = 'Alice', and the table returned by
-the SELECT … FROM … statement gets stored at the bottom of the queue,
-resulting in the tables shown in step 1.  The algorithm repeats, step 2, Bob
-is pulled from the queue and put into the recursive table, and the Bob record
-gets joined with the org table.  The result is then stored in the queue.
-This repeats until the queue is empty; which is only possible if the JOIN
-returns NULL, which is does for Fred, Gail, Cindy, and Dave.  Otherwise the
-query would loop infinitely.  This query performs a breadth first search.
-</p>
-
-<ul class="org-ul">
-<li>step 1</li>
-</ul>
-
-<table id="org04b796a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org31ffcff" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 2</li>
-</ul>
-<table id="org1bbabfe" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-</tbody>
-</table>
-
-<table id="orgc443c59" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 3</li>
-</ul>
-<table id="org33c1f7a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org56165c4" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 4</li>
-</ul>
-<table id="org09e5c94" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org07fb611" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 5</li>
-</ul>
-<table id="org150afd2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org93341aa" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 6</li>
-</ul>
-<table id="org0686be9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org1c45f7b" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 7</li>
-</ul>
-<table id="org9d59fb9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
+<div id="outline-container-org62155e8" class="outline-4">
+<h4 id="org62155e8">
+<span class="section-number-4">1.1.2</span> Depth First Search</h4>
+<div class="outline-text-4" id="text-1-1-2">
 <p>
 The SQLite article also gives an example of depth first search.
 </p>
@@ -614,16 +689,19 @@ The SQLite article also gives an example of depth first search.
 </div>
 
 <p>
-The ORDER BY number refers to the second column in the select statement. The
-DESC means that elements get taken from the bottom of the queue instead of
+The <code>ORDER BY</code> number refers to the second column in the <code>SELECT</code> statement. The
+<code>DESC</code> means that elements get taken from the bottom of the <em>queue</em> instead of
 the top; that is, the queue acts as a stack.
 </p>
 
 <ul class="org-ul">
-<li>step 1</li>
-</ul>
-<table id="org2e387a3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<li>
+<p>
+step 0
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 15:</span> Queue</caption>
 
 <colgroup>
 <col class="org-left">
@@ -638,8 +716,35 @@ the top; that is, the queue acts as a stack.
 </tbody>
 </table>
 
-<table id="orgc07a02a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<p>
+The recursive table is empty.
+</p>
+</li>
 
+<li>
+<p>
+step 1
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 16:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 17:</span> Queue</caption>
 
 <colgroup>
 <col class="org-left">
@@ -658,12 +763,15 @@ the top; that is, the queue acts as a stack.
 </tr>
 </tbody>
 </table>
+</li>
 
-<ul class="org-ul">
-<li>step 2</li>
-</ul>
-<table id="org9b164c3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<li>
+<p>
+step 2
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 18:</span> Recursive Table</caption>
 
 <colgroup>
 <col class="org-left">
@@ -683,8 +791,9 @@ the top; that is, the queue acts as a stack.
 </tbody>
 </table>
 
-<table id="orgf37f196" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 19:</span> Queue</caption>
 
 <colgroup>
 <col class="org-left">
@@ -708,62 +817,15 @@ the top; that is, the queue acts as a stack.
 </tr>
 </tbody>
 </table>
+</li>
 
-<ul class="org-ul">
-<li>step 3</li>
-</ul>
-<table id="org5a2b60a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<table id="org3e55f45" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 4</li>
-</ul>
-<table id="orgc98b1f5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<li>
+<p>
+step 3
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 20:</span> Recursive Table</caption>
 
 <colgroup>
 <col class="org-left">
@@ -785,16 +847,12 @@ the top; that is, the queue acts as a stack.
 <td class="org-left">Gail</td>
 <td class="org-right">2</td>
 </tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
 </tbody>
 </table>
 
-<table id="orgdec75e5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 21:</span> Queue</caption>
 
 <colgroup>
 <col class="org-left">
@@ -806,14 +864,22 @@ the top; that is, the queue acts as a stack.
 <td class="org-left">Bob</td>
 <td class="org-right">1</td>
 </tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
 </tbody>
 </table>
+</li>
 
-<ul class="org-ul">
-<li>step 5</li>
-</ul>
-<table id="org67f5d84" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<li>
+<p>
+step 4
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 22:</span> Recursive Table</caption>
 
 <colgroup>
 <col class="org-left">
@@ -840,6 +906,60 @@ the top; that is, the queue acts as a stack.
 <td class="org-left">Fred</td>
 <td class="org-right">2</td>
 </tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 23:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 5
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 24:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
 
 <tr>
 <td class="org-left">Bob</td>
@@ -848,8 +968,9 @@ the top; that is, the queue acts as a stack.
 </tbody>
 </table>
 
-<table id="org5e98200" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 25:</span> Queue</caption>
 
 <colgroup>
 <col class="org-left">
@@ -868,72 +989,15 @@ the top; that is, the queue acts as a stack.
 </tr>
 </tbody>
 </table>
+</li>
 
-<ul class="org-ul">
-<li>step 6</li>
-</ul>
-<table id="orgffb080a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Alice</td>
-<td class="org-right">0</td>
-</tr>
-
-<tr>
-<td class="org-left">Cindy</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Gail</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Fred</td>
-<td class="org-right">2</td>
-</tr>
-
-<tr>
-<td class="org-left">Bob</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Emma</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<table id="orgc60de4a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-
-<col class="org-right">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">Dave</td>
-<td class="org-right">2</td>
-</tr>
-</tbody>
-</table>
-
-<ul class="org-ul">
-<li>step 7</li>
-</ul>
-<table id="org7d20220" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<li>
+<p>
+step 6
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 26:</span> Recursive Table</caption>
 
 <colgroup>
 <col class="org-left">
@@ -970,6 +1034,70 @@ the top; that is, the queue acts as a stack.
 <td class="org-left">Emma</td>
 <td class="org-right">2</td>
 </tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 27:</span> Queue</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Dave</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</li>
+
+<li>
+<p>
+step 7
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 28:</span> Recursive Table</caption>
+
+<colgroup>
+<col class="org-left">
+
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Alice</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">Cindy</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Gail</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Fred</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Bob</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Emma</td>
+<td class="org-right">2</td>
+</tr>
 
 <tr>
 <td class="org-left">Dave</td>
@@ -979,143 +1107,177 @@ the top; that is, the queue acts as a stack.
 </table>
 
 <p>
-In the previous examples, the order that rows were returned was random.  The
-row order of (Bob,1; Cindy,1) in the first step could have been switched to
-(Cindy,1; Bob,1), as could other returns.  So if it mattered, you could use
-for sub-sorting:
+The queue is empty.
+</p>
+</li>
+</ul>
+
+<p>
+In the previous examples, some of the row orderings were random.  For
+example, in step 1, the row order of <code>(Bob,1; Cindy,1)</code> could have been
+reversed; so if determinism matters, you could sub-sort the recursive query:
+<code>ORDER BY 2 DESC, 1 DESC</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org99139fa" class="outline-3">
+<h3 id="org99139fa">
+<span class="section-number-3">1.2</span> Memoization Example</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Here is a recursive CTE, adapted from <a href="https://www.codeproject.com/tips/811924/fibonacci-sequence-using-sql-server-cte">Code Project</a>, that computes the
+Fibonacci sequence. 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 2 <span class="org-keyword">DESC</span>, 1 <span class="org-keyword">DESC</span>
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org914e6cd" class="outline-4">
-<h4 id="org914e6cd">
-<span class="section-number-4">1.1.1</span> Sudoku Example</h4>
-<div class="outline-text-4" id="text-1-1-1">
-<p>
-The SQLite article gives the following code that performs sudoku.
-</p>
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
-<span class="org-keyword">input</span>(sud) <span class="org-keyword">AS</span> (
-    <span class="org-keyword">VALUES</span>(<span class="org-string">'53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79'</span>)
-  ),
-  digits(z, lp) <span class="org-keyword">AS</span> (
-    <span class="org-keyword">VALUES</span>(<span class="org-string">'1'</span>, 1)
-    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span> <span class="org-keyword">SELECT</span>
-    <span class="org-builtin">CAST</span>(lp+1 <span class="org-keyword">AS</span> TEXT), lp+1 <span class="org-keyword">FROM</span> digits <span class="org-keyword">WHERE</span> lp&lt;9
-  ),
-  x(s, ind) <span class="org-keyword">AS</span> (
-    <span class="org-keyword">SELECT</span> sud, instr(sud, <span class="org-string">'.'</span>) <span class="org-keyword">FROM</span> <span class="org-keyword">input</span>
-    <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
-    <span class="org-keyword">SELECT</span>
-      substr(s, 1, ind-1) || z.z || substr(s, ind+1),
-      instr( substr(s, 1, ind-1) || z.z || substr(s, ind+1), <span class="org-string">'.'</span> )
-     <span class="org-keyword">FROM</span> x, digits <span class="org-keyword">AS</span> z
-    <span class="org-keyword">WHERE</span> ind&gt;0
-      <span class="org-keyword">AND</span> <span class="org-keyword">NOT</span> <span class="org-keyword">EXISTS</span> (
-            <span class="org-keyword">SELECT</span> 1
-              <span class="org-keyword">FROM</span> digits <span class="org-keyword">AS</span> lp
-             <span class="org-keyword">WHERE</span> z.z = substr(s, ((ind-1)/9)*9 + lp.lp, 1)
-                <span class="org-keyword">OR</span> z.z = substr(s, ((ind-1)%9) + (lp.lp-1)*9 + 1, 1)
-                <span class="org-keyword">OR</span> z.z = substr(s, (((ind-1)/3) % 3) * 3
-                        + ((ind-1)/27) * 27 + lp.lp
-                        + ((lp.lp-1) / 3) * 6, 1)
-         )
-  ) &lt;9 1="" <span class="org-keyword">all</span>="" <span class="org-keyword">as</span>="" digits="" <span class="org-keyword">from</span>="" ind-1="" ind="" <span class="org-keyword">input</span>="" instr="" s="" <span class="org-keyword">select</span>="" substr="" sud="" <span class="org-keyword">union</span>="" <span class="org-keyword">where</span>="" x="" z.z="" z=""&gt;
-<span class="org-keyword">SELECT</span> s <span class="org-keyword">FROM</span> x <span class="org-keyword">WHERE</span> ind=0;
+<pre class="src src-sqlite">.timer <span class="org-keyword">on</span>
+<span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span> nth_fibonacci(i, fiboNumber, nextNumber) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> 0 <span class="org-keyword">AS</span> i, 0 <span class="org-keyword">AS</span> fiboNumber, 1 <span class="org-keyword">AS</span> nextNumber
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+     <span class="org-keyword">SELECT</span> a.i + 1 <span class="org-keyword">AS</span> i, a.nextNumber <span class="org-keyword">AS</span> fiboNumber, a.fiboNumber + a.nextNumber <span class="org-keyword">AS</span> nextNumber
+     <span class="org-keyword">FROM</span> nth_Fibonacci <span class="org-keyword">AS</span> a
+     <span class="org-keyword">LIMIT</span> 1478
+)
+<span class="org-keyword">SELECT</span> fiboNumber <span class="org-keyword">FROM</span> nth_fibonacci <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> i <span class="org-keyword">DESC</span> <span class="org-keyword">LIMIT</span> 10;
 </pre>
 </div>
 
-<p>
-There are a few comments on this code that I would like to make. Every time
-one of these functions are called; input(), digits(), and x(), they return
-the same value. Also the code
-</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 29:</span> Last nine Fibonacci numbers expressible in double precision floats and run-time.</caption>
 
-<div class="org-src-container">
-<pre class="src src-sqlite">substr(s, 1, ind-1) || z.z || substr(s, ind+1)
-</pre>
-</div>
+<colgroup>
+<col class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">Inf</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3069892237634e+308</td>
+</tr>
+
+<tr>
+<td class="org-right">8.07763763215622e+307</td>
+</tr>
+
+<tr>
+<td class="org-right">4.99225460547777e+307</td>
+</tr>
+
+<tr>
+<td class="org-right">3.08538302667846e+307</td>
+</tr>
+
+<tr>
+<td class="org-right">1.90687157879931e+307</td>
+</tr>
+
+<tr>
+<td class="org-right">1.17851144787915e+307</td>
+</tr>
+
+<tr>
+<td class="org-right">7.28360130920163e+306</td>
+</tr>
+
+<tr>
+<td class="org-right">4.50151316958984e+306</td>
+</tr>
+
+<tr>
+<td class="org-right">2.78208813961179e+306</td>
+</tr>
+
+<tr>
+<td class="org-right">Run Time: real 0.002 user 0.001000 sys 0.001000</td>
+</tr>
+</tbody>
+</table>
 
 <p>
-is repeated once and digits() is called twice. Since the result is not
-changed, I assume that the SQLite compiler caches the result and hopefully
-it is smart enough to recognize repeat statements and cache the first
-evaluation and skip the second evaluation. I think this is one of the
-problems with SQL, as far as I know, there are no variables or nested WITH
-statements.  You might be able to use INSERT, UPDATE, and DELETE on
-referenced tables to pass data between CTE calls and other queries.
-</p>
-
-<p>
-Another thing to note, in the example given in the article, there are
-references to the tables "z" and "lp" that do not make sense because a
-specific column is needed, which turns out to be "z.z" and "lp.lp".  I
-assume that this is short hand.  I made those changes in the code shown
-here.
-</p>
-</div>
-</div>
-<div id="outline-container-org99139fa" class="outline-4">
-<h4 id="org99139fa">
-<span class="section-number-4">1.1.2</span> Memoization Example</h4>
-<div class="outline-text-4" id="text-1-1-2">
-<p>
-Looking through the SQLite syntax diagrams, it appears that CTEs can only
-perform select statements; however, you can use external tables to cache
-results. Here is an example that computes the Fibonacci sequence. Given the
-following table and starting data:
+While SQLite quickly computes all expressible Fibonacci values and is smart
+enough to optimize away the recursion, the Fibonacci function is a popular
+example to show memoization. Memoization is where intermediate results are
+stored so that repeated calls do not have to recompute those values.  An
+external tables can be used to memoize results.  Given the following table
+and starting data:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Fibonacci</span> (
-  <span class="org-keyword">number</span> <span class="org-type">INTEGER</span> <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>,
+  i <span class="org-type">INTEGER</span> <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span>,
   fibo <span class="org-type">INTEGER</span>
 ) <span class="org-keyword">WITHOUT</span> ROWID;
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(0,0);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci <span class="org-keyword">VALUES</span>(1,1);
 </pre>
 </div>
-<p>
-This code will compute the next number in the sequence, store it, and return
-the sequence. Repeated calls will add succeeding values to the table.
-</p>
 
+<p>
+The following code computes the next number in the sequence, stores it, and
+returns the sequence. Repeated calls will add succeeding values to the table.
+This query is a CTE but not a recursive one. Getting the <code>N^th^</code> term,
+requires repeatedly calling this <code>WITH...INSERT</code> statement <code>N</code> times.  If you
+add another <code>INSERT</code> statement after the first one, it will not see the WITH
+statement; only the first <code>INSERT</code> knows about the <code>WITH</code> statement.
+</p>
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> next_fibonacci(<span class="org-keyword">number</span>, fibo) <span class="org-keyword">AS</span> (
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> next_fibonacci(i, fibo) <span class="org-keyword">AS</span> (
 <span class="org-comment">-- compute the next Fibonacci number in the sequence</span>
-    <span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) + 1, <span class="org-builtin">SUM</span>(fibo)
+    <span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) + 1, <span class="org-builtin">SUM</span>(fibo)
     <span class="org-keyword">FROM</span> Fibonacci
     <span class="org-keyword">WHERE</span>
-    <span class="org-comment">-- Get only the last two records </span>
-    Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) <span class="org-keyword">FROM</span> Fibonacci)
-    <span class="org-keyword">OR</span> Fibonacci.<span class="org-keyword">number</span> = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(<span class="org-keyword">number</span>) - 1 <span class="org-keyword">FROM</span> Fibonacci)
+    <span class="org-comment">-- Get only the last two records</span>
+    Fibonacci.i = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) <span class="org-keyword">FROM</span> Fibonacci)
+    <span class="org-keyword">OR</span> Fibonacci.i = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) - 1 <span class="org-keyword">FROM</span> Fibonacci)
 )
 
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Fibonacci
-<span class="org-keyword">SELECT</span> <span class="org-keyword">number</span>, fibo <span class="org-keyword">FROM</span> next_fibonacci; 
+<span class="org-keyword">SELECT</span> i, fibo <span class="org-keyword">FROM</span> next_fibonacci;
 <span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> Fibonacci;
 </pre>
 </div>
+
 <p>
-Getting the Nth term, would require repeatedly calling this WITH … INSERT
-statement N times, since recursive CTEs cannot perform insertion and only
-the first INSERT is scoped to the WITH statement.  You cannot get an
-arbitrary Nth value, however. If you add another INSERT statement after the
-first one, it will not see the WITH statement.
+Combining the last two queries, the recursive CTE and the non-recursive CTE,
+we get a recursive CTE that can compute the first <code>N</code> values; in this case,
+up to the 60^th^ value. Computing an arbitrary <code>N</code> would require an external
+program to modify the query's <code>N</code> value. In this case, Emacs Org <a href="http://orgmode.org/worg/org-contrib/babel/">Babel</a> is
+used to set it. Filtering the <code>nth_fibonacci</code> output is necessary because the
+CTE will return the <code>N+1</code> Fibonacci value.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span> nth_fibonacci(i, prevNumber, fiboNumber) <span class="org-keyword">AS</span> (
+     <span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) + 1 <span class="org-keyword">AS</span> i, <span class="org-builtin">MAX</span>(fibo) <span class="org-keyword">AS</span> prevNumber, <span class="org-builtin">SUM</span>(fibo) <span class="org-keyword">AS</span> fiboNumber
+     <span class="org-keyword">FROM</span> Fibonacci
+     <span class="org-keyword">WHERE</span> Fibonacci.i = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) <span class="org-keyword">FROM</span> Fibonacci)
+     <span class="org-keyword">OR</span> Fibonacci.i = (<span class="org-keyword">SELECT</span> <span class="org-builtin">MAX</span>(i) - 1 <span class="org-keyword">FROM</span> Fibonacci)
+
+     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
+
+     <span class="org-keyword">SELECT</span> prev.i + 1 <span class="org-keyword">AS</span> i,
+            prev.fiboNumber <span class="org-keyword">AS</span> prevNumber,
+            prev.fiboNumber + prev.prevNumber <span class="org-keyword">AS</span> fiboNumber
+     <span class="org-keyword">FROM</span> nth_Fibonacci <span class="org-keyword">AS</span> prev
+     <span class="org-keyword">WHERE</span> prev.i &lt; $N
+)
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fibonacci
+<span class="org-keyword">SELECT</span> i, fiboNumber <span class="org-keyword">AS</span> fibo <span class="org-keyword">FROM</span> nth_Fibonacci <span class="org-keyword">WHERE</span> i &lt;= $N;
+
+<span class="org-keyword">SELECT</span> i, fibo <span class="org-keyword">FROM</span> fibonacci <span class="org-keyword">WHERE</span> i = $N;
+</pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org01b044f" class="outline-3">
-<h3 id="org01b044f">
-<span class="section-number-3">1.2</span> Example Situation</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org6725559" class="outline-3">
+<h3 id="org6725559">
+<span class="section-number-3">1.3</span> Transitive Closure Example</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 Aho and Ullman give the example of finding whether one can take flights to
 get from one airport to another. Direct and one-stop flights are possible to
@@ -1124,12 +1286,15 @@ or recursion on intermediate output until a steady state is reached.
 </p>
 
 <p>
-Given the following table of flights, where "source" is the flight's starting
-airport, "dest" is the destination airport, "departs" is the departure time,
-and "arrives" is the arrival time, each flight represents a node on a graph.
+Given the following table of flights, where <em>source</em> is the flight's starting
+airport, <em>dest</em> is the destination airport, <em>departs</em> is the departure time,
+and <em>arrives</em> is the arrival time, each flight record represents a node on a
+graph.
 </p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
+<table id="org88de76f" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 30:</span> Flights.</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1142,16 +1307,15 @@ and "arrives" is the arrival time, each flight represents a node on a graph.
 
 <col class="org-right">
 </colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">id</th>
-<th scope="col" class="org-left">source</th>
-<th scope="col" class="org-left">dest</th>
-<th scope="col" class="org-right">departs</th>
-<th scope="col" class="org-right">arrives</th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<td class="org-right">id</td>
+<td class="org-left">source</td>
+<td class="org-left">dest</td>
+<td class="org-right">departs</td>
+<td class="org-right">arrives</td>
+</tr>
+
 <tr>
 <td class="org-right">0</td>
 <td class="org-left">A</td>
@@ -1205,29 +1369,35 @@ and "arrives" is the arrival time, each flight represents a node on a graph.
 We can get possible one-stop flights by joining the table with itself where
 flights arrive at or before another flight at the same airport. To get
 multi-stop flights, the <a href="https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm">Floyd-Warshall algorithm</a> is used.  The Floyd-Warshall
-alogrithm uses a boolean connection table, true for connected, false for
+algorithm uses a Boolean connection table; true for connected, false for
 unconnected, for each pair of nodes.  The example here, instead, uses a list
 of connections.  A connections is added to the list if there are two
 connections with a common node.  The algorithm uses a triple nested loop that
 iterates through all possible node connections, including connections that
-start and end at the same node. There are N2 number of possible connections,
-N being the number of nodes.  After N3 iterations, any further iterations
-will not affect the output. N times more iterations than there are possible
-connections is necessary to check all connection pairs for new connections
-after ones have been made in the previous iteration. It is possible to short
-circuit the loop if two consecutive loops produce equal output; and if there
-are no connections to begin with, the algorithm can be avoided all together.
-<object type="image/svg+xml" data="sql-transitive-closure/flights.svg" class="org-svg">
-Sorry, your browser does not support SVG.</object>
+start and end at the same node. There are <img class="latex" alt="latex-formula" src="ltximg/sql-transitive-closure_731951f1052361d2d6fe5b5440ea4660064bb31b.svg"> number of possible
+connections, <img class="latex" alt="latex-formula" src="ltximg/sql-transitive-closure_1604386ea47346f67afa73a28e7f8ad277037010.svg"> being the number of nodes.  After <img class="latex" alt="latex-formula" src="ltximg/sql-transitive-closure_782a4cff3074d9e11460003c32baab46dde8f863.svg"> iterations, any
+further iterations will not affect the output. <img class="latex" alt="latex-formula" src="ltximg/sql-transitive-closure_1604386ea47346f67afa73a28e7f8ad277037010.svg"> times more iterations than
+there are possible connections is necessary to check all connection pairs for
+new connections after ones have been made in the previous iteration. It is
+possible to short circuit the loop if two consecutive loops produce equal
+output; and if there are no connections to begin with, the algorithm can be
+avoided all together.
 </p>
 
+
+<div class="figure">
+<p><img class="latex" alt="latex-formula" src="sql-transitive-closure/flights.svg">
+</p>
+</div>
+
 <p>
-Black arrows in the diagram, represent one-stop connections.  Red and blue
-arrows are found by the Floyd-Warshall alogrithm.  The red arrows are
-computed during the first iteration by looking for pairs of black arrows with
-common nodes.  These are two-stop flights.  The blue arrow is a three stop
-connection that is found after the red arrows are established.  So the
-algorithm looks for red and black arrow pairs with common nodes.
+Black arrows in the diagram, represent one-stop connections; think of them as
+running to the next gate. Red and blue arrows are found by the Floyd-Warshall
+algorithm. The red arrows are computed during the first iteration by looking
+for pairs of black arrows with common nodes.  These are two-stop flights.
+The blue arrow is a three stop connection that is found after the red arrows
+are established, where the algorithm looks for red and black arrow pairs with
+common nodes.
 </p>
 
 <p>
@@ -1240,17 +1410,18 @@ algorithm.
 
 <div id="outline-container-orge7328d7" class="outline-4">
 <h4 id="orge7328d7">
-<span class="section-number-4">1.2.1</span> Using Relational Algebra and Python</h4>
-<div class="outline-text-4" id="text-1-2-1">
+<span class="section-number-4">1.3.1</span> Using Relational Algebra and Python</h4>
+<div class="outline-text-4" id="text-1-3-1">
 <p>
 The following Python code uses relational.py and Emacs Org mode.  See my
-previous post for more on that.
+previous post in the thread for more on that.
 </p>
+
 <div class="org-src-container">
-<pre class="src src-python">    <span class="org-keyword">import</span> sys
+<pre class="src src-python"><span class="org-keyword">import</span> sys
 sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</span>)
 <span class="org-keyword">from</span> relational.relation_org <span class="org-keyword">import</span> RelationOrg
-<span class="org-variable-name">flights</span> = RelationOrg(in_table)
+<span class="org-variable-name">flights</span> = RelationOrg(flights)
 <span class="org-variable-name">flight_ids</span> = flights.projection(<span class="org-string">"id"</span>)
 <span class="org-comment-delimiter"># </span><span class="org-comment">use Warshall's algorithm to compute indirect connections</span>
 <span class="org-variable-name">flight_num</span> = <span class="org-builtin">len</span>(flights)
@@ -1279,8 +1450,6 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
     <span class="org-keyword">while</span> i &lt; flight_num:
         <span class="org-comment-delimiter"># </span><span class="org-comment">find secondary connections and remove known connections from</span>
         <span class="org-comment-delimiter"># </span><span class="org-comment">new_connections list so as to not insert existing connections,</span>
-        <span class="org-comment-delimiter"># </span><span class="org-comment">SQL might be able to check whether a tuple exists when doing the</span>
-        <span class="org-comment-delimiter"># </span><span class="org-comment">theta join</span>
         <span class="org-variable-name">connections</span> = connections.thetajoin(connections_org,
                                             <span class="org-string">"dest_id == source_id_c"</span>)\
                                  .projection(<span class="org-string">"source_id"</span>, <span class="org-string">"dest_id_c"</span>)\
@@ -1291,7 +1460,7 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
         <span class="org-variable-name">itineraries</span> = itineraries.thetajoin(itineraries_org,\
                                             <span class="org-string">"dest_id == source_id_n"</span>)\
                                  .projection(<span class="org-string">"dest_id"</span>, <span class="org-string">"dest_id_n"</span>, <span class="org-string">"connection_id"</span>)\
-     .rename({<span class="org-string">"dest_id"</span>: <span class="org-string">"source_id"</span>, <span class="org-string">"dest_id_n"</span>:<span class="org-string">"dest_id"</span>})\
+                                 .rename({<span class="org-string">"dest_id"</span>: <span class="org-string">"source_id"</span>, <span class="org-string">"dest_id_n"</span>:<span class="org-string">"dest_id"</span>})\
                                  .union(itineraries)
         <span class="org-variable-name">i</span> += 1
 
@@ -1303,38 +1472,272 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
          .rename({<span class="org-string">"id"</span>:<span class="org-string">"source_id"</span>})\
          .semijoin_left(connections)\
          .projection(<span class="org-string">"source_id"</span>, <span class="org-string">"dest_id"</span>, <span class="org-string">"source"</span>, <span class="org-string">"dest_d"</span>, <span class="org-string">"departs"</span>, <span class="org-string">"arrives_d"</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">return str(RelationOrg(connections))</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">return str(RelationOrg(itineraries))</span>
 <span class="org-keyword">return</span> <span class="org-builtin">str</span>(RelationOrg(result))
 </pre>
 </div>
+
 <p>
-"in_table" refers to the before mentioned flights table. Initially, the
-"connections" variable is a two-column, many-to-many relation table
-describing possible one-stop connections, "source_id" and "dest_id". The
-"itineraries" variable adds an extra column, "connection_id", to the
-"connections" table, that being the starting connection. The code only needs
-to iterate N times because the two inner loops are accomplished by the
-thetajoin. Renaming is necessary because thetajoin does not allow for
-duplicate column names. Intermediate results are aggregated into the
-"connections" and "itineraries" variables by union the known connections
-with the new found connections. The only difference between "connections"
-and "itineraries" is that the "source_id" is projected in the former, while
-the "dest_id" is projected in the later. The "result" variable shows the
+<em>flights</em> refers to the before mentioned flights table. Initially, the
+<em>connections</em> variable is a two-column, many-to-many relation table
+describing possible one-stop connections between <em>source_id</em> and
+<em>dest_id</em>. The <em>itineraries</em> variable adds an extra column, <em>connection_id</em>,
+to the <em>connections</em> table, that being the starting connection ID. The code
+only needs to iterate <code>N</code> times because the two inner loops are accomplished
+by the <em>thetajoin</em>. Renaming is necessary because <em>thetajoin</em> does not allow
+for duplicate column names. Intermediate results are aggregated into the
+<em>connections</em> and <em>itineraries</em> variables by UNION-ing the known connections
+with the new found connections. The only difference between <em>connections</em>
+and <em>itineraries</em> is that the <em>source_id</em> is projected in the former, while
+the <em>dest_id</em> is projected in the later. The <em>result</em> variable shows the
 flight information associated with the entries in the connections table. It
 is created by computing all possible connections between nodes and keeping
 only those connections that exist in the connections table, joining on
-"dest_id" and "source_id".
+<em>dest_id</em> and <em>source_id</em>.
 </p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 31:</span> <em>connections</em> table is the graph's transitive closure.</caption>
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">source_id</th>
+<th scope="col" class="org-right">dest_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 32:</span> <em>itineraries</em> table shows all four possible flight itineraries whose destination is airport E. <em>connection_id</em> is the starting connection.</caption>
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">connection_id</th>
+<th scope="col" class="org-right">source_id</th>
+<th scope="col" class="org-right">dest_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above">
+<span class="table-number">Table 33:</span> This is the <em>result</em> table. It is <em>connections</em> table with the last four columns in the <em>flights</em> table joined to it. <em>source_id</em> is the first flight number. <em>dest_id</em> is the last flight number. <em>source</em> is the first flight's departure location. <em>dest_d</em> is the last flight's arrival location. <em>departs</em> is the first flight's departure time. <em>arrives_d</em> is the last flight's arrival time.</caption>
+
+<colgroup>
+<col class="org-right">
+
+<col class="org-right">
+
+<col class="org-left">
+
+<col class="org-left">
+
+<col class="org-right">
+
+<col class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">source_id</th>
+<th scope="col" class="org-right">dest_id</th>
+<th scope="col" class="org-left">source</th>
+<th scope="col" class="org-left">dest_d</th>
+<th scope="col" class="org-right">departs</th>
+<th scope="col" class="org-right">arrives_d</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">3</td>
+<td class="org-left">A</td>
+<td class="org-left">C</td>
+<td class="org-right">0</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">4</td>
+<td class="org-left">A</td>
+<td class="org-left">D</td>
+<td class="org-right">0</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">5</td>
+<td class="org-left">A</td>
+<td class="org-left">E</td>
+<td class="org-right">0</td>
+<td class="org-right">6</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+<td class="org-left">B</td>
+<td class="org-left">D</td>
+<td class="org-right">0</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">5</td>
+<td class="org-left">B</td>
+<td class="org-left">E</td>
+<td class="org-right">0</td>
+<td class="org-right">6</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-left">B</td>
+<td class="org-left">D</td>
+<td class="org-right">3</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">5</td>
+<td class="org-left">B</td>
+<td class="org-left">E</td>
+<td class="org-right">3</td>
+<td class="org-right">6</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+<td class="org-left">C</td>
+<td class="org-left">E</td>
+<td class="org-right">4</td>
+<td class="org-right">6</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
 <div id="outline-container-org991be95" class="outline-4">
 <h4 id="org991be95">
-<span class="section-number-4">1.2.2</span> Using SQLite and Recursive Common Table Expressions</h4>
-<div class="outline-text-4" id="text-1-2-2">
+<span class="section-number-4">1.3.2</span> Using SQLite and Recursive Common Table Expressions</h4>
+<div class="outline-text-4" id="text-1-3-2">
 <p>
 Given example table
 </p>
-
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Flights</span> (
        id <span class="org-keyword">NUMBER</span>,
@@ -1344,18 +1747,12 @@ Given example table
        arrives <span class="org-keyword">NUMBER</span>,
        <span class="org-keyword">CONSTRAINT</span> FlightsPK <span class="org-keyword">PRIMARY</span> <span class="org-keyword">KEY</span> (id)
 );
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">BEGIN</span> <span class="org-keyword">TRANSACTION</span>;
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (0, <span class="org-string">'A'</span>, <span class="org-string">'B'</span>, 0, 1);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (1, <span class="org-string">'A'</span>, <span class="org-string">'B'</span>, 3, 4);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (2, <span class="org-string">'B'</span>, <span class="org-string">'C'</span>, 0, 1);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (3, <span class="org-string">'B'</span>, <span class="org-string">'C'</span>, 3, 4);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (4, <span class="org-string">'C'</span>, <span class="org-string">'D'</span>, 4, 5);
 <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> Flights(id, <span class="org-keyword">source</span>, dest, departs, arrives) <span class="org-keyword">VALUES</span> (5, <span class="org-string">'D'</span>, <span class="org-string">'E'</span>, 5, 6);
-<span class="org-keyword">COMMIT</span>;
 </pre>
 </div>
 
@@ -1367,13 +1764,13 @@ CTEs. The following code returns the transitive closure.
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
 connections(source_id, dest_id) <span class="org-keyword">AS</span> (
-                   <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+                   <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id
                    <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
                    <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
 ),
 
 iterations(x) <span class="org-keyword">AS</span> (
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
+              <span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
 ),
 
 trans_closure(source_id, dest_id) <span class="org-keyword">AS</span> (
@@ -1389,16 +1786,16 @@ trans_closure(source_id, dest_id) <span class="org-keyword">AS</span> (
 </div>
 
 <p>
-connections function is just a regular CTE that results in a static table of
-one-stop connections. The output table's column names are "source_id" and
-"dest_id" when they are referenced, not S.id and D.id. The trans_closure CTE
-is recursive. The SELECT statement before the UNION ALL creates a table that
-the recursive operation, the code after the UNION ALL, iterates through. The
-table "connections" has the value
+The <em>connections</em> function is just a regular CTE that results in a table of
+one-stop connections. <em>iterations</em> caches the <em>Flight</em> table length. The
+<em>trans_closure</em> CTE is recursive. The <code>SELECT</code> statement before the <code>UNION ALL</code>
+creates a table that the recursive operation, the code after the <code>UNION ALL</code>,
+iterates through. The table <em>connections</em> has the value
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<caption class="t-above">
+<span class="table-number">Table 34:</span> <em>connections</em> table</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1434,10 +1831,12 @@ table "connections" has the value
 </tbody>
 </table>
 <p>
-The table is copied into a queue. One of the rows is extracted from the queue
-and inserted into trans_closure's table. The trans_closure table is joined
-with the connections table ON A.dest_id = B.source_id and the result is added
-to the queue.
+The table is copied into a <em>queue</em>. One of the rows is extracted from the <em>queue</em>
+and inserted into <em>trans_closure</em>'s table. The <em>trans_closure</em> table is joined
+with the <em>connections</em> table <code>ON A.dest_id = B.source_id</code> and the result is added
+to the <em>queue</em>. The number of recursions is limited to the square of the <em>Flights</em>
+table length. The <code>LIMIT</code> is not strictly needed in this example because the
+<em>Flights</em> table is not circular.
 </p>
 
 <p>
@@ -1447,7 +1846,7 @@ A list of all itineraries can be produced by:
 <pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
 itineraries(id, source_id, connection_id) <span class="org-keyword">AS</span>
 (
-        <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, S.id, D.id 
+        <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, S.id, D.id
         <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
         <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
 ),
@@ -1463,60 +1862,37 @@ sub_graphs(id, source_id, connection_id) <span class="org-keyword">AS</span>
 <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> id, source_id, connection_id <span class="org-keyword">FROM</span> sub_graphs <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2,3;
 </pre>
 </div>
+
 <p>
-There are only minor differences between this code and the transitive closure
-query.  "itineraries()" is like "connections()", except the first node is
-used to group itinerary parts together.  In the recursive query, the JOIN ON
-is the same, dest_id is renamed connection_id (This was done to be consistent
-with the relational algebra example, and it was done there to avoid naming
-collisions.), and the fields returned is changed.
+There are only minor differences between this code and the transitive
+closure query.  <em>itineraries</em> is like <em>connections</em> in the previous example,
+except the first node is used to group itinerary parts together.  In the
+recursive query, the <code>JOIN ON</code> is the same, <code>dest_id</code> is renamed <code>connection_id</code>
+(This was done to be consistent with the relational algebra example, and it
+was done there to avoid naming collisions.), and the fields returned is
+changed.
 </p>
 </div>
 </div>
-</div>
 
-<div id="outline-container-org26850e3" class="outline-3">
-<h3 id="org26850e3">
-<span class="section-number-3">1.3</span> Cyclic Graphs</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org26850e3" class="outline-4">
+<h4 id="org26850e3">
+<span class="section-number-4">1.3.3</span> Cyclic Graphs</h4>
+<div class="outline-text-4" id="text-1-3-3">
 <p>
-If the Flights table were cyclic, the former queries would never stop. There
-are two ways we could modify the queries. Using a limit:
-</p>
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
-connections(source_id, dest_id) <span class="org-keyword">AS</span> (
-                   <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
-                   <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
-                   <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
-),
-
-iterations(x) <span class="org-keyword">AS</span> (
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
-),
-
-
-trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
-                   <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
-                   <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
-                   <span class="org-keyword">SELECT</span> itter + 1, A.source_id, B.dest_id
-                   <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
-                   <span class="org-keyword">ON</span> A.dest_id = B.source_id
-                   <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
-                   <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
-)
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
-</pre>
-</div>
-
-<p>
-Or using an iterator:
+If the Flights table were cyclic, the recursive queries would require a
+limit or an iterator. Unlike the relational algebra example, where the
+entire intermediate result was joined with the entire original table, this
+query is joining one of the intermediate results with the original table, so
+<code>N^2^</code> loops are needed. The iterative version has the advantage of being
+order-able.  The <code>ORDER BY</code> clause requires a numeric field to sort on. This
+controls whether the <em>queue</em> virtual table is treated as a stack or a queue.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
+<label class="org-src-name"><span class="listing-number">Listing 1: </span>Iterative version of the transitive closure.</label><pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
 connections(source_id, dest_id) <span class="org-keyword">AS</span> (
-     <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
+     <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id
      <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
      <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
 ),
@@ -1524,50 +1900,6 @@ connections(source_id, dest_id) <span class="org-keyword">AS</span> (
 iterations(x) <span class="org-keyword">AS</span> (
 <span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
 ),
-
-
-trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
-     <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
-     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
-     <span class="org-keyword">SELECT</span> itter + 1, A.source_id, B.dest_id
-     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> connections <span class="org-keyword">AS</span> B
-     <span class="org-keyword">ON</span> A.dest_id = B.source_id
-     <span class="org-keyword">WHERE</span> itter &lt; (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
-     <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>
-)
-<span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> source_id, dest_id <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
-</pre>
-</div>
-<p>
-Unlike the relational algebra example, where the entire intermediate result
-was joined with the entire original table, this query is joining one of the
-intermediate results with the original table, so N2 loops are needed. If
-SQLite uses a signed 64-bit integer for the iterator or LIMIT, then the table
-must be no longer than 3,037,000,499 entries. The second version has the
-advantage of being order-able.  The ORDER BY clause does not seem to work
-with LIMIT clause when there is no numeric field.  The SQLite documentation
-says that ascending is the default but that that may change.  ORDER BY
-requires a field, so you cannot say FIFO or FILO without referring to one of
-the columns.
-</p>
-
-<p>
-A list of all itineraries can be produced by:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span> 
-
-connections(source_id, dest_id) <span class="org-keyword">AS</span> (
-     <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> S.id, D.id 
-     <span class="org-keyword">FROM</span> flights <span class="org-keyword">AS</span> S <span class="org-keyword">JOIN</span> flights <span class="org-keyword">AS</span> D
-     <span class="org-keyword">ON</span> S.dest = D.<span class="org-keyword">source</span> <span class="org-keyword">AND</span> S.arrives &lt;= D.departs
-),
-
-iterations(x) <span class="org-keyword">AS</span> (
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Flights
-),
-
 
 trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
      <span class="org-keyword">SELECT</span> 0, source_id, dest_id <span class="org-keyword">FROM</span> connections
@@ -1583,14 +1915,13 @@ trans_closure(itter, source_id, dest_id) <span class="org-keyword">AS</span> (
 </div>
 </div>
 
-<div id="outline-container-org50fb68e" class="outline-4">
-<h4 id="org50fb68e">
-<span class="section-number-4">1.3.1</span> Another Example</h4>
-<div class="outline-text-4" id="text-1-3-1">
+<div id="outline-container-org50fb68e" class="outline-5">
+<h5 id="org50fb68e">
+<span class="section-number-5">1.3.3.1</span> Another Example</h5>
+<div class="outline-text-5" id="text-1-3-3-1">
 <p>
-Given the table
+Given a circular graph such as:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> <span class="org-function-name">Circular</span> (
        <span class="org-keyword">source</span> TEXT(1),
@@ -1604,40 +1935,21 @@ Given the table
 </div>
 
 <p>
-The query
+Order might be necessary for transitive closure of cyclic graphs to ensure
+FIFO execution.  Otherwise an undiscovered connection might get left at the
+<em>queue</em>'s top, while loops get repeatedly stored at the bottom and popped
+off. Currently, FIFO is the default if <code>ORDER BY</code> is not used, but that is
+not guaranteed.
 </p>
 
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
-iterations(x) <span class="org-keyword">AS</span> (
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> Circular
-),
-
-trans_closure(<span class="org-keyword">source</span>, dest) <span class="org-keyword">AS</span> (
-     <span class="org-keyword">SELECT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> Circular
-     <span class="org-keyword">UNION</span> <span class="org-keyword">ALL</span>
-     <span class="org-keyword">SELECT</span> A.<span class="org-keyword">source</span>, B.dest
-     <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">AS</span> A <span class="org-keyword">JOIN</span> Circular <span class="org-keyword">AS</span> B
-     <span class="org-keyword">ON</span> A.dest = B.<span class="org-keyword">source</span>
-     <span class="org-keyword">LIMIT</span> (<span class="org-keyword">SELECT</span> (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations) * (<span class="org-keyword">SELECT</span> x <span class="org-keyword">FROM</span> iterations))
-)
-<span class="org-keyword">SELECT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;    
-</pre>
-</div>
-
+<blockquote>
 <p>
-will produce correct results. However, if an
+If there is no ORDER BY clause, then the order in which rows are extracted
+is undefined. (In the current implementation, the queue becomes a FIFO if
+the ORDER BY clause is omitted, but applications should not depend on that
+fact since it might change.)
 </p>
-
-<div class="org-src-container">
-<pre class="src src-sqlite"><span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1 <span class="org-keyword">ASC</span>    
-</pre>
-</div>
-
-<p>
-clause is added before the LIMIT clause (after will give a syntax error), an
-incorrect result is produced. The query:
-</p>
+</blockquote>
 
 <div class="org-src-container">
 <pre class="src src-sqlite"><span class="org-keyword">WITH</span> <span class="org-keyword">RECURSIVE</span>
@@ -1657,12 +1969,7 @@ trans_closure(itter, <span class="org-keyword">source</span>, dest) <span class=
 <span class="org-keyword">SELECT</span> <span class="org-keyword">DISTINCT</span> <span class="org-keyword">source</span>, dest <span class="org-keyword">FROM</span> trans_closure <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> 1,2;
 </pre>
 </div>
-<p>
-produces the correct result and can have an order by clause.  Order might be
-necessary for transitive closure of cyclic graphs.  Otherwise an
-undiscovered connection might get left at the queue's top, while loops get
-repeatedly stored at the bottom and popped off.
-</p>
+</div>
 </div>
 </div>
 </div>
