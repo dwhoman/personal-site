@@ -339,9 +339,9 @@ INSERT INTO fibonacci VALUES(1,1);
 
    The following code computes the next number in the sequence, stores it, and
    returns the sequence. Repeated calls will add succeeding values to the table.
-   This query is a CTE but not a recursive one. Getting the =N^th^= term,
+   This query is a CTE but not a recursive one. Getting the N^{th} term,
    requires repeatedly calling this ~WITH...INSERT~ statement =N= times.  If you
-   add another ~INSERT~ statement after the first one, it will not see the WITH
+   add another ~INSERT~ statement after the first one, it will not see the ~WITH~
    statement; only the first ~INSERT~ knows about the ~WITH~ statement.
    #+BEGIN_SRC sqlite :db sql-transitive-closure/tables.db :exports code
 WITH next_fibonacci(i, fibo) AS (
@@ -368,7 +368,7 @@ SELECT * FROM Fibonacci;
 
    Combining the last two queries, the recursive CTE and the non-recursive CTE,
    we get a recursive CTE that can compute the first =N= values; in this case,
-   up to the 60^th^ value. Computing an arbitrary =N= would require an external
+   up to the 60^{th} value. Computing an arbitrary =N= would require an external
    program to modify the query's =N= value. In this case, Emacs Org [[http://orgmode.org/worg/org-contrib/babel/][Babel]] is
    used to set it. Filtering the ~nth_fibonacci~ output is necessary because the
    CTE will return the =N+1= Fibonacci value.
@@ -702,7 +702,7 @@ SELECT DISTINCT id, source_id, connection_id FROM sub_graphs ORDER BY 1,2,3;
     limit or an iterator. Unlike the relational algebra example, where the
     entire intermediate result was joined with the entire original table, this
     query is joining one of the intermediate results with the original table, so
-    =N^2^= loops are needed. The iterative version has the advantage of being
+    $N^2$ loops are needed. The iterative version has the advantage of being
     order-able.  The ~ORDER BY~ clause requires a numeric field to sort on. This
     controls whether the /queue/ virtual table is treated as a stack or a queue.
 

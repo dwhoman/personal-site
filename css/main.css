@@ -7,6 +7,49 @@
     src: url("../fonts/genoa_italic_filtered.woff")format("woff");
 }
 
+@font-face {
+    font-family: "CMU-Serif";
+    src: url("../fonts/cmunrm.woff")format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "CMU-Serif";
+    src: url("../fonts/cmunbx.woff")format("woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "CMU-Serif";
+    src: url("../fonts/cmunti.woff")format("woff");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "CMU-Serif";
+    src: url("../fonts/cmunbi.woff")format("woff");
+    font-style: italic;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "CMU-TT";
+    src: url("../fonts/cmuntt.woff")format("woff");
+}
+
+@font-face {
+    font-family: "CMU-TT";
+    src: url("../fonts/cmuntb.woff")format("woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "CMU-TT";
+    src: url("../fonts/cmunit.woff")format("woff");
+    font-style: italic;
+}
+
 :root {
     --logo-height: 190px;
     --nav-width: 200px;
@@ -88,13 +131,29 @@ span.bar-dash::before {
     margin-right: -0.8ex;
 }
 
-/* span.acute-e { */
-/*     visibility: hidden; */
+span.acute-e {
+}
+
+/* span.acute-e::after { */
+/*     content: "\0301"; */
+/*     position: relative; */
+/*     display: inline-block; */
+/*     top: 0.4ex; */
+/*     right: 0.1em; */
 /* } */
 
-/* span.acute-e::before { */
-/*     content: "è"; */
-/* } */
+body {
+    font-family: "CMU-Serif", serif;
+    font-variant-ligatures: common-ligatures;
+}
+
+code {
+    font-family: "CMU-TT", Courier, monospace;
+}
+
+pre {
+    font-family: monospace;
+}
 
 @media screen {
     body {
@@ -211,7 +270,9 @@ span.bar-dash::before {
     }
     /* switch between main menu and blog menu */
     input#expand-blog-menu {
-	display: none;
+	position: fixed;
+	left: -100vw;
+	filter: opacity(0);
     }
     label#expand-blog-menu-inactive, label#expand-blog-menu-active {
 	cursor: pointer;
@@ -227,7 +288,7 @@ span.bar-dash::before {
 
     @media (min-width: 1280px) and (max-resolution: 182dpi) {
 	body > main {
-	    font-size: var(--default-font-size);
+
 	}
     }
 
@@ -245,6 +306,23 @@ span.bar-dash::before {
     (min-width: 1280px) and (max-width: 1439px) and (max-resolution: 182dpi),
     (min-width: 1024px) and (max-width: 1279px) and (max-resolution: 146dpi)
     {
+	/* for tabbing and screen readers */
+	input#expand-blog-menu:focus ~ label#expand-blog-menu-active, input#expand-blog-menu:focus ~ label#expand-blog-menu-inactive {
+	    filter: opacity(0.5);
+	}
+	
+	input#expand-blog-menu:focus:not(:hover) ~ label#expand-blog-menu-inactive::after {
+	    content: "Hit space for sub-menu.";
+	    display: block;
+	    filter: opacity(1);
+	}
+	
+	input#expand-blog-menu:focus:not(:hover) ~ label#expand-blog-menu-active::after {
+	    content: "Hit space for main menu.";
+	    display: block;
+	    filter: opacity(1);
+	}
+
 	.mobile {
 	    display: none;
 	}
@@ -264,6 +342,7 @@ span.bar-dash::before {
 	    max-width: var(--desktop-content-max-x);
 	    margin: 0 auto 50vh auto;
 	    grid-column: 2/3;
+	    font-size: var(--default-font-size);
 	}
 
 	/* position the main menu */
@@ -339,7 +418,7 @@ span.bar-dash::before {
     (min-width: 3840px) and (max-width: 4607px) and (min-resolution: 549dpi),
     (min-width: 4608px) and (max-width: 5119px) and (min-resolution: 659dpi),
     (min-width: 5120px) and (max-width: 8191px) and (min-resolution: 732dpi)
-    {
+    {	
 	header#masthead div#nav-filler {
 	    display: none;
 	}

@@ -73,9 +73,9 @@ img.latex {
 	body > aside#generation-dates {
 	    grid-row-start: 2;
 	}
-    }
-    code {
-	font-size: 0.8em;
+	code {
+	    font-size: 0.8em;
+	}
     }
     
     body > aside#generation-dates {
@@ -154,7 +154,6 @@ img.latex {
 
     pre {
 	display: block;
-	font-family: monospace;
 	font-size: 1rem;
     }
 

@@ -1809,15 +1809,17 @@ return str(RelationOrg(prod))
       | 0 | 0 |
 
 ***** Relational Algebra Definition
-      The Wikipedia page on relational algebra defines the division of table $R$ by table $S$ as:
-      $R\div S = \pi_pR - V$; where $p$ is the set of columns unique to $R$.
+      The Wikipedia page on relational algebra defines the division of table
+      $R$ [fn::R] by table $S$ [fn::S] as: $R\div S = \pi_pR - V$ [fn::Division of
+      R by S is the projection p of R minus V]; where $p$ [fn::p] is the set of
+      columns unique to $R$ [fn::R].
 
-      Substituting $V$:
-      $R\div S = \pi_pR - \pi_pU$
+      Substituting $V$ [fn::V]:
+      $R\div S = \pi_pR - \pi_pU$ [fn::Division of R by S is the projection of R minus the projection of U.]
       Substituting U:
-      $R\div S = \pi_pR - \pi_p(T - R)$
+      $R\div S = \pi_pR - \pi_p(T - R)$ [fn::Division of R by S is the projection of R minus the projection of (T minus R).]
       Substituting T:
-      $R\div S = \pi_pR - \pi_p(\pi_pR\times S - R)$
+      $R\div S = \pi_pR - \pi_p(\pi_pR\times S - R)$ [fn::Division of R by S is the projection of R minus the projection of (the projection of R cross S minus R).]
 
       In Relational Python:
     #+BEGIN_SRC python :noweb yes :exports code

@@ -1,0 +1,447 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<link rel="alternate" type="application/atom+xml" href="../feed.atom">
+<link rel="shortcut icon" href="../graphics/logo3.svg">
+<link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
+<title>Rolling My Own Static Site Generator</title>
+<meta name="author" content="Devin Homan">
+<meta name="description" content="How I create my blog with Emacs Org Mode and the shell.">
+<meta name="keywords" content="XSLT, shell, Org">
+<meta name="generator" content="Org mode">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<link rel="stylesheet" type="text/css" href="../css/exposition.css">
+<link rel="stylesheet" type="text/css" href="../css/blog.css">
+<link rel="stylesheet" type="text/css" href="../css/rolling-my-own-static-site-generator.css">
+</head>
+<body>
+<header id="masthead"><input id="expand-blog-menu" type="checkbox" tabindex="2"><div id="dwhoman-logo" class="nav"><a href="../index.html" tabindex="1"><span>D</span><span>W</span><span>H</span></a></div>
+<label id="expand-blog-menu-inactive" class="nav menu menu-btn" for="expand-blog-menu"><span>Blog</span><img src="../graphics/noun_1322581_cc.svg" alt=""></label><label id="expand-blog-menu-active" class="nav blog-menu menu-btn" for="expand-blog-menu"><span>Main Menu</span><img src="../graphics/noun_1355740_cc.svg" alt=""></label><div id="blog-chronologic" class="nav blog-menu menu-btn"><a href="../chronological.html" tabindex="3"><span>Chronological</span><img src="../graphics/noun_333757_cc.svg" alt=""></a></div>
+<div id="blog-recent" class="nav blog-menu menu-btn"><a href="../recent-updates.html" tabindex="4"><span>Updated</span><img src="../graphics/noun_1572678_cc.svg" alt=""></a></div>
+<div id="blog-categories" class="nav blog-menu menu-btn"><a href="../categories.xhtml" tabindex="5"><span>Categories</span><img src="../graphics/noun_1332809_cc.svg" alt=""></a></div>
+<div id="blog-threads" class="nav blog-menu menu-btn"><a href="../threads.html" tabindex="6"><span>Threads</span><img src="../graphics/noun_844785_cc.svg" alt=""></a></div>
+<div id="blog-feed" class="nav blog-menu menu-btn"><a href="../feed.atom" tabindex="7"><span>Feed</span><img src="../graphics/noun_19895_cc.svg" alt=""></a></div>
+<div id="about-page" class="nav menu menu-btn"><a href="../about.html" tabindex="8"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
+<div id="resume-page" class="nav menu menu-btn"><a href="../resume.html" tabindex="9"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
+<div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman" tabindex="10"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
+<div id="following-page" class="menu nav menu-btn"><a href="../blog/following.html" tabindex="11"><span>Following</span><img src="../graphics/noun_541507_cc.svg" alt=""></a></div>
+<div id="blog-feed-comp" class="filler menu"></div>
+<div id="nav-filler" class="filler"></div>
+<div id="to-top" class="nav menu-btn"><a href="#" tabindex="12"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-threads"><h2>Thread</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
+</dl></nav><nav id="blog-published"><h2>Published</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
+</dl></nav><nav id="blog-updated"><h2>Updated</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
+</dl></nav><nav id="tag-list"><h2>Tags</h2>
+<ul>
+<li><a href="../categories.xhtml#Org">Org</a></li>
+<li><a href="../categories.xhtml#XSLT">XSLT</a></li>
+<li><a href="../categories.xhtml#shell">shell</a></li>
+</ul></nav></aside><aside id="generation-dates"><ul>
+<li id="publication-date">Published: <time datetime="2018-04-03T00:00:00">April 03 2018</time>
+</li>
+<li id="markup-source"><a href="rolling-my-own-static-site-generator.org" type="text/plain" download="rolling-my-own-static-site-generator.org">Page Markup Source</a></li>
+</ul></aside><main id="content">
+<h1 class="title">Rolling My Own Static Site Generator</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgae674b7">1. Why Re-Invent The Wheel</a></li>
+<li><a href="#orgc9386c6">2. Org File Header</a></li>
+<li>
+<a href="#org4a23906">3. Blog Threads</a>
+<ul>
+<li><a href="#orgb91eb06">3.1. GXL and Lisp Aside</a></li>
+</ul>
+</li>
+<li>
+<a href="#org6833042">4. Blog Design</a>
+<ul>
+<li><a href="#org5b67df1">4.1. Site Layout and Markup</a></li>
+<li><a href="#orged1f925">4.2. Media Types</a></li>
+<li><a href="#orgdf3e42f">4.3. Navigation Bar</a></li>
+<li><a href="#orgc67ff25">4.4. Blog Navigation</a></li>
+<li><a href="#org87408b4">4.5. Content</a></li>
+<li><a href="#orgbccfced">4.6. Colors</a></li>
+<li><a href="#orgf0ae71a">4.7. Browser Support</a></li>
+<li>
+<a href="#orge1e28c5">4.8. Future Enhancements</a>
+<ul>
+<li><a href="#org0f0e9b1">4.8.1. Dashes, Diacritics, and Ligatures</a></li>
+<li><a href="#org6fd5d2b">4.8.2. Comment Support</a></li>
+<li><a href="#org2766b78">4.8.3. Selenium Web Driver Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<article id="outline-container-orgae674b7" class="outline-2">
+<h2 id="orgae674b7">
+<span class="section-number-2">1</span> Why Re-Invent The Wheel</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I use <a href="http://orgmode.org/">Emacs Org</a> mode for taking notes.  Org mode has its own markup structure,
+richer than markdown, and allows you to export to a variety of formats,
+including XHTML.  Emacs Org Mode is extremely powerful, with support for
+tables and spread sheets, computer algebra, <img class="org-svg" src="ltximg/rolling-my-own-static-site-generator_0fead4af9df23401e5524e33c078678bbc52d8ce.svg" alt="SVG Image."> 
+equations, images, and embedded, run-able code snippets. My home directory is
+littered with Org files representing years of notes, and I am consolidating
+them into a single notes directory. I wanted to publish some of my notes as
+blog posts, without much overhead. Furthermore, when Org mode exports a
+document, it includes metadata such as the publication time, the modification
+time, keywords, description, etc. I just needed something to create a blog
+index, landing page, and overall site look and navigation.
+</p>
+
+<p>
+I initially started a blog on Blogger. Blogger made it difficult to paste HTML
+markup generated by Org Mode. I ended up with two versions of my notes/blog
+posts, and Blogger did not have much control over the layout.  I looked at
+existing static site generators, specifically <a href="https://blog.getpelican.com/">Pelican</a>. Pelican can take HTML
+as blog post inputs, but you do not have much control over the layout and
+indexing without investing a lot of work. Having trouble finding a static site
+generator that I liked, I decided to roll my own.
+</p>
+
+<p>
+I have used <a href="https://en.wikipedia.org/wiki/XSLT">XSLT</a> in the past, and for this task, it really is the perfect
+tool. XSLT, Extensible Stylesheet Language Transformations, is a language
+designed for translating XML to XML, HTML, or plain text.  With XSLT, I am
+able pull meta-data from Org's XHTML export and add navigation and other
+modifications to each XHTML file.
+</p>
+</div>
+</article>
+<article id="outline-container-orgc9386c6" class="outline-2">
+<h2 id="orgc9386c6">
+<span class="section-number-2">2</span> Org File Header</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+All of the Org files used in the blog have the following header fields:
+<code>TITLE</code>, <code>DATE</code>, <code>DESCRIPTION</code>, <code>KEYWORDS</code>. For example, this file has the
+following header.
+</p>
+<div class="org-src-container">
+<pre class="src src-org"><span class="org-org-document-info-keyword">#+TITLE:</span> <span class="org-org-document-title">Rolling My Own Static Site Generator</span>
+<span class="org-org-document-info-keyword">#+DATE:</span> <span class="org-org-document-info">[2018-03-29 Thu]</span>
+<span class="org-org-meta-line">#+DESCRIPTION: How I create my blog with Emacs Org Mode and the shell.</span>
+<span class="org-org-meta-line">#+KEYWORDS: XSLT, shell, Org</span>
+</pre>
+</div>
+
+<p>
+My Emacs init file has the following Org configuration for exporting blog
+files to XHTML.  Metadata is passed to the site generator by placing it in the
+<code>org-html-preamble-format</code> variable. (I added newlines in the code string for
+displaying it on the web.) The fields, <code>TITLE</code>, <code>DESCRIPTION</code>, and <code>KEYWORDS</code> are
+stored in the output XHTML header.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span> org-publish-project-alist
+      '((<span class="org-string">"blog"</span>
+         <span class="org-builtin">:publishing-directory</span> <span class="org-string">"/home/devin/blog/org-html/"</span>
+         <span class="org-builtin">:base-extension</span> <span class="org-string">"org"</span>
+         <span class="org-builtin">:base-directory</span> <span class="org-string">"/home/devin/blog/org-files/"</span>
+         <span class="org-builtin">:publishing-function</span> org-html-publish-to-html
+         <span class="org-builtin">:html-head-include-default-style</span> nil
+         <span class="org-builtin">:with-tags</span> nil
+         <span class="org-builtin">:html-html5-fancy</span> t
+         <span class="org-builtin">:html-container</span> <span class="org-string">"article"</span>
+         <span class="org-builtin">:auto-sitemap</span> nil
+         <span class="org-builtin">:html-divs</span> ((preamble <span class="org-string">"header"</span> <span class="org-string">"preamble"</span>)
+                     (content <span class="org-string">"main"</span> <span class="org-string">"content"</span>)
+                     (postamble <span class="org-string">"footer"</span> <span class="org-string">"postamble"</span>))
+         <span class="org-builtin">:html-preamble</span> t
+         <span class="org-builtin">:html-postamble</span> nil
+         <span class="org-builtin">:html-doctype</span> <span class="org-string">"xhtml-strict"</span>
+         <span class="org-builtin">:headline-levels</span> 6
+         <span class="org-builtin">:html-text-markup-alist</span> ((bold . <span class="org-string">"&lt;str&gt;%s&lt;/str&gt;"</span>)
+                                 (code . <span class="org-string">"&lt;code&gt;%s&lt;/code&gt;"</span>)
+                                 (italic . <span class="org-string">"&lt;em&gt;%s&lt;/em&gt;"</span>)
+                                 (strike-through . <span class="org-string">"&lt;del&gt;%s&lt;/del&gt;"</span>)
+                                 (underline . <span class="org-string">"&lt;u&gt;%s&lt;/u&gt;"</span>)
+                                 (verbatim . <span class="org-string">"&lt;code&gt;%s&lt;/code&gt;"</span>))))
+      org-html-preamble-format '((<span class="org-string">"en"</span> <span class="org-string">"&lt;p id='title'&gt;%t&lt;/p&gt;</span>
+<span class="org-string">          &lt;p id='subtitle'&gt;%s&lt;/p&gt;&lt;p id='author'&gt;%a&lt;/p&gt;&lt;p id='email'&gt;%e&lt;/p&gt;</span>
+<span class="org-string">          &lt;p id='date'&gt;%d&lt;/p&gt;&lt;p id='org-html-creator-string'&gt;%c&lt;/p&gt;</span>
+<span class="org-string">          &lt;p id='export-time'&gt;%T&lt;/p&gt;&lt;p id='mod-time'&gt;%C&lt;/p&gt;"</span>)))
+(<span class="org-keyword">defun</span> <span class="org-function-name">org-disable-todo-keywords</span> (orig-fun <span class="org-type">&amp;rest</span> args)
+ (<span class="org-keyword">let</span> ((org-todo-keywords '())) (apply orig-fun args)))
+(advice-add 'org-export-as <span class="org-builtin">:around</span> #'org-disable-todo-keywords)
+(<span class="org-keyword">setq</span> org-html-htmlize-output-type 'css
+      org-html-with-latex 'dvisvgm)
+</pre>
+</div>
+
+<p>
+An XSLT script gets each table's title, modification time, publication date,
+and keywords. This data is passed to an AWK script as a CSV.  The keywords,
+in the XHTML files, are already formatted as comma separated lists.  This AWK
+script creates an XML metadata file. Utilizing XSLT, the metadata file is
+used to generate index pages and links between pages.
+</p>
+</div>
+</article>
+<article id="outline-container-org4a23906" class="outline-2">
+<h2 id="org4a23906">
+<span class="section-number-2">3</span> Blog Threads</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Aside from the blog posts, the other user generated file is <em>threads.gxl</em>.
+This is a <a href="http://www.gupro.de/GXL/">Graph eXchange Language</a> XML file, which both Graphviz and XSLT can
+process. This file must be edited to add a blog post to a thread.  Graphviz is
+used to generate an SVG graph showing in what order blog posts should be read,
+since posts may be multi-part.  The before mentioned AWK script also
+includes the thread information in the metadata XML file, specifically what blog
+posts immediately precede or succeed a particular post.
+</p>
+</div>
+<div id="outline-container-orgb91eb06" class="outline-3">
+<h3 id="orgb91eb06">
+<span class="section-number-3">3.1</span> GXL and Lisp Aside</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+On a side note, GXL could be used by Emacs Lisp to generate graphs. Emacs Lisp
+makes it easy to generate XML with libraries such as <a href="https://www.emacswiki.org/emacs/XmlGen">xmlgen</a>. Emacs can then
+pass the generated XML to Graphviz, and then display the output image
+in a buffer. It is not so easy to create Graphviz Dot code because it does not
+have the same kind of tree structure that Lisp and XML share.  It is also
+difficult to access Graphviz's shared object libraries from Emacs Lisp because
+Emacs requires that the library have a number of features for it to
+work. Accessing shared objects is detailed in the Emacs Lisp manual section
+<em>Emacs Dynamic Modules</em>.
+</p>
+</div>
+</div>
+</article>
+<article id="outline-container-org6833042" class="outline-2">
+<h2 id="org6833042">
+<span class="section-number-2">4</span> Blog Design</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org5b67df1" class="outline-3">
+<h3 id="org5b67df1">
+<span class="section-number-3">4.1</span> Site Layout and Markup</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+I decided from the start that the site would use a vertical main navigation
+bar. Because modern monitors are wide screen and text is generally best
+limited to 80 characters per line, I believe it is better to put any fixed
+content in the vertical margins, such as the site's navigation.  I also
+wanted to, where possible, prefer HTML/CSS solutions over JavaScript
+solutions; the site should be as functional as possible when JavaScript is
+turned off or blocked, adhering to the principle of graceful degradation.
+The site's layout relies on CSS Grid and Flexbox. CSS variables are also used
+throughout the site.
+</p>
+</div>
+</div>
+<div id="outline-container-orged1f925" class="outline-3">
+<h3 id="orged1f925">
+<span class="section-number-3">4.2</span> Media Types</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The site's desktop and mobile layout are controlled using CSS media
+queries. This also means that mobile browsers cannot request the desktop site
+because the same site serves as both the mobile and desktop version. A
+problem that I ran into in controlling whether mobile or desktop layout is
+displayed is that CSS cannot query the screen's physical dimensions, but it
+can query its resolution and DPI. Modern smart phones have display
+resolutions comparable to desktop monitors, but their DPIs are much higher. I
+use the resolution and DPI information to determine whether the mobile or
+desktop version should be displayed.
+</p>
+
+<p>
+The print layout is also controlled in CSS. Navigation is hidden in the print
+media; only the main body is displayed.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdf3e42f" class="outline-3">
+<h3 id="orgdf3e42f">
+<span class="section-number-3">4.3</span> Navigation Bar</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The vertical navigation bar is built using CSS grid.  Content inside each
+cell is positioned using flexbox.  The blog menu toggle is implemented using
+the CSS <a href="https://css-tricks.com/the-checkbox-hack/">checkbox hack</a>.  The checkbox is moved out of screen and made
+transparent. This keeps the <em>Blog</em> button navigable with <em>TAB</em>. I preferred
+this method over JavaScript because the sub-menu is an essential feature that
+would otherwise not work if JavaScript were not available. Normally,
+sub-menus are controlled by CSS using the <code>:hover</code> pseudo-class and are
+drop-downs so that they do not hide the parent menu.  Aesthetically, I wanted
+the sub-menu to replace the main menu.  If I were to implement it in
+JavaScript, I would have to change where the sub-menu was rendered without
+JavaScript when hovering, and then use JavaScript to change the CSS.
+Furthermore, mobile view would add further complication.
+</p>
+
+<p>
+The sub-menu for blog index navigation has one more element than the main
+menu.  Each corresponding item in the main menu and sub-menu share the same
+cell.  The missing element in the main menu is filled with a <code>&lt;div&gt;</code>. The
+space between the last menu item and the <em>Back to Top</em> button is also filled
+with an empty <code>&lt;div&gt;</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc67ff25" class="outline-3">
+<h3 id="orgc67ff25">
+<span class="section-number-3">4.4</span> Blog Navigation</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Usually, it is difficult to browse through posts made to a blog. They are
+usually cataloged chronologically and sometimes there is a keyword
+list. Rarely, are blog posts grouped into series, like a playlist.  I created
+four forms of navigation for the blog, ordered by the original publication
+date, the date the post was last updated, the categories or keywords listed,
+and the sequence in which related posts are meant to be read.  The first
+three navigation pages are generated from a single XML file, <em>metadata.xml</em>,
+which is generated from metadata in each Org file and <em>threads.gxl</em>.
+</p>
+
+<p>
+The <em>threads.gxl</em> page contains an inline SVG with embedded hyperlinks.  The
+Safari browser currently does not <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a#Browser_compatibility">support</a> such links and many mobile browsers
+have unknown support, so I added a hidden list of hyperlinks to supplement
+it.
+</p>
+
+<p>
+Content reordering in the <em>Categories</em> page is done using in-browser XSLT,
+radio buttons, and CSS selectors. A browser without XSLT will get the default
+ordering. The checkbox hack is used to add custom radio buttons.
+</p>
+</div>
+</div>
+<div id="outline-container-org87408b4" class="outline-3">
+<h3 id="org87408b4">
+<span class="section-number-3">4.5</span> Content</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Most of the site's images are SVGs, and the site's logo is created using CSS.
+This makes the site's visual content easily scalable and the sites logo
+readable by screen readers and web crawlers. SVG image backgrounds and
+dimensions are removed when the site is built, using XSLT. The dimensions are
+kept on equations, whose colors are also changed.  I played around with
+trying to use JavaScript and object tags to do the editing in browser to see
+if the images would render in text browsers.  The text browsers I tested
+appear to only sometimes render the SVGs regardless of whether size
+information is present.  The object tag is also not well supported by screen
+readers, and browser inconsistencies might pop-up. The object tag is required
+to allow JavaScript to modify linked SVGs.
+</p>
+
+<p>
+I chose to use SVG to render <img class="org-svg" src="ltximg/rolling-my-own-static-site-generator_0fead4af9df23401e5524e33c078678bbc52d8ce.svg" alt="SVG Image.">  equations, with
+dvisvgm, rather than use the popular MathJax (Org Mode's default) JavaScript
+library, again for graceful degradation.  I never use Org Mode's footnotes,
+so I repurpose them as equation image <code>alt</code> tags.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbccfced" class="outline-3">
+<h3 id="orgbccfced">
+<span class="section-number-3">4.6</span> Colors</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+The site's color scheme is based around its background image, which I took in
+2009 from Deep Creek, Alaska.  It is a setting sun on the left and an active
+volcano, Mt. Redoubt, on the right. I used the apps <a href="https://play.google.com/store/apps/details?id=pl.powsty.colorharmony">Color Harmony</a>, <a href="http://paletton.com/#uid=5190+0kk8my9Dz0eRrPpuhcuWbK">Paletton</a>, and
+<a href="https://www.sessions.edu/color-calculator/">Color Calculator</a> to figure out what colors would work together.  I added
+shadowing to links such that they would pop but also look like they are being
+supported by clouds.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf0ae71a" class="outline-3">
+<h3 id="orgf0ae71a">
+<span class="section-number-3">4.7</span> Browser Support</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+I am designing the blog to target popular, currently maintained
+browsers. Internet Explorer has not been updated since 2013, so I will not
+bother supporting it.  I do not aim to make the browser experience consistent
+across browsers, using polyfills. What matters is that the site is usable and
+that the code is W3C compliant.
+</p>
+</div>
+</div>
+<div id="outline-container-orge1e28c5" class="outline-3">
+<h3 id="orge1e28c5">
+<span class="section-number-3">4.8</span> Future Enhancements</h3>
+<div class="outline-text-3" id="text-4-8">
+</div>
+<div id="outline-container-org0f0e9b1" class="outline-4">
+<h4 id="org0f0e9b1">
+<span class="section-number-4">4.8.1</span> Dashes, Diacritics, and Ligatures</h4>
+<div class="outline-text-4" id="text-4-8-1">
+<p>
+The site's main font family is Prof.Donald Knuth's <a href="https://fontlibrary.org/en/font/cmu-serif">CMU Serif</a>. This
+family of fonts includes ligatures and diacritics. Browsers can replace
+character patterns with ligatures so long as the font has those
+letter-combination glyphs. Using <a href="https://github.com/fonttools/fonttools">pyftsubset</a>, I include only Latin characters
+and the common ligatures in the font files that are sent to the browser.
+The program <a href="https://github.com/filamentgroup/glyphhanger">glyphhanger</a>, which I learned about from the YouTube video, <a href="https://www.youtube.com/watch?v=6poPxOYiuBE">Web
+Fonts Are Not Rocket Science</a>, uses pyftsubset as a back-end and is what lead
+me to it.
+</p>
+
+<p>
+I created an XSLT script which replaces words with versions that have
+optional break points and diacritics. The words are still find-able using
+normal text. Initally I attempted to add diacritics by replacing characters
+with their diacritic counterparts.  The original glyph is hidden with CSS and
+replaced using <code>::before</code> and <code>::after</code> pseudo-elements. However, this only
+works if you can change the original glyph to the background color. Making
+the character transpartent also did not work because the pseudo-elements
+cannot have a differernt transparency from the real element.  Simply adding
+the diacritic marker in the <code>::after</code> content also did not work because its
+position was inconsistent between browsers. My current thought is to create
+alternate glyph files where the regular Latin characters are replaced by
+their diacritic counterparts.
+</p>
+</div>
+</div>
+<div id="outline-container-org6fd5d2b" class="outline-4">
+<h4 id="org6fd5d2b">
+<span class="section-number-4">4.8.2</span> Comment Support</h4>
+<div class="outline-text-4" id="text-4-8-2">
+<p>
+The JavaScript library, <a href="https://github.com/wireddown/ghpages-ghcomments">ghpages-ghcomments</a>, allows GitHub Page sites to
+support user comments. The comments are stored as GitHub Issues. <a href="http://downtothewire.io/ghpages-ghcomments/2015/01/18/the-phrenic-shrine-reveals-itself/">This</a> is an
+example page with comments, and <a href="https://github.com/wireddown/ghpages-ghcomments/issues/5">these</a> are the same comments in the <em>Issues</em>
+page.  This library is designed for use with the <a href="https://jekyllrb.com/">Jekyll</a> static site
+generator, so adding it to the site will be a bit more involved.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2766b78" class="outline-4">
+<h4 id="org2766b78">
+<span class="section-number-4">4.8.3</span> Selenium Web Driver Testing</h4>
+<div class="outline-text-4" id="text-4-8-3">
+<p>
+While there is not too much that can go wrong with a static site, I still
+want to check for broken links.
+</p>
+</div>
+</div>
+</div>
+</article>
+</main><footer><div id="to-top-alt" class="mobile nav menu-btn"><a href="#" tabindex="-1">Back to Top</a></div></footer>
+</body>
+</html>

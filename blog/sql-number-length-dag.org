@@ -15,7 +15,7 @@
 
 * Number Length Directed Graph
 ** Problem
-   In his YouTube video [[https://www.youtube.com/watch?v=LYKn0yUTIU4][Four has Four Letters]], Matt Parker creates cyclic
+   In his YouTube video, [[https://www.youtube.com/watch?v=LYKn0yUTIU4][Four has Four Letters]], Matt Parker creates cyclic
    directed graphs out of counting systems.  Given a language's counting system,
    count the number of letters in the spelled-out representation of a number,
    and then go to the number that is the character count.  For any language,

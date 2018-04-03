@@ -90,7 +90,7 @@ input.category-sort {
 }
 
 label.category-sort::before {
-    content: "◇";
+    content: "\25c7";
     display: inline-block;
     position: relative;
     top: 0px;
@@ -99,7 +99,7 @@ label.category-sort::before {
 }
 
 input.name-sort:checked ~ label.name-sort::before, input.publish-sort:checked ~ label.publish-sort::before, input.update-sort:checked ~ label.update-sort::before {
-    content: "◈";
+    content: "\25c8";
 }
 
 input.name-sort:not(:checked) ~ label.name-sort::before, input.publish-sort:not(:checked) ~ label.publish-sort::before, input.update-sort:not(:checked) ~ label.update-sort::before {

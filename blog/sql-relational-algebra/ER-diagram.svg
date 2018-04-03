@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1222 485" version="1.1">
 <defs>
 <g>
@@ -187,7 +187,7 @@
 </symbol>
 </g>
 </defs>
-<rect width="1222" height="485" x="0" y="0" style="fill:white" id="background" />
+
 <g id="surface42246">
 <path style="fill-rule:evenodd;fill:rgb(100%,100%,100%);fill-opacity:1;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 24.87495 -11.754994 L 33.105028 -11.754994 L 33.105028 -10.854994 L 24.87495 -10.854994 Z M 24.87495 -11.754994 " transform="matrix(20,0,0,20,-108.4404,267.178)"/>
 <g style="fill:rgb(0%,0%,0%);fill-opacity:1;">

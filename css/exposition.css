@@ -6,6 +6,7 @@
 	    max-width: calc(100vw - var(--nav-width) - 10ch);
 	}
     }
+    /* desktop */
     @media
     (min-width: 8192px),
     (min-width: 5120px) and (max-width: 8191px) and (max-resolution: 731dpi),
@@ -23,6 +24,7 @@
 	}
 	
     }
+    /* mobile */
     @media
     (max-width: 1023px),
     (min-width: 1024px) and (max-width: 1279px) and (min-resolution: 147dpi),
@@ -38,9 +40,14 @@
     {
 	main {
 	    max-width: 95vw;
-	    margin-bottom: 0px;
+	    margin-bottom: 25vh;
 	    margin-left: 4rem;
 	    margin-right: 4rem;
+	}
+	@media (max-aspect-ratio: 1/2) {
+	    main {
+		font-size: 2rem;
+	    }
 	}
     }
 }
