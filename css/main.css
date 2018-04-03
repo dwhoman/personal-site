@@ -426,6 +426,20 @@ pre {
 	    display: none;
 	}
 
+	main {
+	    max-width: 95vw;
+	    margin-bottom: 1.5in;
+	}
+	@media (max-aspect-ratio: 1/2) {
+	    main {
+		font-size: 2rem;
+	    }
+	}
+
+	div#to-top-alt, div#to-top-alt a {
+	    height: 1in;
+	}
+
 	header#masthead div#blog-feed-comp {
 	    display: none;
 	}

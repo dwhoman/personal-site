@@ -39,15 +39,8 @@
     (min-width: 5120px) and (max-width: 8191px) and (min-resolution: 732dpi)
     {
 	main {
-	    max-width: 95vw;
-	    margin-bottom: 25vh;
 	    margin-left: 4rem;
 	    margin-right: 4rem;
-	}
-	@media (max-aspect-ratio: 1/2) {
-	    main {
-		font-size: 2rem;
-	    }
 	}
     }
 }
