@@ -60,7 +60,7 @@
     --desktop-content-max-x: calc(100vw - var(--nav-width) - var(--nav-gutter));
     --max-chars-per-line: 80ch;
 
-    --default-font-size: 1.5rem;
+    --default-font-size: 1.3rem;
 
     --main-color: #F5E8C8;
     --main-color-trasp1: #EBDDB777;

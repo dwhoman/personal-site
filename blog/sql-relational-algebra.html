@@ -37,9 +37,9 @@
 </dl></nav><nav id="blog-updated-local"><h2>Updated</h2>
 <dl>
 <dt>Prev:</dt>
-<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
-<dt>Next:</dt>
 <dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
 </dl></nav><nav id="tag-list"><h2>Tags</h2>
 <ul>
 <li><a href="../categories.xhtml#python">python</a></li>
@@ -48,7 +48,7 @@
 </ul></nav></aside><aside id="generation-dates"><ul>
 <li id="publication-date">Published: <time datetime="2016-09-01T00:00:00">September 01 2016</time>
 </li>
-<li id="update-date">Updated: <time datetime="2018-04-03T15:37:00">April 03 2018</time>
+<li id="update-date">Updated: <time datetime="2018-04-03T22:42:00">April 03 2018</time>
 </li>
 <li id="markup-source"><a href="sql-relational-algebra.org" type="text/plain" download="sql-relational-algebra.org">Page Markup Source</a></li>
 </ul></aside><main id="content">
@@ -101,8 +101,8 @@
 <li>
 <a href="#orgc3a173d">1.3.6.4. Anti-Join</a>
 <ul>
-<li><a href="#org632ea11">1.3.6.4.1. With Correlated Subqueries</a></li>
-<li><a href="#orgfd2bc7b">1.3.6.4.2. With the Relation Algebra Definition</a></li>
+<li><a href="#org876e0f4">1.3.6.4.1. With Correlated Subqueries</a></li>
+<li><a href="#org10c68ae">1.3.6.4.2. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 <li>
@@ -110,8 +110,8 @@
 <ul>
 <li><a href="#orgeb22a51">1.3.6.5.1. Example</a></li>
 <li><a href="#orgb5ab875">1.3.6.5.2. Relational Algebra Definition</a></li>
-<li><a href="#orgc7c1d55">1.3.6.5.3. With Correlated Subqueries</a></li>
-<li><a href="#org23aab46">1.3.6.5.4. With the Relation Algebra Definition</a></li>
+<li><a href="#org5950ebe">1.3.6.5.3. With Correlated Subqueries</a></li>
+<li><a href="#org30f5115">1.3.6.5.4. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 </ul>
@@ -123,8 +123,8 @@
 <ul>
 <li><a href="#org3596ee1">1.4.1. Multiple Joins</a></li>
 <li><a href="#org4e5f40a">1.4.2. Adding Division</a></li>
-<li><a href="#orgd39d14a">1.4.3. With Correlated Subqueries</a></li>
-<li><a href="#orgab797a3">1.4.4. With the Relation Algebra Definition</a></li>
+<li><a href="#org4391a73">1.4.3. With Correlated Subqueries</a></li>
+<li><a href="#orgb5d4a2c">1.4.4. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 <li>
@@ -977,8 +977,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-org632ea11" class="outline-6">
-<h6 id="org632ea11">
+<div id="outline-container-org876e0f4" class="outline-6">
+<h6 id="org876e0f4">
 <span class="section-number-6">1.3.6.4.1</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-4-1">
 <p>
@@ -1012,31 +1012,16 @@ subqueries.
 This query has the following plan in SQLite.
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE Employee</td>
-</tr>
-
-<tr>
-<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 1</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Customer USING INDEX IFK<sub>CustomerSupportRepId</sub> (SupportRepId=?)</td>
-</tr>
-</tbody>
-</table>
+<pre class="example">
+SCAN TABLE Employee
+EXECUTE CORRELATED SCALAR SUBQUERY 1
+SEARCH TABLE Customer USING INDEX IFK_CustomerSupportRepId (SupportRepId=?)
+</pre>
 </div>
 </div>
 
-<div id="outline-container-orgfd2bc7b" class="outline-6">
-<h6 id="orgfd2bc7b">
+<div id="outline-container-org10c68ae" class="outline-6">
+<h6 id="org10c68ae">
 <span class="section-number-6">1.3.6.4.2</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-4-2">
 <div class="org-src-container">
@@ -1066,32 +1051,15 @@ This query has the following plan in SQLite.
 It has the following plan in SQLite.
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above">
-<span class="table-number">Table 1:</span> Query Plan</caption>
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE Employee</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
-</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Employee USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)</td>
-</tr>
-</tbody>
-</table>
+<p>
+Query Plan
+</p>
+<pre class="example">
+SCAN TABLE Employee
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SEARCH TABLE Employee USING INTEGER PRIMARY KEY (rowid=?)
+COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)
+</pre>
 
 <p>
 I prefer the relational algebra definition over the correlated subquery
@@ -1166,9 +1134,9 @@ D are unique to the first. Only the group of rows with 0,0 in C,D
 have all of the A,B columns values existing in the second table.
 </p>
 
-<table id="org9731712" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org9731712">
 <caption class="t-above">
-<span class="table-number">Table 2:</span> Dividend</caption>
+<span class="table-number">Table 1:</span> Dividend</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1224,9 +1192,9 @@ have all of the A,B columns values existing in the second table.
 </tbody>
 </table>
 
-<table id="orgb44d9b3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="orgb44d9b3">
 <caption class="t-above">
-<span class="table-number">Table 3:</span> Divisor</caption>
+<span class="table-number">Table 2:</span> Divisor</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1262,9 +1230,9 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 <caption class="t-above">
-<span class="table-number">Table 4:</span> Quotient</caption>
+<span class="table-number">Table 3:</span> Quotient</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1297,7 +1265,7 @@ columns unique to <img class="org-svg" src="ltximg/sql-relational-algebra_0ba33d
 </p>
 
 <p>
-Substituting <img class="org-svg" src="ltximg/sql-relational-algebra_681a24e08cb4cdec7eab121e7a930cc58b7dc085.svg" alt="SVG Image."> :
+Substituting V:
 <img class="org-svg" src="ltximg/sql-relational-algebra_0e9fbeda8a65e866d7752414cba9e10065108075.svg" alt="SVG Image."> 
 Substituting U:
 <img class="org-svg" src="ltximg/sql-relational-algebra_e2fbd42976c308b55402b4dcafd5b548e186b2bf.svg" alt="SVG Image."> 
@@ -1339,8 +1307,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-orgc7c1d55" class="outline-6">
-<h6 id="orgc7c1d55">
+<div id="outline-container-org5950ebe" class="outline-6">
+<h6 id="org5950ebe">
 <span class="section-number-6">1.3.6.5.3</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-5-3">
 <p>
@@ -1369,41 +1337,19 @@ correlated subqueries.
 
 <p>
 This query has the following plan in SQLite.
+Query Plan
 </p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<pre class="example">
+SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK_CustomerSupportRepId
+EXECUTE CORRELATED SCALAR SUBQUERY 1
+SCAN TABLE Employee AS Dividend
+EXECUTE CORRELATED SCALAR SUBQUERY 2
+SEARCH TABLE Customer AS Divisor USING INTEGER PRIMARY KEY (rowid=?)
+</pre>
+
+<table>
 <caption class="t-above">
-<span class="table-number">Table 5:</span> Query Plan</caption>
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
-</td>
-</tr>
-
-<tr>
-<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 1</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Employee AS Dividend</td>
-</tr>
-
-<tr>
-<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 2</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Customer AS Divisor USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-</tbody>
-</table>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above">
-<span class="table-number">Table 6:</span> Result and Run Time</caption>
+<span class="table-number">Table 4:</span> Result and Run Time</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1421,8 +1367,8 @@ This query has the following plan in SQLite.
 </div>
 </div>
 
-<div id="outline-container-org23aab46" class="outline-6">
-<h6 id="org23aab46">
+<div id="outline-container-org30f5115" class="outline-6">
+<h6 id="org30f5115">
 <span class="section-number-6">1.3.6.5.4</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-5-4">
 <div class="org-src-container">
@@ -1438,45 +1384,18 @@ This query has the following plan in SQLite.
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above">
-<span class="table-number">Table 7:</span> Query Plan</caption>
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
-</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Employee</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
-</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Customer</td>
-</tr>
-
-<tr>
-<td class="org-left">COMPOUND SUBQUERIES 4 AND 5 USING TEMP B-TREE (EXCEPT)</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN SUBQUERY 3</td>
-</tr>
-
-<tr>
-<td class="org-left">COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)</td>
-</tr>
-</tbody>
-</table>
+<p>
+Query Plan
+</p>
+<pre class="example">
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SCAN TABLE Employee
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SCAN TABLE Customer
+COMPOUND SUBQUERIES 4 AND 5 USING TEMP B-TREE (EXCEPT)
+SCAN SUBQUERY 3
+COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)
+</pre>
 
 <p>
 This query plan is two steps longer than the correlated subquery version;
@@ -1509,8 +1428,8 @@ were coded after the Relational version was written.
 <span class="section-number-4">1.4.1</span> Multiple Joins</h4>
 <div class="outline-text-4" id="text-1-4-1">
 <p>
-The following code joins the tables: artist, album, track, genre,
-playlist<sub>track</sub>, and playlist; they are all joined together in order to find
+The following code joins the tables: <code>artist</code>, <code>album</code>, <code>track</code>, <code>genre</code>,
+<code>playlist_track</code>, and <code>playlist</code>; they are all joined together in order to find
 playlists that contain rock and list the artists on those playlists.
 </p>
 
@@ -1676,8 +1595,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-orgd39d14a" class="outline-4">
-<h4 id="orgd39d14a">
+<div id="outline-container-org4391a73" class="outline-4">
+<h4 id="org4391a73">
 <span class="section-number-4">1.4.3</span> With Correlated Subqueries</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <p>
@@ -1732,115 +1651,39 @@ quot <span class="org-keyword">AS</span>
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<p>
+Query Plan
+</p>
+<pre class="example">
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+EXECUTE CORRELATED SCALAR SUBQUERY 2
+SCAN TABLE Genre
+EXECUTE CORRELATED SCALAR SUBQUERY 3
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+USE TEMP B-TREE FOR DISTINCT
+SCAN SUBQUERY 1
+</pre>
+
+<table>
 <caption class="t-above">
-<span class="table-number">Table 8:</span> Query Plan</caption>
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE PlaylistTrack</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 2</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Genre</td>
-</tr>
-
-<tr>
-<td class="org-left">EXECUTE CORRELATED SCALAR SUBQUERY 3</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK<sub>PlaylistTrack</sub> (PlaylistId=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK<sub>PlaylistTrack</sub> (PlaylistId=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">USE TEMP B-TREE FOR DISTINCT</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN SUBQUERY 1</td>
-</tr>
-</tbody>
-</table>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above">
-<span class="table-number">Table 9:</span> Result and Run Time</caption>
+<span class="table-number">Table 5:</span> Result and Run Time</caption>
 
 <colgroup>
 <col class="org-right">
@@ -1858,8 +1701,8 @@ quot <span class="org-keyword">AS</span>
 </div>
 </div>
 
-<div id="outline-container-orgab797a3" class="outline-4">
-<h4 id="orgab797a3">
+<div id="outline-container-orgb5d4a2c" class="outline-4">
+<h4 id="orgb5d4a2c">
 <span class="section-number-4">1.4.4</span> With the Relation Algebra Definition</h4>
 <div class="outline-text-4" id="text-1-4-4">
 <p>
@@ -1909,147 +1752,47 @@ divisor <span class="org-keyword">AS</span>
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<p>
+Query Plan
+</p>
+<pre class="example">
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SCAN TABLE Genre
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+COMPOUND SUBQUERIES 6 AND 7 USING TEMP B-TREE (EXCEPT)
+SCAN SUBQUERY 5
+COMPOUND SUBQUERIES 3 AND 4 USING TEMP B-TREE (EXCEPT)
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH SUBQUERY 2 AS quot USING AUTOMATIC COVERING INDEX (PlaylistId=?)
+USE TEMP B-TREE FOR DISTINCT
+SCAN SUBQUERY 1
+</pre>
+
+<table>
 <caption class="t-above">
-<span class="table-number">Table 10:</span> Query Plan</caption>
-
-<colgroup>
-<col class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">SCAN TABLE PlaylistTrack</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE PlaylistTrack</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE Genre</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE PlaylistTrack</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">COMPOUND SUBQUERIES 6 AND 7 USING TEMP B-TREE (EXCEPT)</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN SUBQUERY 5</td>
-</tr>
-
-<tr>
-<td class="org-left">COMPOUND SUBQUERIES 3 AND 4 USING TEMP B-TREE (EXCEPT)</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN TABLE PlaylistTrack</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">SEARCH SUBQUERY 2 AS quot USING AUTOMATIC COVERING INDEX (PlaylistId=?)</td>
-</tr>
-
-<tr>
-<td class="org-left">USE TEMP B-TREE FOR DISTINCT</td>
-</tr>
-
-<tr>
-<td class="org-left">SCAN SUBQUERY 1</td>
-</tr>
-</tbody>
-</table>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above">
-<span class="table-number">Table 11:</span> Result and Run Time</caption>
+<span class="table-number">Table 6:</span> Result and Run Time</caption>
 
 <colgroup>
 <col class="org-right">

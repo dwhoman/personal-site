@@ -204,13 +204,13 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
     =DESC= means that elements get taken from the bottom of the /queue/ instead of
     the top; that is, the queue acts as a stack.
 
-    - step 0
+    - Step 0
       #+CAPTION: Queue
       | Alice | 0 |
 
       The recursive table is empty.
 
-    - step 1
+    - Step 1
       #+CAPTION: Recursive Table
       | Alice | 0 |
   
@@ -218,7 +218,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Bob   | 1 |
       | Cindy | 1 |
 
-    - step 2
+    - Step 2
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -228,7 +228,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Fred | 2 |
       | Gail | 2 |
 
-    - step 3
+    - Step 3
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -238,7 +238,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Bob  | 1 |
       | Fred | 2 |
 
-    - step 4
+    - Step 4
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -248,7 +248,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       #+CAPTION: Queue
       | Bob  | 1 |
 
-    - step 5
+    - Step 5
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -260,7 +260,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Dave | 2 |
       | Emma | 2 |
 
-    - step 6
+    - Step 6
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -272,7 +272,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       #+CAPTION: Queue
       | Dave | 2 |
 
-    - step 7
+    - Step 7
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Cindy | 1 |
@@ -514,25 +514,25 @@ result = flights.product(flights.rename({"id":"dest_id",
 return str(RelationOrg(result))
     #+END_SRC
 
-    /flights/ refers to the before mentioned flights table. Initially, the
-    /connections/ variable is a two-column, many-to-many relation table
-    describing possible one-stop connections between /source_id/ and
-    /dest_id/. The /itineraries/ variable adds an extra column, /connection_id/,
-    to the /connections/ table, that being the starting connection ID. The code
+    =flights= refers to the before mentioned flights table. Initially, the
+    =connections= variable is a two-column, many-to-many relation table
+    describing possible one-stop connections between =source_id= and
+    =dest_id=. The =itineraries= variable adds an extra column, =connection_id=,
+    to the =connections= table, that being the starting connection ID. The code
     only needs to iterate =N= times because the two inner loops are accomplished
-    by the /thetajoin/. Renaming is necessary because /thetajoin/ does not allow
+    by the =thetajoin=. Renaming is necessary because =thetajoin= does not allow
     for duplicate column names. Intermediate results are aggregated into the
-    /connections/ and /itineraries/ variables by UNION-ing the known connections
-    with the new found connections. The only difference between /connections/
-    and /itineraries/ is that the /source_id/ is projected in the former, while
-    the /dest_id/ is projected in the later. The /result/ variable shows the
+    =connections= and =itineraries= variables by UNION-ing the known connections
+    with the new found connections. The only difference between =connections=
+    and =itineraries= is that the =source_id= is projected in the former, while
+    the =dest_id= is projected in the later. The =result= variable shows the
     flight information associated with the entries in the connections table. It
     is created by computing all possible connections between nodes and keeping
     only those connections that exist in the connections table, joining on
-    /dest_id/ and /source_id/.
+    =dest_id= and =source_id=.
 
-    #+CAPTION: /connections/ table is the graph's transitive closure.
-    |   source_id |   dest_id |
+    #+CAPTION: =connections= table is the graph's transitive closure.
+    | =source_id= | =dest_id= |
     |-------------+-----------|
     |           0 |         3 |
     |           0 |         4 |
@@ -543,41 +543,41 @@ return str(RelationOrg(result))
     |           3 |         5 |
     |           4 |         5 |
 
-    #+CAPTION: /itineraries/ table shows all four possible flight
+    #+CAPTION: =itineraries= table shows all four possible flight
     #+CAPTION: itineraries whose destination is airport E.
-    #+CAPTION: /connection_id/ is the starting connection.
-    | connection_id | source_id | dest_id |
-    |---------------+-----------+---------|
-    |             0 |         0 |       3 |
-    |             0 |         3 |       4 |
-    |             0 |         4 |       5 |
-    |---------------+-----------+---------|
-    |             2 |         2 |       4 |
-    |             2 |         4 |       5 |
-    |---------------+-----------+---------|
-    |             3 |         3 |       4 |
-    |             3 |         4 |       5 |
-    |---------------+-----------+---------|
-    |             4 |         4 |       5 |
+    #+CAPTION: =connection_id= is the starting connection.
+    | =connection_id= | =source_id= | =dest_id= |
+    |-----------------+-------------+-----------|
+    |               0 |           0 |         3 |
+    |               0 |           3 |         4 |
+    |               0 |           4 |         5 |
+    |-----------------+-------------+-----------|
+    |               2 |           2 |         4 |
+    |               2 |           4 |         5 |
+    |-----------------+-------------+-----------|
+    |               3 |           3 |         4 |
+    |               3 |           4 |         5 |
+    |-----------------+-------------+-----------|
+    |               4 |           4 |         5 |
 
-    #+CAPTION: This is the /result/ table. It is /connections/ table with
-    #+CAPTION: the last four columns in the /flights/ table joined to it.
-    #+CAPTION: /source_id/ is the first flight number.
-    #+CAPTION: /dest_id/ is the last flight number.
-    #+CAPTION: /source/ is the first flight's departure location.
-    #+CAPTION: /dest_d/ is the last flight's arrival location.
-    #+CAPTION: /departs/ is the first flight's departure time.
-    #+CAPTION: /arrives_d/ is the last flight's arrival time.
-    | source_id | dest_id | source | dest_d | departs | arrives_d |
-    |-----------+---------+--------+--------+---------+-----------|
-    |         0 |       3 | A      | C      |       0 |         4 |
-    |         0 |       4 | A      | D      |       0 |         5 |
-    |         0 |       5 | A      | E      |       0 |         6 |
-    |         2 |       4 | B      | D      |       0 |         5 |
-    |         2 |       5 | B      | E      |       0 |         6 |
-    |         3 |       4 | B      | D      |       3 |         5 |
-    |         3 |       5 | B      | E      |       3 |         6 |
-    |         4 |       5 | C      | E      |       4 |         6 |
+    #+CAPTION: This is the =result= table. It is =connections= table with
+    #+CAPTION: the last four columns in the =flights= table joined to it.
+    #+CAPTION: =source_id= is the first flight number.
+    #+CAPTION: =dest_id= is the last flight number.
+    #+CAPTION: =source= is the first flight's departure location.
+    #+CAPTION: =dest_d= is the last flight's arrival location.
+    #+CAPTION: =departs= is the first flight's departure time.
+    #+CAPTION: =arrives_d= is the last flight's arrival time.
+    | =source_id= | =dest_id= | =source= | =dest_d= | =departs= | =arrives_d= |
+    |-------------+-----------+----------+----------+-----------+-------------|
+    |           0 |         3 | A        | C        |         0 |           4 |
+    |           0 |         4 | A        | D        |         0 |           5 |
+    |           0 |         5 | A        | E        |         0 |           6 |
+    |           2 |         4 | B        | D        |         0 |           5 |
+    |           2 |         5 | B        | E        |         0 |           6 |
+    |           3 |         4 | B        | D        |         3 |           5 |
+    |           3 |         5 | B        | E        |         3 |           6 |
+    |           4 |         5 | C        | E        |         4 |           6 |
 
 *** Using SQLite and Recursive Common Table Expressions
     Given example table
@@ -636,25 +636,25 @@ SELECT source_id, dest_id FROM trans_closure ORDER BY 1,2;
     |         3 |       5 |
     |         4 |       5 |
 
-    The /connections/ function is just a regular CTE that results in a table of
-    one-stop connections. /iterations/ caches the /Flight/ table length. The
-    /trans_closure/ CTE is recursive. The ~SELECT~ statement before the ~UNION ALL~
+    The =connections= function is just a regular CTE that results in a table of
+    one-stop connections. =iterations= caches the =Flight= table length. The
+    =trans_closure= CTE is recursive. The ~SELECT~ statement before the ~UNION ALL~
     creates a table that the recursive operation, the code after the ~UNION ALL~,
-    iterates through. The table /connections/ has the value
+    iterates through. The table =connections= has the value
 
-    #+CAPTION: /connections/ table
-    | source_id | dest_id |
-    |-----------+---------|
-    |         0 |       3 |
-    |         2 |       4 |
-    |         3 |       4 |
-    |         4 |       5 |
-    The table is copied into a /queue/. One of the rows is extracted from the /queue/
-    and inserted into /trans_closure/'s table. The /trans_closure/ table is joined
-    with the /connections/ table ~ON A.dest_id = B.source_id~ and the result is added
-    to the /queue/. The number of recursions is limited to the square of the /Flights/
+    #+CAPTION: =connections= table
+    | =source_id= | =dest_id= |
+    |-------------+-----------|
+    |           0 |         3 |
+    |           2 |         4 |
+    |           3 |         4 |
+    |           4 |         5 |
+    The table is copied into a =queue=. One of the rows is extracted from the =queue=
+    and inserted into =trans_closure='s table. The =trans_closure= table is joined
+    with the =connections= table ~ON A.dest_id = B.source_id~ and the result is added
+    to the =queue=. The number of recursions is limited to the square of the =Flights=
     table length. The ~LIMIT~ is not strictly needed in this example because the
-    /Flights/ table is not circular.
+    =Flights= table is not circular.
 
     A list of all itineraries can be produced by:
     #+BEGIN_SRC sqlite :db sql-transitive-closure/tables.db :colnames yes :exports code
@@ -690,7 +690,7 @@ SELECT DISTINCT id, source_id, connection_id FROM sub_graphs ORDER BY 1,2,3;
     |  4 |         4 |             5 |
 
     There are only minor differences between this code and the transitive
-    closure query.  /itineraries/ is like /connections/ in the previous example,
+    closure query.  =itineraries= is like =connections= in the previous example,
     except the first node is used to group itinerary parts together.  In the
     recursive query, the ~JOIN ON~ is the same, ~dest_id~ is renamed ~connection_id~
     (This was done to be consistent with the relational algebra example, and it
@@ -704,7 +704,7 @@ SELECT DISTINCT id, source_id, connection_id FROM sub_graphs ORDER BY 1,2,3;
     query is joining one of the intermediate results with the original table, so
     $N^2$ loops are needed. The iterative version has the advantage of being
     order-able.  The ~ORDER BY~ clause requires a numeric field to sort on. This
-    controls whether the /queue/ virtual table is treated as a stack or a queue.
+    controls whether the =queue= virtual table is treated as a stack or a queue.
 
     #+CAPTION: Iterative version of the transitive closure.
     #+BEGIN_SRC sqlite :db sql-transitive-closure/tables.db :colnames yes :exports code
@@ -758,7 +758,7 @@ INSERT INTO Circular(source, dest) VALUES ('C', 'A');
 
      Order might be necessary for transitive closure of cyclic graphs to ensure
      FIFO execution.  Otherwise an undiscovered connection might get left at the
-     /queue/'s top, while loops get repeatedly stored at the bottom and popped
+     queue's top, while loops get repeatedly stored at the bottom and popped
      off. Currently, FIFO is the default if ~ORDER BY~ is not used, but that is
      not guaranteed.
 

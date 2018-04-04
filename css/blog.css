@@ -8,6 +8,45 @@ img.latex {
     vertical-align: middle;
 }
 
+main table {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: none;
+    border-right: none;
+    border-collapse: collapse;
+    text-align: center;
+    margin-top: 1em;
+}
+
+main table th {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+main table th:first-child {
+    border-left: none;
+}
+
+main table td {
+    border-left: 1px solid black;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+main table th:only-child {
+    text-align: left;
+}
+
+main table td:only-child {
+    text-align: left;
+}
+
+main table td:first-child {
+    border-left: none;
+}
+
 @media screen {
     body > article {
     	width: var(--max-chars-per-line);

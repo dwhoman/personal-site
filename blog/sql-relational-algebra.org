@@ -1,7 +1,7 @@
 #+TITLE: SQL Relational Algebra
 
 #+DESCRIPTION: Relational algebra offers an alternative syntax for crafting relational
-#+DESCRIPTION: database queries.  I demonstrate how to use Python and Relational.py to 
+#+DESCRIPTION: database queries.  I demonstrate how to use Python and Relational.py to
 #+DESCRIPTION: ces6/index.htmlreate relational database queries and translate them into SQL.
 #+KEYWORDS: sql, relational algebra, python
 #+STARTUP:  overview
@@ -1650,7 +1650,7 @@ return str(RelationOrg(jn))
 ***** With Correlated Subqueries
       In SQL, the typical way of performing an antijoin is by using correlated
       subqueries.
-      
+
       #+NAME: aj-corr-sq
       #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports code
 SELECT DISTINCT EmployeeId,
@@ -1682,15 +1682,16 @@ WHERE Employee.EmployeeId = Customer.SupportRepId);
 
       This query has the following plan in SQLite.
 
-      #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports results :noweb yes
+      #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports none :noweb yes
 EXPLAIN QUERY PLAN
 <<aj-corr-sq>>
       #+END_SRC
 
-      #+RESULTS:
-      | SCAN TABLE Employee                                                         |
-      | EXECUTE CORRELATED SCALAR SUBQUERY 1                                        |
-      | SEARCH TABLE Customer USING INDEX IFK_CustomerSupportRepId (SupportRepId=?) |
+      #+BEGIN_EXAMPLE
+SCAN TABLE Employee
+EXECUTE CORRELATED SCALAR SUBQUERY 1
+SEARCH TABLE Customer USING INDEX IFK_CustomerSupportRepId (SupportRepId=?)
+      #+END_EXAMPLE
 
 ***** With the Relation Algebra Definition
       #+NAME: aj-ra-alg
@@ -1730,11 +1731,13 @@ EXPLAIN QUERY PLAN
 <<aj-ra-alg>>
       #+END_SRC
 
-      #+CAPTION: Query Plan
-      | SCAN TABLE Employee                                               |
-      | SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId |
-      | SEARCH TABLE Employee USING INTEGER PRIMARY KEY (rowid=?)         |
-      | COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)            |
+      Query Plan
+      #+BEGIN_EXAMPLE
+SCAN TABLE Employee
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SEARCH TABLE Employee USING INTEGER PRIMARY KEY (rowid=?)
+COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)
+      #+END_EXAMPLE
 
       I prefer the relational algebra definition over the correlated subquery
       definition. In toolkits such as [[http://www.sqlalchemy.org/][SQLAlchemy]], it is difficult to code
@@ -1787,13 +1790,13 @@ return str(RelationOrg(cust))
       | 1 | 1 | 0 | 0 |
       | 1 | 0 | 1 | 0 |
       | 1 | 1 | 3 | 1 |
-  
+
       #+CAPTION: Divisor
       #+NAME: Divisor
       | A | B |
       | 1 | 0 |
       | 1 | 1 |
-  
+
       #+BEGIN_SRC python :var in_table=Dividend other_table=Divisor :exports code
 import sys
 sys.path.append("/home/devin/projects/relational/")
@@ -1814,7 +1817,7 @@ return str(RelationOrg(prod))
       R by S is the projection p of R minus V]; where $p$ [fn::p] is the set of
       columns unique to $R$ [fn::R].
 
-      Substituting $V$ [fn::V]:
+      Substituting V:
       $R\div S = \pi_pR - \pi_pU$ [fn::Division of R by S is the projection of R minus the projection of U.]
       Substituting U:
       $R\div S = \pi_pR - \pi_p(T - R)$ [fn::Division of R by S is the projection of R minus the projection of (T minus R).]
@@ -1859,29 +1862,31 @@ WHERE NOT EXISTS
 
       #+RESULTS: div-codd
       : 14
-  
+
       This query has the following plan in SQLite.
       #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports results :noweb yes
 EXPLAIN QUERY PLAN
 <<div-codd>>
       #+END_SRC
-  
-      #+CAPTION: Query Plan
-      | SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK_CustomerSupportRepId |
-      | EXECUTE CORRELATED SCALAR SUBQUERY 1                                          |
-      | SCAN TABLE Employee AS Dividend                                               |
-      | EXECUTE CORRELATED SCALAR SUBQUERY 2                                          |
-      | SEARCH TABLE Customer AS Divisor USING INTEGER PRIMARY KEY (rowid=?)          |
+
+      Query Plan
+      #+BEGIN_EXAMPLE
+SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK_CustomerSupportRepId
+EXECUTE CORRELATED SCALAR SUBQUERY 1
+SCAN TABLE Employee AS Dividend
+EXECUTE CORRELATED SCALAR SUBQUERY 2
+SEARCH TABLE Customer AS Divisor USING INTEGER PRIMARY KEY (rowid=?)
+      #+END_EXAMPLE
 
       #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports none :noweb yes
 .timer on
 <<div-codd>>
       #+END_SRC
-  
+
       #+CAPTION: Result and Run Time
       |                                              14 |
       | Run Time: real 0.001 user 0.000000 sys 0.001000 |
-  
+
 ***** With the Relation Algebra Definition
       #+NAME: ra-division-sqlite
       #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports code
@@ -1904,14 +1909,16 @@ EXPLAIN QUERY PLAN
 <<ra-division-sqlite>>
       #+END_SRC
 
-      #+CAPTION: Query Plan
-      | SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId |
-      | SCAN TABLE Employee                                               |
-      | SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId |
-      | SCAN TABLE Customer                                               |
-      | COMPOUND SUBQUERIES 4 AND 5 USING TEMP B-TREE (EXCEPT)            |
-      | SCAN SUBQUERY 3                                                   |
-      | COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)            |
+      Query Plan
+      #+BEGIN_EXAMPLE
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SCAN TABLE Employee
+SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId
+SCAN TABLE Customer
+COMPOUND SUBQUERIES 4 AND 5 USING TEMP B-TREE (EXCEPT)
+SCAN SUBQUERY 3
+COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (EXCEPT)
+      #+END_EXAMPLE
 
       #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports none :noweb yes
 .timer on
@@ -1936,8 +1943,8 @@ EXPLAIN QUERY PLAN
    were coded after the Relational version was written.
 
 *** Multiple Joins
-    The following code joins the tables: artist, album, track, genre,
-    playlist_track, and playlist; they are all joined together in order to find
+    The following code joins the tables: =artist=, =album=, =track=, =genre=,
+    =playlist_track=, and =playlist=; they are all joined together in order to find
     playlists that contain rock and list the artists on those playlists.
 
     #+BEGIN_SRC python :noweb yes :exports code
@@ -2293,31 +2300,33 @@ EXPLAIN QUERY PLAN
 <<complex-query-cor-sq>>
     #+END_SRC
 
-    #+CAPTION: Query Plan
-    | SCAN TABLE PlaylistTrack                                                         |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                        |
-    | EXECUTE CORRELATED SCALAR SUBQUERY 2                                             |
-    | SCAN TABLE Genre                                                                 |
-    | EXECUTE CORRELATED SCALAR SUBQUERY 3                                             |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)        |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                        |
-    | SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?) |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                          |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                        |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)        |
-    | SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                          |
-    | SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?) |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)        |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                           |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                          |
-    | USE TEMP B-TREE FOR DISTINCT                                                     |
-    | SCAN SUBQUERY 1                                                                  |
+    Query Plan
+    #+BEGIN_EXAMPLE
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+EXECUTE CORRELATED SCALAR SUBQUERY 2
+SCAN TABLE Genre
+EXECUTE CORRELATED SCALAR SUBQUERY 3
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+USE TEMP B-TREE FOR DISTINCT
+SCAN SUBQUERY 1
+    #+END_EXAMPLE
 
     #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports results :noweb yes
 .timer on
@@ -2377,41 +2386,43 @@ USING (GenreId));
     #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports results :noweb yes :results table
 EXPLAIN QUERY PLAN
 <<complex-query-ra>>
-    #+END_SRC    
+    #+END_SRC
 
-    #+CAPTION: Query Plan
-    | SCAN TABLE PlaylistTrack                                                  |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                 |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?) |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                   |
-    | SCAN TABLE PlaylistTrack                                                  |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                 |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?) |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                   |
-    | SCAN TABLE Genre                                                          |
-    | SCAN TABLE PlaylistTrack                                                  |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                 |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?) |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                   |
-    | COMPOUND SUBQUERIES 6 AND 7 USING TEMP B-TREE (EXCEPT)                    |
-    | SCAN SUBQUERY 5                                                           |
-    | COMPOUND SUBQUERIES 3 AND 4 USING TEMP B-TREE (EXCEPT)                    |
-    | SCAN TABLE PlaylistTrack                                                  |
-    | SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?) |
-    | SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)                 |
-    | SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)                    |
-    | SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)                   |
-    | SEARCH SUBQUERY 2 AS quot USING AUTOMATIC COVERING INDEX (PlaylistId=?)   |
-    | USE TEMP B-TREE FOR DISTINCT                                              |
-    | SCAN SUBQUERY 1                                                           |
+    Query Plan
+    #+BEGIN_EXAMPLE
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SCAN TABLE Genre
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+COMPOUND SUBQUERIES 6 AND 7 USING TEMP B-TREE (EXCEPT)
+SCAN SUBQUERY 5
+COMPOUND SUBQUERIES 3 AND 4 USING TEMP B-TREE (EXCEPT)
+SCAN TABLE PlaylistTrack
+SEARCH TABLE Track USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)
+SEARCH TABLE Genre USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Playlist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Album USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH TABLE Artist USING INTEGER PRIMARY KEY (rowid=?)
+SEARCH SUBQUERY 2 AS quot USING AUTOMATIC COVERING INDEX (PlaylistId=?)
+USE TEMP B-TREE FOR DISTINCT
+SCAN SUBQUERY 1
+    #+END_EXAMPLE
 
     #+BEGIN_SRC sqlite :db sql-relational-algebra/chinook/Chinook_Sqlite.sqlite :exports results :noweb yes
 .timer on
