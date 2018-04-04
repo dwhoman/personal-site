@@ -1,7 +1,6 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <link rel="alternate" type="application/atom+xml" href="../feed.atom">
 <link rel="shortcut icon" href="../graphics/logo3.svg">
 <link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
@@ -28,20 +27,20 @@
 <div id="following-page" class="menu nav menu-btn"><a href="../blog/following.html" tabindex="11"><span>Following</span><img src="../graphics/noun_541507_cc.svg" alt=""></a></div>
 <div id="blog-feed-comp" class="filler menu"></div>
 <div id="nav-filler" class="filler"></div>
-<div id="to-top" class="nav menu-btn"><a href="#" tabindex="12"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-threads"><h2>Thread</h2>
+<div id="to-top" class="nav menu-btn"><a href="#" tabindex="12"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-threads-local"><h2>Thread</h2>
 <dl>
 <dt>Prev:</dt>
-<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
-</dl></nav><nav id="blog-published"><h2>Published</h2>
-<dl>
-<dt>Prev:</dt>
-<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
-</dl></nav><nav id="blog-updated"><h2>Updated</h2>
-<dl>
-<dt>Prev:</dt>
-<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
-<dt>Next:</dt>
 <dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
+<dt>Next:</dt>
+<dd class="cloud"><a href="sql-number-length-dag.html">Number Length Directed Graph</a></dd>
+</dl></nav><nav id="blog-published-local"><h2>Published</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
+</dl></nav><nav id="blog-updated-local"><h2>Updated</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
 </dl></nav><nav id="tag-list"><h2>Tags</h2>
 <ul>
 <li><a href="../categories.xhtml#Org">Org</a></li>
@@ -80,7 +79,7 @@
 <ul>
 <li><a href="#org0f0e9b1">4.8.1. Dashes, Diacritics, and Ligatures</a></li>
 <li><a href="#org6fd5d2b">4.8.2. Comment Support</a></li>
-<li><a href="#org2766b78">4.8.3. Selenium Web Driver Testing</a></li>
+<li><a href="#orgcf5ccac">4.8.3. Selenium Web Driver Testing and Markup Validation</a></li>
 </ul>
 </li>
 </ul>
@@ -121,7 +120,8 @@ I have used <a href="https://en.wikipedia.org/wiki/XSLT">XSLT</a> in the past, a
 tool. XSLT, Extensible Stylesheet Language Transformations, is a language
 designed for translating XML to XML, HTML, or plain text.  With XSLT, I am
 able pull meta-data from Org's XHTML export and add navigation and other
-modifications to each XHTML file.
+modifications to each XHTML file. You can check out the static site generator
+I built, on my <a href="https://github.com/dwhoman/personal-site-generator">GitHub page</a>.
 </p>
 </div>
 </article>
@@ -433,13 +433,14 @@ generator, so adding it to the site will be a bit more involved.
 </div>
 </div>
 
-<div id="outline-container-org2766b78" class="outline-4">
-<h4 id="org2766b78">
-<span class="section-number-4">4.8.3</span> Selenium Web Driver Testing</h4>
+<div id="outline-container-orgcf5ccac" class="outline-4">
+<h4 id="orgcf5ccac">
+<span class="section-number-4">4.8.3</span> Selenium Web Driver Testing and Markup Validation</h4>
 <div class="outline-text-4" id="text-4-8-3">
 <p>
 While there is not too much that can go wrong with a static site, I still
-want to check for broken links.
+want to check for broken links. I also want to do automated markup
+validation using the W3C Nu Markup validator.
 </p>
 </div>
 </div>

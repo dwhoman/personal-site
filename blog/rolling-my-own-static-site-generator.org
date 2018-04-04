@@ -34,7 +34,8 @@
   tool. XSLT, Extensible Stylesheet Language Transformations, is a language
   designed for translating XML to XML, HTML, or plain text.  With XSLT, I am
   able pull meta-data from Org's XHTML export and add navigation and other
-  modifications to each XHTML file.
+  modifications to each XHTML file. You can check out the static site generator
+  I built, on my [[https://github.com/dwhoman/personal-site-generator][GitHub page]].
 * Org File Header
   All of the Org files used in the blog have the following header fields:
   =TITLE=, =DATE=, =DESCRIPTION=, =KEYWORDS=. For example, this file has the
@@ -233,6 +234,7 @@
     page.  This library is designed for use with the [[https://jekyllrb.com/][Jekyll]] static site
     generator, so adding it to the site will be a bit more involved.
 
-*** Selenium Web Driver Testing
+*** Selenium Web Driver Testing and Markup Validation
     While there is not too much that can go wrong with a static site, I still
-    want to check for broken links.
+    want to check for broken links. I also want to do automated markup
+    validation using the W3C Nu Markup validator.
