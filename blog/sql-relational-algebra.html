@@ -40,7 +40,7 @@
 <dt>Prev:</dt>
 <dd class="cloud"><a href="why-gentoo.html">Why I Use Gentoo</a></dd>
 <dt>Next:</dt>
-<dd class="cloud"><a href="rolling-my-own-static-site-generator.html">Rolling My Own Static Site Generator</a></dd>
+<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
 </dl></nav><nav id="tag-list"><h2>Tags</h2>
 <ul>
 <li><a href="../categories.xhtml#python">python</a></li>
@@ -49,7 +49,7 @@
 </ul></nav></aside><aside id="generation-dates"><ul>
 <li id="publication-date">Published: <time datetime="2016-09-01T00:00:00">September 01 2016</time>
 </li>
-<li id="update-date">Updated: <time datetime="2018-04-01T15:15:00">April 01 2018</time>
+<li id="update-date">Updated: <time datetime="2018-04-03T15:37:00">April 03 2018</time>
 </li>
 <li id="markup-source"><a href="sql-relational-algebra.org" type="text/plain" download="sql-relational-algebra.org">Page Markup Source</a></li>
 </ul></aside><main id="content">
@@ -102,8 +102,8 @@
 <li>
 <a href="#orgc3a173d">1.3.6.4. Anti-Join</a>
 <ul>
-<li><a href="#org5ccc421">1.3.6.4.1. With Correlated Subqueries</a></li>
-<li><a href="#orge396856">1.3.6.4.2. With the Relation Algebra Definition</a></li>
+<li><a href="#org632ea11">1.3.6.4.1. With Correlated Subqueries</a></li>
+<li><a href="#orgfd2bc7b">1.3.6.4.2. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 <li>
@@ -111,8 +111,8 @@
 <ul>
 <li><a href="#orgeb22a51">1.3.6.5.1. Example</a></li>
 <li><a href="#orgb5ab875">1.3.6.5.2. Relational Algebra Definition</a></li>
-<li><a href="#org4b96508">1.3.6.5.3. With Correlated Subqueries</a></li>
-<li><a href="#orgd852efc">1.3.6.5.4. With the Relation Algebra Definition</a></li>
+<li><a href="#orgc7c1d55">1.3.6.5.3. With Correlated Subqueries</a></li>
+<li><a href="#org23aab46">1.3.6.5.4. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 </ul>
@@ -124,8 +124,8 @@
 <ul>
 <li><a href="#org3596ee1">1.4.1. Multiple Joins</a></li>
 <li><a href="#org4e5f40a">1.4.2. Adding Division</a></li>
-<li><a href="#org632ea11">1.4.3. With Correlated Subqueries</a></li>
-<li><a href="#orgfd2bc7b">1.4.4. With the Relation Algebra Definition</a></li>
+<li><a href="#orgd39d14a">1.4.3. With Correlated Subqueries</a></li>
+<li><a href="#orgab797a3">1.4.4. With the Relation Algebra Definition</a></li>
 </ul>
 </li>
 <li>
@@ -190,7 +190,7 @@ The first line in each CSV file are the column names. Every element in each
 file is quoted with double quotes.  The CSV data entries are parsed into four
 possible types; string, integer, float, and date, which are defined in
 rtypes.py. Relational does not have a null type. Instead, three dashes,
-<code>"---"</code>, are used to represent null values in the CSV files. Relational treats null
+<code>---</code>, are used to represent null values in the CSV files. Relational treats null
 values as equal, but SQL sometimes treats them as equal and sometimes not, so
 some of the examples may need to be changed to treat null equality as
 desired. <a href="https://en.wikipedia.org/wiki/Null_(SQL)">Wikipedia</a> has an extensive article on the subject.
@@ -229,7 +229,7 @@ the Babel code block and the table data is converted to a list of lists.
 </div>
 
 <p>
-In the example, the alpha_table is given the value:
+In the example, the alpha<sub>table</sub> is given the value:
 </p>
 <div class="org-src-container">
 <pre class="src src-python"><span class="org-variable-name">alpha_table</span> = [[<span class="org-string">"key"</span>, <span class="org-string">"value"</span>],[<span class="org-string">"1"</span>,<span class="org-string">"A"</span>]]
@@ -978,8 +978,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-org5ccc421" class="outline-6">
-<h6 id="org5ccc421">
+<div id="outline-container-org632ea11" class="outline-6">
+<h6 id="org632ea11">
 <span class="section-number-6">1.3.6.4.1</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-4-1">
 <p>
@@ -1029,15 +1029,15 @@ This query has the following plan in SQLite.
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Customer USING INDEX IFK_CustomerSupportRepId (SupportRepId=?)</td>
+<td class="org-left">SEARCH TABLE Customer USING INDEX IFK<sub>CustomerSupportRepId</sub> (SupportRepId=?)</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-orge396856" class="outline-6">
-<h6 id="orge396856">
+<div id="outline-container-orgfd2bc7b" class="outline-6">
+<h6 id="orgfd2bc7b">
 <span class="section-number-6">1.3.6.4.2</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-4-2">
 <div class="org-src-container">
@@ -1080,7 +1080,8 @@ It has the following plan in SQLite.
 </tr>
 
 <tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
+</td>
 </tr>
 
 <tr>
@@ -1339,8 +1340,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-org4b96508" class="outline-6">
-<h6 id="org4b96508">
+<div id="outline-container-orgc7c1d55" class="outline-6">
+<h6 id="orgc7c1d55">
 <span class="section-number-6">1.3.6.5.3</span> With Correlated Subqueries</h6>
 <div class="outline-text-6" id="text-1-3-6-5-3">
 <p>
@@ -1379,7 +1380,8 @@ This query has the following plan in SQLite.
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK_CustomerSupportRepId</td>
+<td class="org-left">SCAN TABLE Customer AS Quotient USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
+</td>
 </tr>
 
 <tr>
@@ -1420,8 +1422,8 @@ This query has the following plan in SQLite.
 </div>
 </div>
 
-<div id="outline-container-orgd852efc" class="outline-6">
-<h6 id="orgd852efc">
+<div id="outline-container-org23aab46" class="outline-6">
+<h6 id="org23aab46">
 <span class="section-number-6">1.3.6.5.4</span> With the Relation Algebra Definition</h6>
 <div class="outline-text-6" id="text-1-3-6-5-4">
 <div class="org-src-container">
@@ -1446,7 +1448,8 @@ This query has the following plan in SQLite.
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
+</td>
 </tr>
 
 <tr>
@@ -1454,7 +1457,8 @@ This query has the following plan in SQLite.
 </tr>
 
 <tr>
-<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK_CustomerSupportRepId</td>
+<td class="org-left">SCAN TABLE Customer USING COVERING INDEX IFK<sub>CustomerSupportRepId</sub>
+</td>
 </tr>
 
 <tr>
@@ -1507,7 +1511,7 @@ were coded after the Relational version was written.
 <div class="outline-text-4" id="text-1-4-1">
 <p>
 The following code joins the tables: artist, album, track, genre,
-playlist_track, and playlist; they are all joined together in order to find
+playlist<sub>track</sub>, and playlist; they are all joined together in order to find
 playlists that contain rock and list the artists on those playlists.
 </p>
 
@@ -1673,8 +1677,8 @@ sys.path.append(<span class="org-string">"/home/devin/projects/relational/"</spa
 </div>
 </div>
 
-<div id="outline-container-org632ea11" class="outline-4">
-<h4 id="org632ea11">
+<div id="outline-container-orgd39d14a" class="outline-4">
+<h4 id="orgd39d14a">
 <span class="section-number-4">1.4.3</span> With Correlated Subqueries</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <p>
@@ -1762,7 +1766,7 @@ quot <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -1770,7 +1774,7 @@ quot <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)</td>
+<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK<sub>PlaylistTrack</sub> (PlaylistId=?)</td>
 </tr>
 
 <tr>
@@ -1790,7 +1794,7 @@ quot <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -1806,7 +1810,7 @@ quot <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK_PlaylistTrack (PlaylistId=?)</td>
+<td class="org-left">SEARCH TABLE PlaylistTrack USING COVERING INDEX IPK<sub>PlaylistTrack</sub> (PlaylistId=?)</td>
 </tr>
 
 <tr>
@@ -1814,7 +1818,7 @@ quot <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -1855,8 +1859,8 @@ quot <span class="org-keyword">AS</span>
 </div>
 </div>
 
-<div id="outline-container-orgfd2bc7b" class="outline-4">
-<h4 id="orgfd2bc7b">
+<div id="outline-container-orgab797a3" class="outline-4">
+<h4 id="orgab797a3">
 <span class="section-number-4">1.4.4</span> With the Relation Algebra Definition</h4>
 <div class="outline-text-4" id="text-1-4-4">
 <p>
@@ -1927,7 +1931,7 @@ divisor <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -1951,7 +1955,7 @@ divisor <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -1979,7 +1983,7 @@ divisor <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>
@@ -2011,7 +2015,7 @@ divisor <span class="org-keyword">AS</span>
 </tr>
 
 <tr>
-<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK_Genre (GenreId=? AND rowid=?)</td>
+<td class="org-left">SEARCH TABLE Genre USING COVERING INDEX IPK<sub>Genre</sub> (GenreId=? AND rowid=?)</td>
 </tr>
 
 <tr>

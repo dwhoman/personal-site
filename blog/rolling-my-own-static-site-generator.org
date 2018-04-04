@@ -209,8 +209,9 @@
     character patterns with ligatures so long as the font has those
     letter-combination glyphs. Using [[https://github.com/fonttools/fonttools][pyftsubset]], I include only Latin characters
     and the common ligatures in the font files that are sent to the browser.
-    The program [[https://github.com/filamentgroup/glyphhanger][glyphhanger]], which I learned about from the YouTube video, [[https://www.youtube.com/watch?v=6poPxOYiuBE][Web
-    Fonts Are Not Rocket Science]], uses pyftsubset as a back-end and is what lead
+    The program [[https://github.com/filamentgroup/glyphhanger][glyphhanger]], which I learned about from the YouTube video,
+    [[https://www.youtube.com/watch?v=6poPxOYiuBE][Web Fonts Are Not Rocket Science]], 
+    uses pyftsubset as a back-end and is what lead
     me to it.
 
     I created an XSLT script which replaces words with versions that have

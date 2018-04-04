@@ -208,7 +208,7 @@ track = Relation(root_fp + "track.csv")
    file is quoted with double quotes.  The CSV data entries are parsed into four
    possible types; string, integer, float, and date, which are defined in
    rtypes.py. Relational does not have a null type. Instead, three dashes,
-   ~"---"~, are used to represent null values in the CSV files. Relational treats null
+   =---=, are used to represent null values in the CSV files. Relational treats null
    values as equal, but SQL sometimes treats them as equal and sometimes not, so
    some of the examples may need to be changed to treat null equality as
    desired. [[https://en.wikipedia.org/wiki/Null_%28SQL%29][Wikipedia]] has an extensive article on the subject.
