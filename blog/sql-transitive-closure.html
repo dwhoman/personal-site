@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="alternate" type="application/atom+xml" href="../feed.atom">
-<link rel="shortcut icon" href="../graphics/logo3.svg">
+<link rel="shortcut icon" href="../graphics/logo.ico">
 <link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
 <title>Transitive Closure in SQL</title>
 <meta name="description" content="Using recursive common table expressions in SQL to find the transitive closure.">
@@ -43,7 +43,7 @@
 <dt>Prev:</dt>
 <dd class="cloud"><a href="rolling-my-own-static-site-generator.html">Rolling My Own Static Site Generator</a></dd>
 <dt>Next:</dt>
-<dd class="cloud"><a href="sql-relational-algebra.html">SQL Relational Algebra</a></dd>
+<dd class="cloud"><a href="keyboard-layouts.html">Keyboard Layouts</a></dd>
 </dl></nav><nav id="tag-list"><h2>Tags</h2>
 <ul>
 <li><a href="../categories.xhtml#python">python</a></li>
@@ -52,7 +52,7 @@
 </ul></nav></aside><aside id="generation-dates"><ul>
 <li id="publication-date">Published: <time datetime="2016-09-11T00:00:00">September 11 2016</time>
 </li>
-<li id="update-date">Updated: <time datetime="2018-04-03T22:22:00">April 03 2018</time>
+<li id="update-date">Updated: <time datetime="2018-04-07T20:07:00">April 07 2018</time>
 </li>
 <li id="markup-source"><a href="sql-transitive-closure.org" type="text/plain" download="sql-transitive-closure.org">Page Markup Source</a></li>
 </ul></aside><main id="content">
@@ -152,7 +152,7 @@ A recursive query is one with the form:
 not. What look to be parameters, are actually the column names of the return
 value, so <code>org.name, under_alice.level+1</code> becomes <code>under_alice.name,
     under_alice.level</code>. The last SELECT statement just formats the result from
-<code>under_alice</code>. The under<sub>alice</sub> query makes reference to the <code>org</code> table:
+<code>under_alice</code>. The <code>under_alice</code> query makes reference to the <code>org</code> table:
 </p>
 
 <table>
@@ -215,7 +215,7 @@ Initially <code>VALUES('Alice',0)</code> is stored in the <em>queue</em>, and th
 table</em> is empty. The part after the <code>UNION ALL</code> is the recursion loop.  The
 statement, <code>VALUES('Alice',0)</code>, does not get re-evaluated. In the first
 iteration, the top value from the <em>queue</em> is moved to the <em>recursive table</em>
-and it also becomes the value that <em>under<sub>alice</sub></em> refers to in the
+and it also becomes the value that <code>under_alice</code> refers to in the
 <code>SELECT...FROM...</code> statement.  The <code>org</code> table gets joined with <code>('Alice',0)
     ON org.boss = 'Alice'</code>, and the table returned by the <code>SELECT...FROM...</code>
 statement gets stored at the bottom of the queue, resulting in the tables
@@ -231,7 +231,7 @@ first search.
 <ul class="org-ul">
 <li>
 <p>
-step 0
+Step 0
 </p>
 <table>
 <caption class="t-above">
@@ -257,7 +257,7 @@ The recursive table is empty.
 
 <li>
 <p>
-step 1
+Step 1
 </p>
 <table>
 <caption class="t-above">
@@ -301,7 +301,7 @@ step 1
 
 <li>
 <p>
-step 2
+Step 2
 </p>
 <table>
 <caption class="t-above">
@@ -355,7 +355,7 @@ step 2
 
 <li>
 <p>
-step 3
+Step 3
 </p>
 <table>
 <caption class="t-above">
@@ -419,7 +419,7 @@ step 3
 
 <li>
 <p>
-step 4
+Step 4
 </p>
 <table>
 <caption class="t-above">
@@ -483,7 +483,7 @@ step 4
 
 <li>
 <p>
-step 5
+Step 5
 </p>
 <table>
 <caption class="t-above">
@@ -547,7 +547,7 @@ step 5
 
 <li>
 <p>
-step 6
+Step 6
 </p>
 <table>
 <caption class="t-above">
@@ -611,7 +611,7 @@ step 6
 
 <li>
 <p>
-step 7
+Step 7
 </p>
 <table>
 <caption class="t-above">

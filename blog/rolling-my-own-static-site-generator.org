@@ -6,7 +6,7 @@
 #+COPYRIGHT: 2016 https://creativecommons.org/licenses/by/4.0/legalcode
 # All code listings are "free and unencumbered software released into the public domain."
 #+DESCRIPTION: How I create my blog with Emacs Org Mode and the shell.
-#+KEYWORDS: XSLT, shell, Org
+#+KEYWORDS: XSLT, shell, Org, Web
 #+STARTUP:  overview
 #+PROPERTY: header-args :eval no-export
 * Why Re-Invent The Wheel

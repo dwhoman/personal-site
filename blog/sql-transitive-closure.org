@@ -72,7 +72,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
     not. What look to be parameters, are actually the column names of the return
     value, so ~org.name, under_alice.level+1~ becomes ~under_alice.name,
     under_alice.level~. The last SELECT statement just formats the result from
-    =under_alice=. The under_alice query makes reference to the =org= table:
+    =under_alice=. The =under_alice= query makes reference to the =org= table:
 
     | name  | boss  |
     |-------+-------|
@@ -91,7 +91,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
     table/ is empty. The part after the ~UNION ALL~ is the recursion loop.  The
     statement, ~VALUES('Alice',0)~, does not get re-evaluated. In the first
     iteration, the top value from the /queue/ is moved to the /recursive table/
-    and it also becomes the value that /under_alice/ refers to in the
+    and it also becomes the value that =under_alice= refers to in the
     ~SELECT...FROM...~ statement.  The =org= table gets joined with ~('Alice',0)
     ON org.boss = 'Alice'~, and the table returned by the ~SELECT...FROM...~
     statement gets stored at the bottom of the queue, resulting in the tables
@@ -103,13 +103,13 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
     Otherwise the query would loop infinitely.  This query performs a breadth
     first search.
 
-    - step 0
+    - Step 0
       #+CAPTION: Queue
       | Alice | 0 |
 
       The recursive table is empty.
 
-    - step 1
+    - Step 1
       #+CAPTION: Recursive Table
       | Alice | 0 |
 
@@ -117,7 +117,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Bob   | 1 |
       | Cindy | 1 |
 
-    - step 2
+    - Step 2
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |
@@ -127,7 +127,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Dave  | 2 |
       | Emma  | 2 |
 
-    - step 3
+    - Step 3
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |
@@ -139,7 +139,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Fred | 2 |
       | Gail | 2 |
 
-    - step 4
+    - Step 4
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |
@@ -151,7 +151,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Fred | 2 |
       | Gail | 2 |
 
-    - step 5
+    - Step 5
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |
@@ -163,7 +163,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       | Fred | 2 |
       | Gail | 2 |
 
-    - step 6
+    - Step 6
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |
@@ -175,7 +175,7 @@ SELECT substr('..........',1,level*3) || name FROM under_alice;
       #+CAPTION: Queue
       | Gail | 2 |
 
-    - step 7
+    - Step 7
       #+CAPTION: Recursive Table
       | Alice | 0 |
       | Bob   | 1 |

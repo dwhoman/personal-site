@@ -1,0 +1,1684 @@
+div.QWERTY {
+    --shiftr: #89ff00;
+    --shiftl: #bcff00;
+    --pipe: #0034ff;
+    --equal: #0044ff;
+    --tilde: #0056ff;
+    --leftsquare: #0066ff;
+    --rightsquare: #0078ff;
+    --z: #0088ff;
+    --question: #009aff;
+    --tab: #00aaff;
+    --q: #00bcff;
+    --one: #00ff78;
+    --two: #00ffcc;
+    --three: #00ffdd;
+    --four: #00ffff;
+    --five: #00eeff;
+    --six: #00ccff;
+    --seven: #00ddff;
+    --eight: #00ffbc;
+    --nine: #00ffaa;
+    --zero: #00ff88;
+    --j: #00ffee;
+    --x: #00ff9a;
+    --colon: #00ff66;
+    --underscore: #00ff56;
+    --quote: #00ff44;
+    --k: #00ff34;
+    --v: #00ff22;
+    --period: #00ff12;
+    --b: #00ff00;
+    --p: #11ff00;
+    --y: #22ff00;
+    --comma: #33ff00;
+    --g: #44ff00;
+    --w: #77ff00;
+    --f: #ddff00;
+    --m: #ffff00;
+    --c: #ffee00;
+    --enter: #ffdd00;
+    --u: #ffcc00;
+    --l: #ffbb00;
+    --d: #ffaa00;
+    --r: #ff9900;
+    --h: #ff8800;
+    --s: #ff7700;
+    --n: #ff6600;
+    --i: #ff5500;
+    --o: #ff4400;
+    --a: #ff3300;
+    --t: #ff2200;
+    --e: #ff1100;
+    --space: #ff0000;
+}
+
+div.Dvorak {
+    --shiftr: #55ff00;
+    --shiftl: #eeff00;
+    --pipe: #0034ff;
+    --equal: #0044ff;
+    --tilde: #0056ff;
+    --leftsquare: #0066ff;
+    --rightsquare: #0078ff;
+    --comma: #33ff00;
+    --question: #009aff;
+    --tab: #00aaff;
+    --q: #00bcff;
+    --six: #00ccff;
+    --seven: #00ddff;
+    --five: #00eeff;
+    --four: #00ffff;
+    --three: #00ffdd;
+    --two: #00ffcc;
+    --eight: #00ffbc;
+    --nine: #00ffaa;
+    --zero: #00ff88;
+    --one: #00ff78;
+    --colon: #00ff66;
+    --underscore: #00ff56;
+    --quote: #00ff44;
+    --period: #00ff12;
+    --x: #00ff9a;
+    --j: #00ffee;
+    --k: #00ff34;
+    --v: #00ff22;
+    --z: #0088ff;
+    --b: #00ff00;
+    --p: #11ff00;
+    --g: #44ff00;
+    --w: #77ff00;
+    --e: #ff1100;
+    --r: #ff9900;
+    --t: #ff2200;
+    --y: #22ff00;
+    --u: #ffcc00;
+    --i: #ff5500;
+    --f: #ddff00;
+    --m: #ffff00;
+    --c: #ffee00;
+    --l: #ffbb00;
+    --d: #ffaa00;
+    --h: #ff8800;
+    --s: #ff7700;
+    --n: #ff6600;
+    --o: #ff4400;
+    --a: #ff3300;
+    --enter: #ffdd00;
+    --space: #ff0000;
+}
+
+div.Workman {
+    --shiftl: #9aff00;
+    --shiftr: #abff00;
+    --pipe: #0034ff;
+    --equal: #0044ff;
+    --tilde: #0056ff;
+    --leftsquare: #0066ff;
+    --rightsquare: #0078ff;
+    --z: #0088ff;
+    --question: #009aff;
+    --tab: #00aaff;
+    --q: #00bcff;
+    --six: #00ccff;
+    --seven: #00ddff;
+    --five: #00eeff;
+    --four: #00ffff;
+    --j: #00ffee;
+    --three: #00ffdd;
+    --two: #00ffcc;
+    --eight: #00ffbc;
+    --nine: #00ffaa;
+    --x: #00ff9a;
+    --zero: #00ff88;
+    --one: #00ff78;
+    --colon: #00ff66;
+    --underscore: #00ff56;
+    --quote: #00ff44;
+    --k: #00ff34;
+    --v: #00ff22;
+    --period: #00ff12;
+    --b: #00ff00;
+    --p: #11ff00;
+    --y: #22ff00;
+    --comma: #33ff00;
+    --g: #44ff00;
+    --w: #77ff00;
+    --f: #ddff00;
+    --m: #ffff00;
+    --c: #ffee00;
+    --enter: #ffdd00;
+    --u: #ffcc00;
+    --l: #ffbb00;
+    --d: #ffaa00;
+    --r: #ff9900;
+    --h: #ff8800;
+    --s: #ff7700;
+    --n: #ff6600;
+    --i: #ff5500;
+    --o: #ff4400;
+    --a: #ff3300;
+    --t: #ff2200;
+    --e: #ff1100;
+    --space: #ff0000;
+}
+
+div.Colemak {
+    --shiftl: #ccff00;
+    --shiftr: #eeff00;
+    --pipe: #0034ff;
+    --equal: #0044ff;
+    --tilde: #0056ff;
+    --leftsquare: #0066ff;
+    --rightsquare: #0078ff;
+    --z: #0088ff;
+    --question: #009aff;
+    --tab: #00aaff;
+    --q: #00bcff;
+    --six: #00ccff;
+    --seven: #00ddff;
+    --five: #00eeff;
+    --four: #00ffff;
+    --j: #00ffee;
+    --three: #00ffdd;
+    --two: #00ffcc;
+    --eight: #00ffbc;
+    --nine: #00ffaa;
+    --x: #00ff9a;
+    --zero: #00ff88;
+    --one: #00ff78;
+    --colon: #00ff66;
+    --underscore: #00ff56;
+    --quote: #00ff44;
+    --k: #00ff34;
+    --v: #00ff22;
+    --period: #00ff12;
+    --b: #00ff00;
+    --p: #11ff00;
+    --y: #22ff00;
+    --comma: #33ff00;
+    --g: #44ff00;
+    --w: #77ff00;
+    --f: #ddff00;
+    --m: #ffff00;
+    --c: #ffee00;
+    --enter: #ffdd00;
+    --u: #ffcc00;
+    --l: #ffbb00;
+    --d: #ffaa00;
+    --r: #ff9900;
+    --h: #ff8800;
+    --s: #ff7700;
+    --n: #ff6600;
+    --i: #ff5500;
+    --o: #ff4400;
+    --a: #ff3300;
+    --t: #ff2200;
+    --e: #ff1100;
+    --space: #ff0000;
+}
+
+div.QWERTY.code {
+    --shiftl: #ff4400;
+    --shiftr: #ffee00;
+    --tilde: #0034ff;
+    --z: #0044ff;
+    --j: #0056ff;
+    --question: #0066ff;
+    --seven: #0078ff;
+    --q: #0088ff;
+    --six: #009aff;
+    --four: #00aaff;
+    --rightsquare: #00bcff;
+    --leftsquare: #00ccff;
+    --eight: #00ddff;
+    --five: #00eeff;
+    --pipe: #00ffff;
+    --two: #00ffee;
+    --k: #00ffdd;
+    --x: #00ffcc;
+    --one: #00ffbc;
+    --w: #00ffaa;
+    --v: #00ff9a;
+    --three: #00ff88;
+    --y: #00ff78;
+    --equal: #00ff66;
+    --b: #00ff56;
+    --colon: #00ff44;
+    --nine: #00ff34;
+    --g: #00ff22;
+    --h: #00ff12;
+    --period: #00ff00;
+    --zero: #11ff00;
+    --m: #22ff00;
+    --comma: #33ff00;
+    --underscore: #44ff00;
+    --f: #55ff00;
+    --tab: #66ff00;
+    --p: #77ff00;
+    --c: #89ff00;
+    --quote: #9aff00;
+    --d: #abff00;
+    --u: #bcff00;
+    --enter: #ccff00;
+    --l: #ddff00;
+    --n: #ffdd00;
+    --o: #ffcc00;
+    --i: #ffbb00;
+    --r: #ff9900;
+    --a: #ff8800;
+    --s: #ff7700;
+    --t: #ff6600;
+    --space: #ff2200;
+    --e: #ff0000;
+}
+
+div.Dvorak.code {
+    --shiftr: #ffaa00;
+    --shiftl: #ff5500;
+    --tilde: #0034ff;
+    --z: #0044ff;
+    --j: #0056ff;
+    --question: #0066ff;
+    --seven: #0078ff;
+    --q: #0088ff;
+    --six: #009aff;
+    --four: #00aaff;
+    --rightsquare: #00bcff;
+    --leftsquare: #00ccff;
+    --eight: #00ddff;
+    --five: #00eeff;
+    --pipe: #00ffff;
+    --two: #00ffee;
+    --k: #00ffdd;
+    --x: #00ffcc;
+    --one: #00ffbc;
+    --w: #00ffaa;
+    --v: #00ff9a;
+    --three: #00ff88;
+    --y: #00ff78;
+    --equal: #00ff66;
+    --b: #00ff56;
+    --colon: #00ff44;
+    --nine: #00ff34;
+    --g: #00ff22;
+    --h: #00ff12;
+    --period: #00ff00;
+    --zero: #11ff00;
+    --m: #22ff00;
+    --comma: #33ff00;
+    --underscore: #44ff00;
+    --f: #55ff00;
+    --tab: #66ff00;
+    --p: #77ff00;
+    --c: #89ff00;
+    --quote: #9aff00;
+    --d: #abff00;
+    --u: #bcff00;
+    --enter: #ccff00;
+    --l: #ddff00;
+    --n: #ffdd00;
+    --o: #ffcc00;
+    --i: #ffbb00;
+    --r: #ff9900;
+    --a: #ff8800;
+    --s: #ff7700;
+    --t: #ff6600;
+    --space: #ff2200;
+    --e: #ff0000;
+}
+
+div.Workman.code {
+    --shiftr: #eeff00;
+    --shiftl: #ff1100;
+    --tilde: #0034ff;
+    --z: #0044ff;
+    --j: #0056ff;
+    --question: #0066ff;
+    --seven: #0078ff;
+    --q: #0088ff;
+    --six: #009aff;
+    --four: #00aaff;
+    --rightsquare: #00bcff;
+    --leftsquare: #00ccff;
+    --eight: #00ddff;
+    --five: #00eeff;
+    --pipe: #00ffff;
+    --two: #00ffee;
+    --k: #00ffdd;
+    --x: #00ffcc;
+    --one: #00ffbc;
+    --w: #00ffaa;
+    --v: #00ff9a;
+    --three: #00ff88;
+    --y: #00ff78;
+    --equal: #00ff66;
+    --b: #00ff56;
+    --colon: #00ff44;
+    --nine: #00ff34;
+    --g: #00ff22;
+    --h: #00ff12;
+    --period: #00ff00;
+    --zero: #11ff00;
+    --m: #22ff00;
+    --comma: #33ff00;
+    --underscore: #44ff00;
+    --f: #55ff00;
+    --tab: #66ff00;
+    --p: #77ff00;
+    --c: #89ff00;
+    --quote: #9aff00;
+    --d: #abff00;
+    --u: #bcff00;
+    --enter: #ccff00;
+    --l: #ddff00;
+    --n: #ffdd00;
+    --o: #ffcc00;
+    --i: #ffbb00;
+    --r: #ff9900;
+    --a: #ff8800;
+    --s: #ff7700;
+    --t: #ff6600;
+    --space: #ff2200;
+    --e: #ff0000;
+}
+
+div.Colemak.code {
+    --shiftr: #ffff00;
+    --shiftl: #ff3300;
+    --tilde: #0034ff;
+    --z: #0044ff;
+    --j: #0056ff;
+    --question: #0066ff;
+    --seven: #0078ff;
+    --q: #0088ff;
+    --six: #009aff;
+    --four: #00aaff;
+    --rightsquare: #00bcff;
+    --leftsquare: #00ccff;
+    --eight: #00ddff;
+    --five: #00eeff;
+    --pipe: #00ffff;
+    --two: #00ffee;
+    --k: #00ffdd;
+    --x: #00ffcc;
+    --one: #00ffbc;
+    --w: #00ffaa;
+    --v: #00ff9a;
+    --three: #00ff88;
+    --y: #00ff78;
+    --equal: #00ff66;
+    --b: #00ff56;
+    --colon: #00ff44;
+    --nine: #00ff34;
+    --g: #00ff22;
+    --h: #00ff12;
+    --period: #00ff00;
+    --zero: #11ff00;
+    --m: #22ff00;
+    --comma: #33ff00;
+    --underscore: #44ff00;
+    --f: #55ff00;
+    --tab: #66ff00;
+    --p: #77ff00;
+    --c: #89ff00;
+    --quote: #9aff00;
+    --d: #abff00;
+    --u: #bcff00;
+    --enter: #ccff00;
+    --l: #ddff00;
+    --n: #ffdd00;
+    --o: #ffcc00;
+    --i: #ffbb00;
+    --r: #ff9900;
+    --a: #ff8800;
+    --s: #ff7700;
+    --t: #ff6600;
+    --space: #ff2200;
+    --e: #ff0000;
+}
+
+div.keyboard {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+}
+
+div.keyboard div.col-1 {
+    --column: 1;
+}
+div.keyboard div.col-2 {
+    --column: 2;
+}
+div.keyboard div.col-3 {
+    --column: 3;
+}
+div.keyboard div.col-4 {
+    --column: 4;
+}
+div.keyboard div.col-5 {
+    --column: 5;
+}
+div.keyboard div.col-6 {
+    --column: 6;
+}
+div.keyboard div.col-7 {
+    --column: 7;
+}
+div.keyboard div.col-8 {
+    --column: 8;
+}
+div.keyboard div.col-9 {
+    --column: 9;
+}
+div.keyboard div.col-10 {
+    --column: 10;
+}
+div.keyboard div.col-11 {
+    --column: 11;
+}
+div.keyboard div.col-12 {
+    --column: 12;
+}
+div.keyboard div.col-13 {
+    --column: 13;
+}
+div.keyboard div.col-14 {
+    --column: 14;
+}
+div.keyboard div.col-14 {
+    --column: 14;
+}
+
+div.keyboard {
+    display: grid;
+    grid-template-columns: repeat(29, 1fr);
+    grid-template-rows: repeat(5, 2em);
+}
+
+div.keyboard div {
+    height: 2em;
+    border: 1px solid black;
+    grid-column-end: span 2;
+}
+
+div.keyboard div::before {
+    position: relative;
+    left: calc(50% - 1ch);
+    font-size: calc(1vw + 6px);
+}
+
+div.keyboard div::after {
+    position: relative;
+    top: 0.7em;
+    left: calc(50% - 1ch);
+    font-size: calc(1vw + 6px);
+}
+
+div.row-1 {
+    grid-row: 1;
+}
+
+div.row-2 {
+    grid-row: 2;
+    grid-column-start: calc(var(--column) * 2);
+}
+
+div.row-2.col-1 {
+    grid-column: 1/4;
+    background-color: var(--tab);
+}
+
+div.row-2.col-1::before {
+    content: "Tab";
+    left: 0.25em;
+}
+
+div.row-3 {
+    grid-row: 3;
+    grid-column-start: calc(var(--column) * 2 + 1);
+}
+div.row-3.col-1 {
+    grid-column: 1/5;
+    background-color: transparent;
+    border: none;
+}
+
+div.row-3.col-13 {
+    grid-column-end: -1;
+    background-color: var(--enter);
+}
+
+div.row-3.col-13::before {
+    content: "Enter";
+    left: 0.25em;
+}
+
+div.row-4 {
+    grid-row: 4;
+    grid-column-start: calc(var(--column) * 2 + 2);
+}
+
+div.row-4.col-1 {
+    grid-column: 1/6;
+    background-color: var(--shiftl);
+}
+
+div.row-4.col-1::before {
+    content: "Shift";
+    left: 0.25em;
+}
+
+div.row-4.col-12 {
+    grid-column-end: -1;
+    background-color: var(--shiftr);
+}
+
+div.row-4.col-12::before {
+    content: "Shift";
+    left: 0.25em;
+}
+
+div.row-5.col-3 {
+    grid-row: 5;
+    grid-column: calc(var(--column) * 2 + 3);
+    grid-column-end: 21;
+    background-color: var(--space);
+}
+
+div.row-5.col-3::before {
+    content: "Space";
+    left: calc(50% - 2.5ch);
+}
+/* Common layout */
+div.row-1.col-1 {
+    background-color: var(--tilde);
+}
+div.row-1.col-1::before {
+    content: "~";
+}
+
+div.row-1.col-1::after {
+    content: "`";
+}
+
+div.row-1.col-2 {
+    background-color: var(--one);
+}
+
+div.row-1.col-2::before {
+    content: "!";
+}
+
+div.row-1.col-2::after {
+    content: "1";
+}
+
+div.row-1.col-3 {
+    background-color: var(--two);
+}
+
+div.row-1.col-3::before {
+    content: "@";
+}
+
+div.row-1.col-3::after {
+    content: "2";
+}
+
+div.row-1.col-4 {
+    background-color: var(--three);
+}
+
+div.row-1.col-4::before {
+    content: "#";
+}
+
+div.row-1.col-4::after {
+    content: "3";
+}
+
+div.row-1.col-5 {
+    background-color: var(--four);
+}
+
+div.row-1.col-5::before {
+    content: "$";
+}
+
+div.row-1.col-5::after {
+    content: "4";
+}
+
+div.row-1.col-6 {
+    background-color: var(--five);
+}
+
+div.row-1.col-6::before {
+    content: "%";
+}
+
+div.row-1.col-6::after {
+    content: "5";
+}
+
+div.row-1.col-7 {
+    background-color: var(--six);
+}
+
+div.row-1.col-7::before {
+    content: "^";
+}
+
+div.row-1.col-7::after {
+    content: "6";
+}
+
+div.row-1.col-8 {
+    background-color: var(--seven);
+}
+
+div.row-1.col-8::before {
+    content: "&";
+}
+
+div.row-1.col-8::after {
+    content: "7";
+}
+
+div.row-1.col-9 {
+    background-color: var(--eight);
+}
+
+div.row-1.col-9::before {
+    content: "*";
+}
+
+div.row-1.col-9::after {
+    content: "8";
+}
+
+div.row-1.col-10 {
+    background-color: var(--nine);
+}
+
+div.row-1.col-10::before {
+    content: "(";
+}
+
+div.row-1.col-10::after {
+    content: "9";
+}
+
+div.row-1.col-11 {
+    background-color: var(--zero);
+}
+
+div.row-1.col-11::before {
+    content: ")";
+}
+
+div.row-1.col-11::after {
+    content: "0";
+}
+
+div.row-1.col-12 {
+    background-color: var(--underscore);
+}
+
+div.row-1.col-12::before {
+    content: "_";
+}
+
+div.row-1.col-12::after {
+    content: "-";
+}
+
+div.row-1.col-13 {
+    background-color: var(--equal);
+}
+
+div.row-1.col-13::before {
+    content: "+";
+}
+
+div.row-1.col-13::after {
+    content: "=";
+}
+
+div.row-2.col-12 {
+    background-color: var(--leftsquare);
+}
+
+div.row-2.col-12::before {
+    content: "{";
+}
+
+div.row-2.col-12::after {
+    content: "[";
+}
+
+div.row-2.col-13 {
+    background-color: var(--rightsquare);
+}
+
+div.row-2.col-13::before {
+    content: "}";
+}
+
+div.row-2.col-13::after {
+    content: "]";
+}
+
+div.row-2.col-14 {
+    background-color: var(--pipe);
+}
+
+div.row-2.col-14::before {
+    content: "|";
+}
+
+div.row-2.col-14::after {
+    content: "\\";
+}
+
+/* QWERTY Layout */
+div.row-2.col-2 {
+    background-color: var(--q);
+}
+
+div.row-2.col-2::before {
+    content: "Q";
+}
+div.row-2.col-3 {
+    background-color: var(--w);
+}
+
+div.row-2.col-3::before {
+    content: "W";
+}
+
+div.row-2.col-4 {
+    background-color: var(--e);
+}
+
+div.row-2.col-4::before {
+    content: "E";
+}
+
+div.row-2.col-5 {
+    background-color: var(--r);
+}
+
+div.row-2.col-5::before {
+    content: "R";
+}
+
+div.row-2.col-6 {
+    background-color: var(--t);
+}
+
+div.row-2.col-6::before {
+    content: "T";
+}
+
+div.row-2.col-7 {
+    background-color: var(--y);
+}
+
+div.row-2.col-7::before {
+    content: "Y";
+}
+
+div.row-2.col-8 {
+    background-color: var(--u);
+}
+
+div.row-2.col-8::before {
+    content: "U";
+}
+
+div.row-2.col-9 {
+    background-color: var(--i);
+}
+
+div.row-2.col-9::before {
+    content: "I";
+}
+
+div.row-2.col-10 {
+    background-color: var(--o);
+}
+
+div.row-2.col-10::before {
+    content: "O";
+}
+
+div.row-2.col-11 {
+    background-color: var(--p);
+}
+
+div.row-2.col-11::before {
+    content: "P";
+}
+
+div.row-3.col-2 {
+    background-color: var(--a);
+}
+
+div.row-3.col-2::before {
+    content: "A";
+}
+
+div.row-3.col-3 {
+    background-color: var(--s);
+}
+
+div.row-3.col-3::before {
+    content: "S";
+}
+
+div.row-3.col-4 {
+    background-color: var(--d);
+}
+
+div.row-3.col-4::before {
+    content: "D";
+}
+
+div.row-3.col-5 {
+    background-color: var(--f);
+}
+
+div.row-3.col-5::before {
+    content: "F";
+}
+
+div.row-3.col-6 {
+    background-color: var(--g);
+}
+
+div.row-3.col-6::before {
+    content: "G";
+}
+
+div.row-3.col-7 {
+    background-color: var(--h);
+}
+
+div.row-3.col-7::before {
+    content: "H";
+}
+
+div.row-3.col-8 {
+    background-color: var(--j);
+}
+
+div.row-3.col-8::before {
+    content: "J";
+}
+
+div.row-3.col-9 {
+    background-color: var(--k);
+}
+
+div.row-3.col-9::before {
+    content: "K";
+}
+
+div.row-3.col-10 {
+    background-color: var(--l);
+}
+
+div.row-3.col-10::before {
+    content: "L";
+}
+
+div.row-3.col-11 {
+    background-color: var(--colon);
+}
+
+div.row-3.col-11::before {
+    content: ":";
+}
+
+div.row-3.col-11::after {
+    content: ";";
+}
+
+div.row-3.col-12 {
+    background-color: var(--quote);
+}
+
+div.row-3.col-12::before {
+    content: "\"";
+}
+
+div.row-3.col-12::after {
+    content: "'";
+}
+
+div.row-4.col-2 {
+    background-color: var(--z);
+}
+
+div.row-4.col-2::before {
+    content: "Z";
+}
+
+div.row-4.col-3 {
+    background-color: var(--x);
+}
+
+div.row-4.col-3::before {
+    content: "X";
+}
+
+div.row-4.col-4 {
+    background-color: var(--c);
+}
+
+div.row-4.col-4::before {
+    content: "C";
+}
+
+div.row-4.col-5 {
+    background-color: var(--v);
+}
+
+div.row-4.col-5::before {
+    content: "V";
+}
+
+div.row-4.col-6 {
+    background-color: var(--b);
+}
+
+div.row-4.col-6::before {
+    content: "B";
+}
+
+div.row-4.col-7 {
+    background-color: var(--n);
+}
+
+div.row-4.col-7::before {
+    content: "N";
+}
+
+div.row-4.col-8 {
+    background-color: var(--m);
+}
+
+div.row-4.col-8::before {
+    content: "M";
+}
+
+div.row-4.col-9 {
+    background-color: var(--comma);
+}
+
+div.row-4.col-9::before {
+    content: "<";
+}
+
+div.row-4.col-9::after {
+    content: ",";
+}
+
+div.row-4.col-10 {
+    background-color: var(--period);
+}
+
+div.row-4.col-10::before {
+    content: ">";
+}
+
+div.row-4.col-10::after {
+    content: ".";
+}
+
+div.row-4.col-11 {
+    background-color: var(--question);
+}
+
+div.row-4.col-11::before {
+    content: "?";
+}
+
+div.row-4.col-11::after {
+    content: "/";
+}
+
+/* Dvorak Layout */
+div.Dvorak div.row-1.col-12 {
+    background-color: var(--leftsquare);
+}
+
+div.Dvorak div.row-1.col-12::before {
+    content: "{";
+}
+
+div.Dvorak div.row-1.col-12::after {
+    content: "[";
+}
+
+div.Dvorak div.row-1.col-13 {
+    background-color: var(--rightsquare);
+}
+
+div.Dvorak div.row-1.col-13::before {
+    content: "}";
+}
+
+div.Dvorak div.row-1.col-13::after {
+    content: "]";
+}
+
+div.Dvorak div.row-2.col-12 {
+    background-color: var(--question);
+}
+
+div.Dvorak div.row-2.col-12::before {
+    content: "?";
+}
+
+div.Dvorak div.row-2.col-12::after {
+    content: "/";
+}
+
+div.Dvorak div.row-2.col-13 {
+    background-color: var(--equal);
+}
+
+div.Dvorak div.row-2.col-13::before {
+    content: "+";
+}
+
+div.Dvorak div.row-2.col-13::after {
+    content: "=";
+}
+div.Dvorak div.row-2.col-2 {
+    background-color: var(--quote);
+}
+
+div.Dvorak div.row-2.col-2::before {
+    content: "\"";
+}
+div.Dvorak div.row-2.col-2::after {
+    content: "'";
+}
+div.Dvorak div.row-2.col-3 {
+    background-color: var(--comma);
+}
+
+div.Dvorak div.row-2.col-3::before {
+    content: "<";
+}
+
+div.Dvorak div.row-2.col-3::after {
+    content: ",";
+}
+
+div.Dvorak div.row-2.col-4 {
+    background-color: var(--period);
+}
+
+div.Dvorak div.row-2.col-4::before {
+    content: ">";
+}
+
+div.Dvorak div.row-2.col-4::after {
+    content: ".";
+}
+
+div.Dvorak div.row-2.col-5 {
+    background-color: var(--p);
+}
+
+div.Dvorak div.row-2.col-5::before {
+    content: "P";
+}
+
+div.Dvorak div.row-2.col-6 {
+    background-color: var(--y);
+}
+
+div.Dvorak div.row-2.col-6::before {
+    content: "Y";
+}
+
+div.Dvorak div.row-2.col-7 {
+    background-color: var(--f);
+}
+
+div.Dvorak div.row-2.col-7::before {
+    content: "F";
+}
+
+div.Dvorak div.row-2.col-8 {
+    background-color: var(--g);
+}
+
+div.Dvorak div.row-2.col-8::before {
+    content: "G";
+}
+
+div.Dvorak div.row-2.col-9 {
+    background-color: var(--c);
+}
+
+div.Dvorak div.row-2.col-9::before {
+    content: "C";
+}
+
+div.Dvorak div.row-2.col-10 {
+    background-color: var(--r);
+}
+
+div.Dvorak div.row-2.col-10::before {
+    content: "R";
+}
+
+div.Dvorak div.row-2.col-11 {
+    background-color: var(--l);
+}
+
+div.Dvorak div.row-2.col-11::before {
+    content: "L";
+}
+
+div.Dvorak div.row-3.col-3 {
+    background-color: var(--o);
+}
+
+div.Dvorak div.row-3.col-3::before {
+    content: "O";
+}
+
+div.Dvorak div.row-3.col-4 {
+    background-color: var(--e);
+}
+
+div.Dvorak div.row-3.col-4::before {
+    content: "E";
+}
+
+div.Dvorak div.row-3.col-5 {
+    background-color: var(--u);
+}
+
+div.Dvorak div.row-3.col-5::before {
+    content: "U";
+}
+
+div.Dvorak div.row-3.col-6 {
+    background-color: var(--i);
+}
+
+div.Dvorak div.row-3.col-6::before {
+    content: "I";
+}
+
+div.Dvorak div.row-3.col-7 {
+    background-color: var(--d);
+}
+
+div.Dvorak div.row-3.col-7::before {
+    content: "D";
+}
+
+div.Dvorak div.row-3.col-8 {
+    background-color: var(--h);
+}
+
+div.Dvorak div.row-3.col-8::before {
+    content: "H";
+}
+
+div.Dvorak div.row-3.col-9 {
+    background-color: var(--t);
+}
+
+div.Dvorak div.row-3.col-9::before {
+    content: "T";
+}
+
+div.Dvorak div.row-3.col-10 {
+    background-color: var(--n);
+}
+
+div.Dvorak div.row-3.col-10::before {
+    content: "N";
+}
+
+div.Dvorak div.row-3.col-11 {
+    background-color: var(--s);
+}
+
+div.Dvorak div.row-3.col-11::before {
+    content: "S";
+}
+
+div.Dvorak div.row-3.col-11::after {
+    content: "";
+}
+
+div.Dvorak div.row-3.col-12 {
+    background-color: var(--underscore);
+}
+
+div.Dvorak div.row-3.col-12::before {
+    content: "_";
+}
+
+div.Dvorak div.row-3.col-12::after {
+    content: "-";
+}
+
+div.Dvorak div.row-4.col-2 {
+    background-color: var(--colon);
+}
+
+div.Dvorak div.row-4.col-2::before {
+    content: ":";
+}
+
+div.Dvorak div.row-4.col-2::after {
+    content: ";";
+}
+
+div.Dvorak div.row-4.col-3 {
+    background-color: var(--q);
+}
+
+div.Dvorak div.row-4.col-3::before {
+    content: "Q";
+}
+
+div.Dvorak div.row-4.col-4 {
+    background-color: var(--j);
+}
+
+div.Dvorak div.row-4.col-4::before {
+    content: "J";
+}
+
+div.Dvorak div.row-4.col-5 {
+    background-color: var(--k);
+}
+
+div.Dvorak div.row-4.col-5::before {
+    content: "K";
+}
+
+div.Dvorak div.row-4.col-6 {
+    background-color: var(--x);
+}
+
+div.Dvorak div.row-4.col-6::before {
+    content: "X";
+}
+
+div.Dvorak div.row-4.col-7 {
+    background-color: var(--b);
+}
+
+div.Dvorak div.row-4.col-7::before {
+    content: "B";
+}
+
+div.Dvorak div.row-4.col-9 {
+    background-color: var(--w);
+}
+
+div.Dvorak div.row-4.col-9::before {
+    content: "W";
+}
+
+div.Dvorak div.row-4.col-9::after {
+    content: "";
+}
+
+div.Dvorak div.row-4.col-10 {
+    background-color: var(--v);
+}
+
+div.Dvorak div.row-4.col-10::before {
+    content: "V";
+}
+
+div.Dvorak div.row-4.col-10::after {
+    content: "";
+}
+
+div.Dvorak div.row-4.col-11 {
+    background-color: var(--z);
+}
+
+div.Dvorak div.row-4.col-11::before {
+    content: "Z";
+}
+
+div.Dvorak div.row-4.col-11::after {
+    content: "";
+}
+/* Colemak layout */
+div.Colemak div.row-2.col-4 {
+    background-color: var(--f);
+}
+
+div.Colemak div.row-2.col-4::before {
+    content: "F";
+}
+
+div.Colemak div.row-2.col-5 {
+    background-color: var(--p);
+}
+
+div.Colemak div.row-2.col-5::before {
+    content: "P";
+}
+
+div.Colemak div.row-2.col-6 {
+    background-color: var(--g);
+}
+
+div.Colemak div.row-2.col-6::before {
+    content: "G";
+}
+
+div.Colemak div.row-2.col-7 {
+    background-color: var(--j);
+}
+
+div.Colemak div.row-2.col-7::before {
+    content: "J";
+}
+
+div.Colemak div.row-2.col-8 {
+    background-color: var(--l);
+}
+
+div.Colemak div.row-2.col-8::before {
+    content: "L";
+}
+
+div.Colemak div.row-2.col-9 {
+    background-color: var(--u);
+}
+
+div.Colemak div.row-2.col-9::before {
+    content: "U";
+}
+
+div.Colemak div.row-2.col-10 {
+    background-color: var(--y);
+}
+
+div.Colemak div.row-2.col-10::before {
+    content: "Y";
+}
+
+div.Colemak div.row-2.col-11 {
+    background-color: var(--colon);
+}
+
+div.Colemak div.row-2.col-11::before {
+    content: ":";
+}
+
+div.Colemak div.row-2.col-11::after {
+    content: ";";
+}
+
+div.Colemak div.row-3.col-3 {
+    background-color: var(--r);
+}
+
+div.Colemak div.row-3.col-3::before {
+    content: "R";
+}
+
+div.Colemak div.row-3.col-4 {
+    background-color: var(--s);
+}
+
+div.Colemak div.row-3.col-4::before {
+    content: "S";
+}
+
+div.Colemak div.row-3.col-5 {
+    background-color: var(--t);
+}
+
+div.Colemak div.row-3.col-5::before {
+    content: "T";
+}
+
+div.Colemak div.row-3.col-6 {
+    background-color: var(--d);
+}
+
+div.Colemak div.row-3.col-6::before {
+    content: "D";
+}
+
+div.Colemak div.row-3.col-8 {
+    background-color: var(--n);
+}
+
+div.Colemak div.row-3.col-8::before {
+    content: "N";
+}
+
+div.Colemak div.row-3.col-9 {
+    background-color: var(--e);
+}
+
+div.Colemak div.row-3.col-9::before {
+    content: "E";
+}
+
+div.Colemak div.row-3.col-10 {
+    background-color: var(--i);
+}
+
+div.Colemak div.row-3.col-10::before {
+    content: "I";
+}
+
+div.Colemak div.row-3.col-11 {
+    background-color: var(--o);
+}
+
+div.Colemak div.row-3.col-11::before {
+    content: "O";
+}
+
+div.Colemak div.row-3.col-11::after {
+    content: "";
+}
+
+div.Colemak div.row-4.col-7 {
+    background-color: var(--k);
+}
+
+div.Colemak div.row-4.col-7::before {
+    content: "K";
+}
+/* Workman layout */
+div.Workman div.row-2.col-3 {
+    background-color: var(--d);
+}
+
+div.Workman div.row-2.col-3::before {
+    content: "D";
+}
+
+div.Workman div.row-2.col-4 {
+    background-color: var(--r);
+}
+
+div.Workman div.row-2.col-4::before {
+    content: "R";
+}
+
+div.Workman div.row-2.col-5 {
+    background-color: var(--w);
+}
+
+div.Workman div.row-2.col-5::before {
+    content: "W";
+}
+
+div.Workman div.row-2.col-6 {
+    background-color: var(--b);
+}
+
+div.Workman div.row-2.col-6::before {
+    content: "B";
+}
+
+div.Workman div.row-2.col-7 {
+    background-color: var(--j);
+}
+
+div.Workman div.row-2.col-7::before {
+    content: "J";
+}
+
+div.Workman div.row-2.col-8 {
+    background-color: var(--f);
+}
+
+div.Workman div.row-2.col-8::before {
+    content: "F";
+}
+
+div.Workman div.row-2.col-9 {
+    background-color: var(--u);
+}
+
+div.Workman div.row-2.col-9::before {
+    content: "U";
+}
+
+div.Workman div.row-2.col-10 {
+    background-color: var(--p);
+}
+
+div.Workman div.row-2.col-10::before {
+    content: "P";
+}
+
+div.Workman div.row-2.col-11 {
+    background-color: var(--colon);
+}
+
+div.Workman div.row-2.col-11::before {
+    content: ":";
+}
+
+div.Workman div.row-2.col-11::after {
+    content: ";";
+}
+
+div.Workman div.row-3.col-4 {
+    background-color: var(--h);
+}
+
+div.Workman div.row-3.col-4::before {
+    content: "H";
+}
+
+div.Workman div.row-3.col-5 {
+    background-color: var(--t);
+}
+
+div.Workman div.row-3.col-5::before {
+    content: "T";
+}
+
+div.Workman div.row-3.col-7 {
+    background-color: var(--y);
+}
+
+div.Workman div.row-3.col-7::before {
+    content: "Y";
+}
+
+div.Workman div.row-3.col-8 {
+    background-color: var(--n);
+}
+
+div.Workman div.row-3.col-8::before {
+    content: "N";
+}
+
+div.Workman div.row-3.col-9 {
+    background-color: var(--e);
+}
+
+div.Workman div.row-3.col-9::before {
+    content: "E";
+}
+
+div.Workman div.row-3.col-10 {
+    background-color: var(--o);
+}
+
+div.Workman div.row-3.col-10::before {
+    content: "O";
+}
+
+div.Workman div.row-3.col-11 {
+    background-color: var(--l);
+}
+
+div.Workman div.row-3.col-11::before {
+    content: "L";
+}
+
+div.Workman div.row-3.col-11::after {
+    content: "";
+}
+
+div.Workman div.row-4.col-4 {
+    background-color: var(--m);
+}
+
+div.Workman div.row-4.col-4::before {
+    content: "M";
+}
+
+div.Workman div.row-4.col-5 {
+    background-color: var(--c);
+}
+
+div.Workman div.row-4.col-5::before {
+    content: "C";
+}
+
+div.Workman div.row-4.col-6 {
+    background-color: var(--v);
+}
+
+div.Workman div.row-4.col-6::before {
+    content: "V";
+}
+
+div.Workman div.row-4.col-7 {
+    background-color: var(--k);
+}
+
+div.Workman div.row-4.col-7::before {
+    content: "K";
+}
+
+div.Workman div.row-4.col-8 {
+    background-color: var(--l);
+}
+
+div.Workman div.row-4.col-8::before {
+    content: "L";
+}

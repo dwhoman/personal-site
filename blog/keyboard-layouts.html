@@ -1,0 +1,630 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="alternate" type="application/atom+xml" href="../feed.atom">
+<link rel="shortcut icon" href="../graphics/logo.ico">
+<link rel="preload" href="../fonts/genoa_italic_filtered.woff" as="font" type="font/woff">
+<title>Keyboard Layouts</title>
+<meta name="description" content="Analysis of the four common keyboard layouts.">
+<meta name="keywords" content="Web, CSS">
+<meta name="generator" content="Org mode">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<link rel="stylesheet" type="text/css" href="../css/exposition.css">
+<link rel="stylesheet" type="text/css" href="../css/blog.css">
+<link rel="stylesheet" type="text/css" href="../css/keyboard-layouts.css">
+</head>
+<body>
+<header id="masthead"><input id="expand-blog-menu" type="checkbox" tabindex="2"><div id="dwhoman-logo" class="nav"><a href="../index.html" tabindex="1"><span>D</span><span>W</span><span>H</span></a></div>
+<label id="expand-blog-menu-inactive" class="nav menu menu-btn" for="expand-blog-menu"><span>Blog</span><img src="../graphics/noun_1322581_cc.svg" alt=""></label><label id="expand-blog-menu-active" class="nav blog-menu menu-btn" for="expand-blog-menu"><span>Main Menu</span><img src="../graphics/noun_1355740_cc.svg" alt=""></label><div id="blog-chronologic" class="nav blog-menu menu-btn"><a href="../chronological.html" tabindex="3"><span>Chronological</span><img src="../graphics/noun_333757_cc.svg" alt=""></a></div>
+<div id="blog-recent" class="nav blog-menu menu-btn"><a href="../recent-updates.html" tabindex="4"><span>Updated</span><img src="../graphics/noun_1572678_cc.svg" alt=""></a></div>
+<div id="blog-categories" class="nav blog-menu menu-btn"><a href="../categories.xhtml" tabindex="5"><span>Categories</span><img src="../graphics/noun_1332809_cc.svg" alt=""></a></div>
+<div id="blog-threads" class="nav blog-menu menu-btn"><a href="../threads.html" tabindex="6"><span>Threads</span><img src="../graphics/noun_844785_cc.svg" alt=""></a></div>
+<div id="blog-feed" class="nav blog-menu menu-btn"><a href="../feed.atom" tabindex="7"><span>Feed</span><img src="../graphics/noun_19895_cc.svg" alt=""></a></div>
+<div id="about-page" class="nav menu menu-btn"><a href="../about.html" tabindex="8"><span>About</span><img src="../graphics/info.svg" alt=""></a></div>
+<div id="resume-page" class="nav menu menu-btn"><a href="../resume.html" tabindex="9"><span>R<span class="acute-e">e</span>sum<span class="acute-e">e</span></span><img src="../graphics/noun_591006_cc.svg" alt=""></a></div>
+<div id="project-page" class="nav menu menu-btn"><a href="https://github.com/dwhoman" tabindex="10"><span>Projects</span><img src="../graphics/Git-logo.svg" alt=""></a></div>
+<div id="following-page" class="menu nav menu-btn"><a href="../blog/following.html" tabindex="11"><span>Following</span><img src="../graphics/noun_541507_cc.svg" alt=""></a></div>
+<div id="blog-feed-comp" class="filler menu"></div>
+<div id="nav-filler" class="filler"></div>
+<div id="to-top" class="nav menu-btn"><a href="#" tabindex="12"><span>Back to Top</span><img src="../graphics/to_top.svg" alt=""></a></div></header><aside id="related-posts"><nav id="blog-published-local"><h2>Published</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="rolling-my-own-static-site-generator.html">Rolling My Own Static Site Generator</a></dd>
+</dl></nav><nav id="blog-updated-local"><h2>Updated</h2>
+<dl>
+<dt>Prev:</dt>
+<dd class="cloud"><a href="sql-transitive-closure.html">Transitive Closure in SQL</a></dd>
+</dl></nav><nav id="tag-list"><h2>Tags</h2>
+<ul>
+<li><a href="../categories.xhtml#CSS">CSS</a></li>
+<li><a href="../categories.xhtml#Web">Web</a></li>
+</ul></nav></aside><aside id="generation-dates"><ul>
+<li id="publication-date">Published: <time datetime="2018-04-05T00:00:00">April 05 2018</time>
+</li>
+<li id="update-date">Updated: <time datetime="2018-04-21T19:47:00">April 21 2018</time>
+</li>
+<li id="markup-source"><a href="keyboard-layouts.org" type="text/plain" download="keyboard-layouts.org">Page Markup Source</a></li>
+</ul></aside><main id="content">
+<h1 class="title">Keyboard Layouts</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6d21972">1. Creating Keyboard In HTML and CSS</a></li>
+<li>
+<a href="#orge042873">2. Counting Gutenberg Data</a>
+<ul>
+<li><a href="#orgcf706dc">2.1. QWERTY</a></li>
+<li><a href="#org4c6d58b">2.2. Dvorak</a></li>
+<li><a href="#org455642e">2.3. Colemak</a></li>
+<li><a href="#org49752f7">2.4. Workman</a></li>
+</ul>
+</li>
+<li>
+<a href="#org4000cac">3. Counting Code Files</a>
+<ul>
+<li><a href="#org131d7d0">3.1. QWERTY</a></li>
+<li><a href="#org78d1151">3.2. Dvorak</a></li>
+<li><a href="#orgccb6911">3.3. Colemak</a></li>
+<li><a href="#orgdeaea7f">3.4. Workman</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<article id="outline-container-org6d21972" class="outline-2">
+<h2 id="org6d21972">
+<span class="section-number-2">1</span> Creating Keyboard In HTML and CSS</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The following keyboard images are not actually images. They are built using
+<code>div</code> elements and CSS grid.  The grid is 29 columns by 5 rows.  Most of the
+<code>div</code> elements span two columns.  Each <code>div</code> has a column class and a row
+class.  The column that each <code>div</code> starts at is calculated in CSS.  The <code>div</code>
+elements of class, <code>col-1</code>, have a <code>--column: 1</code> variable, the <code>div</code> elements
+of class, <code>col-2</code>, have a <code>--column: 2</code> variable, and so on.  Each keyboard
+graphic is contained in a <code>div</code> with class QWERTY, Dvorak, Workman, or
+Colemak.
+</p>
+</div>
+</article>
+<article id="outline-container-orge042873" class="outline-2">
+<h2 id="orge042873">
+<span class="section-number-2">2</span> Counting Gutenberg Data</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+I used Awk to find the frequency of characters in 597 text files from a
+<a href="https://www.gutenberg.org/files/11220/PG2003-08.ISO">Gutenberg Press CD</a>. New-lines were counted as a return key presses, and indents
+were counted as TAB characters.  Left and right shift keys were also counted
+separately; capital characters that are typed with the left hand use the right
+shift, and characters typed with the right hand use the left shift.
+</p>
+
+<p>
+The keyboards are colored as heat maps where red characters have the highest
+frequency, blue the least, and green average.  The different keyboard layouts
+have different frequency graphs due to the left and right shift keys being
+included in the frequency count.  The colors maps were generated by linearly
+mapping the numbers 0 through 57 to the H parameter of the HSV color space
+where the minimum H value is 0 and the maximum H value is 241. S and V where
+set to 1, and the resulting HSV values were converted to RGB.
+</p>
+</div>
+<div id="outline-container-orgcf706dc" class="outline-3">
+<h3 id="orgcf706dc">
+<span class="section-number-3">2.1</span> QWERTY</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<div class="QWERTY"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-org4c6d58b" class="outline-3">
+<h3 id="org4c6d58b">
+<span class="section-number-3">2.2</span> Dvorak</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<div class="Dvorak"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-org455642e" class="outline-3">
+<h3 id="org455642e">
+<span class="section-number-3">2.3</span> Colemak</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+<div class="Colemak"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-org49752f7" class="outline-3">
+<h3 id="org49752f7">
+<span class="section-number-3">2.4</span> Workman</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+<div class="Workman"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+</article>
+<article id="outline-container-org4000cac" class="outline-2">
+<h2 id="org4000cac">
+<span class="section-number-2">3</span> Counting Code Files</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+I also applied the Awk script to 169102 code files found on my computer.
+</p>
+</div>
+<div id="outline-container-org131d7d0" class="outline-3">
+<h3 id="org131d7d0">
+<span class="section-number-3">3.1</span> QWERTY</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+<div class="QWERTY code"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-org78d1151" class="outline-3">
+<h3 id="org78d1151">
+<span class="section-number-3">3.2</span> Dvorak</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<div class="Dvorak code"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-orgccb6911" class="outline-3">
+<h3 id="orgccb6911">
+<span class="section-number-3">3.3</span> Colemak</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+<div class="Colemak code"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+<div id="outline-container-orgdeaea7f" class="outline-3">
+<h3 id="orgdeaea7f">
+<span class="section-number-3">3.4</span> Workman</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+<div class="Workman code"><div class="keyboard">
+<div class="row-1 col-1"></div>
+<div class="row-1 col-2"></div>
+<div class="row-1 col-3"></div>
+<div class="row-1 col-4"></div>
+<div class="row-1 col-5"></div>
+<div class="row-1 col-6"></div>
+<div class="row-1 col-7"></div>
+<div class="row-1 col-8"></div>
+<div class="row-1 col-9"></div>
+<div class="row-1 col-10"></div>
+<div class="row-1 col-11"></div>
+<div class="row-1 col-12"></div>
+<div class="row-1 col-13"></div>
+<div class="row-2 col-1"></div>
+<div class="row-2 col-2"></div>
+<div class="row-2 col-3"></div>
+<div class="row-2 col-4"></div>
+<div class="row-2 col-5"></div>
+<div class="row-2 col-6"></div>
+<div class="row-2 col-7"></div>
+<div class="row-2 col-8"></div>
+<div class="row-2 col-9"></div>
+<div class="row-2 col-10"></div>
+<div class="row-2 col-11"></div>
+<div class="row-2 col-12"></div>
+<div class="row-2 col-13"></div>
+<div class="row-2 col-14"></div>
+<div class="row-3 col-1"></div>
+<div class="row-3 col-2"></div>
+<div class="row-3 col-3"></div>
+<div class="row-3 col-4"></div>
+<div class="row-3 col-5"></div>
+<div class="row-3 col-6"></div>
+<div class="row-3 col-7"></div>
+<div class="row-3 col-8"></div>
+<div class="row-3 col-9"></div>
+<div class="row-3 col-10"></div>
+<div class="row-3 col-11"></div>
+<div class="row-3 col-12"></div>
+<div class="row-3 col-13"></div>
+<div class="row-4 col-1"></div>
+<div class="row-4 col-2"></div>
+<div class="row-4 col-3"></div>
+<div class="row-4 col-4"></div>
+<div class="row-4 col-5"></div>
+<div class="row-4 col-6"></div>
+<div class="row-4 col-7"></div>
+<div class="row-4 col-8"></div>
+<div class="row-4 col-9"></div>
+<div class="row-4 col-10"></div>
+<div class="row-4 col-11"></div>
+<div class="row-4 col-12"></div>
+<div class="row-5 col-3"></div>
+</div></div>
+</p>
+</div>
+</div>
+</article>
+</main><footer><div id="to-top-alt" class="mobile nav menu-btn"><a href="#" tabindex="-1">Back to Top</a></div></footer>
+</body>
+</html>

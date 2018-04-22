@@ -409,5 +409,7 @@ main table td:first-child {
     aside#generation-dates ul {
 	text-align: center;
     }
-   
+    table {
+	margin: auto;
+    }
 }
